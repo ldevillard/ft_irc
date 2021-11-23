@@ -1,4 +1,5 @@
 import tkinter as tk
+import sys
 
 
 class Server:
@@ -12,21 +13,31 @@ class Server:
         pass
 
 
+def close(error=None, code=0):
+    if (error != None):
+        print(error)
+    sys.exit(code)
+
+
+def closeAppHandler(event=None):
+    close()
+
+
 def connect():
-    master = tk.Tk()
-    master.title("ft_irc : connect")
+    root = tk.Tk()
+    root.title("ft_irc : connect")
+    root.grid_anchor("center")
+    tk.Label(root, text="Address").grid(row=0, column=0, sticky="e")
+    tk.Label(root, text="Port").grid(row=1, column=0, sticky="e")
+    tk.Label(root, text="Nickname").grid(row=2, column=0, sticky="e")
+    tk.Label(root, text="Username").grid(row=3, column=0, sticky="e")
+    tk.Label(root, text="Password").grid(row=4, column=0, sticky="e")
 
-    tk.Label(master, text="Address").grid(row=0, column=0)
-    tk.Label(master, text="Port").grid(row=1, column=0)
-    tk.Label(master, text="Nickname").grid(row=2, column=0)
-    tk.Label(master, text="Username").grid(row=3, column=0)
-    tk.Label(master, text="Password").grid(row=4, column=0)
-
-    address = tk.Entry(master)
-    port = tk.Entry(master)
-    nickname = tk.Entry(master)
-    username = tk.Entry(master)
-    password = tk.Entry(master, show='*')
+    address = tk.Entry(root)
+    port = tk.Entry(root)
+    nickname = tk.Entry(root)
+    username = tk.Entry(root)
+    password = tk.Entry(root, show='*')
 
     address.grid(row=0, column=1)
     port.grid(row=1, column=1)
@@ -36,27 +47,34 @@ def connect():
 
     formData: Server = Server()
 
-    def fetchForm():
+    def fetchForm(event=None):
         formData._address = address.get()
         formData._port = port.get()
         formData._nickname = nickname.get()
         formData._username = username.get()
         formData._password = username.get()
-        master.quit()
+        root.unbind("<Destroy>")
+        root.destroy()
 
-    tk.Button(master, text="Connect", command=fetchForm).grid(
+    tk.Button(root, text="Connect", command=fetchForm).grid(
         row=5, column=0, sticky=tk.W, pady=4)
 
-    master.mainloop()
+    root.bind("<Return>", lambda e: fetchForm(e))
+    root.bind("<Destroy>", lambda e: closeAppHandler(e))
+    root.bind("<Escape>", lambda e: closeAppHandler(e))
+
+    root.mainloop()
 
     return formData
 
 
 def mainFrame(server: Server):
-    master = tk.Tk()
-    master.title("ft_irc : connected to "+server._address+":"+server._port)
+    root = tk.Tk()
+    root.title("ft_irc : connected to "+server._address+":"+server._port)
 
-    master.mainloop()
+    root.bind("<Escape>", lambda e: closeAppHandler(e))
+
+    root.mainloop()
 
 
 if __name__ == '__main__':
