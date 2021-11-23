@@ -12,6 +12,7 @@ HEADERS = \
 
 SRCS = \
 		./main.cpp \
+		./testwebhook.cpp \
 
 OBJS = $(SRCS:%.cpp=%.o)
 
