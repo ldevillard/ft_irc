@@ -22,7 +22,7 @@ void	server_init(server &new_server)
 		throw std::runtime_error("connection accept failure");
 }
 
-void	connect()
+int	connect()
 {
 	server	new_server;
 	try
@@ -32,10 +32,11 @@ void	connect()
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
+		return (1);
 	}
-	
 	new_server.valread = read(new_server.new_socket, new_server.buffer, 1024);
 	std::cout << new_server.buffer << std::endl;
 	send(new_server.new_socket, new_server.msg.c_str(), new_server.msg.length(), 0);
 	std::cout << "Message sent!" << std::endl;
+	return (0);
 }
