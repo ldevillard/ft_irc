@@ -18,6 +18,14 @@ int	main()
 
 	connect(socketClient, (const struct sockaddr *)&addrClient, sizeof(addrClient));
 	std::cout << "connected" << std::endl;
+ 
+	char *str = NULL;
+	recv(socketClient, str, 19, 0);
+	std::cout << str << std::endl;
+
+	std::cin >> str;
+	send(socketClient, str, sizeof(str) + 1, 0);
+
 
 	close(socketClient);
 }
