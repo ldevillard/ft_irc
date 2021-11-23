@@ -1,5 +1,8 @@
+from os import stat
 import tkinter as tk
 import sys
+from tkinter.constants import BOTH
+from typing import Text
 
 
 class Server:
@@ -68,9 +71,42 @@ def connect():
     return formData
 
 
+class ChatPannel:
+    _pannel: tk.Text
+    _scrollBar: tk.Scrollbar
+
+    def __init__(self, widget):
+        self._pannel = tk.Text(widget, state="disabled", width=0)
+        self._scrollBar = tk.Scrollbar(
+            widget, orient="vertical", command=self._pannel.yview)
+        self._pannel.config(yscrollcommand=self._scrollBar.set)
+
+        self._pannel.pack(side=tk.LEFT, fill="both", expand=True)
+        self._scrollBar.pack(side=tk.RIGHT, fill="both")
+
+    def addMessage(self, text):
+        self._pannel.config(state="normal")
+        self._pannel.insert(tk.END, text+"\n")
+        self._pannel.config(state="disabled")
+
+
 def mainFrame(server: Server):
     root = tk.Tk()
     root.title("ft_irc : connected to "+server._address+":"+server._port)
+    root.geometry("500x500")
+
+    chatPannel = ChatPannel(root)
+
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("salut")
+    chatPannel.addMessage("pouet")
 
     root.bind("<Escape>", lambda e: closeAppHandler(e))
 
