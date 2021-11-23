@@ -125,7 +125,7 @@ class InputForm:
     def __init__(self, widget):
 
         self._input = tk.Entry(widget, width=0)
-        self._submit = tk.Button(command=self.submit, text="Send")
+        self._submit = tk.Button(widget, command=self.submit, text="Send")
         self._input.pack(side=tk.LEFT, fill="both", expand=True)
         self._submit.pack(side=tk.RIGHT, fill="both")
 
