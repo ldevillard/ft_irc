@@ -1,8 +1,9 @@
-from os import stat
 import tkinter as tk
+import socket
 import sys
-from tkinter.constants import ANCHOR, BOTH
-from typing import Text
+import asyncio
+from threading import Thread
+from time import sleep
 
 
 class Server:
@@ -14,7 +15,7 @@ class Server:
 
     def __init__(self, address, port, nickname, username, password):
         self._address = address
-        self._port = port
+        self._port = int(port)
         self._nickname = nickname
         self._username = username
         self._password = password
@@ -158,6 +159,23 @@ class InputForm:
 listServer = ("#General", "#memes", "#nsfwUwU")
 
 
+class IRCClient:
+    _socket: socket.socket
+    _server: Server
+
+    def __init__(self, server: Server):
+
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._server = server
+
+    def connect(self):
+        self._socket.connect((self._server._address, self._server._port))
+        self._socket.send(bytes("JOIN " + "general" + "\n", "UTF-8"))
+
+    def get_res(self):
+        return str(self._socket.recv(512))
+
+
 class MainFrame:
     _root = tk.Tk
     _serverPannel: ServerPannel
@@ -165,11 +183,15 @@ class MainFrame:
     _inputForm: InputForm
     _topFrame: tk.Frame
     _botFrame: tk.Frame
+    _irc: IRCClient
+    _server: Server
+    _thread: Thread
 
     def __init__(self, server: Server):
+        self._server = server
         self._root = tk.Tk()
         self._root.title("ft_irc : connected to " +
-                         server._address+":"+server._port+" as "+server._username)
+                         server._address+":"+str(server._port)+" as "+server._username)
         self._root.geometry("500x500")
         self._root.minsize(400, 300)
 
@@ -191,12 +213,33 @@ class MainFrame:
 
         self._serverPannel.setList(listServer)
 
+    async def init(self):
+        self._chatPannel.addMessage("* Initialize connection")
+        self._irc = IRCClient(self._server)
+        self._chatPannel.addMessage(
+            "* Connecting to " + self._server._address+":"+str(self._server._port))
+        self._irc.connect()
+
+    def update(self):
+        while True:
+            data = self._irc.get_res()
+            self._chatPannel.addMessage(data)
+            # print(data)
+
     def loop(self):
         self._root.mainloop()
+
+
+async def run(mainFrame: MainFrame):
+    await mainFrame.init()
+    mainFrame._thread = Thread(target=mainFrame.update)
+    mainFrame._thread.start()
+    # mainFrame.update()
 
 
 if __name__ == '__main__':
     connectForm = ConnectFrame()
     connectForm.loop()
     mainFrame = MainFrame(connectForm._return)
+    asyncio.run(run(mainFrame))
     mainFrame.loop()
