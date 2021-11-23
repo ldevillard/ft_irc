@@ -12,8 +12,12 @@ class Server:
     _username: str
     _password: str
 
-    def __init__(self):
-        pass
+    def __init__(self, address, port, nickname, username, password):
+        self._address = address
+        self._port = port
+        self._nickname = nickname
+        self._username = username
+        self._password = password
 
 
 def close(error=None, code=0):
@@ -26,50 +30,51 @@ def closeAppHandler(event=None):
     close()
 
 
-def connect():
-    root = tk.Tk()
-    root.title("ft_irc : connect")
-    root.grid_anchor("center")
-    tk.Label(root, text="Address").grid(row=0, column=0, sticky="e")
-    tk.Label(root, text="Port").grid(row=1, column=0, sticky="e")
-    tk.Label(root, text="Nickname").grid(row=2, column=0, sticky="e")
-    tk.Label(root, text="Username").grid(row=3, column=0, sticky="e")
-    tk.Label(root, text="Password").grid(row=4, column=0, sticky="e")
+class ConnectFrame:
+    _root: tk.Tk
+    _return: Server
 
-    address = tk.Entry(root)
-    address.focus_set()
-    port = tk.Entry(root)
-    nickname = tk.Entry(root)
-    username = tk.Entry(root)
-    password = tk.Entry(root, show='*')
+    def __init__(self):
+        self._root = tk.Tk()
+        self._root.title("ft_irc : connect")
+        self._root.maxsize(300, 200)
+        self._root.minsize(300, 200)
+        self._root.grid_anchor("center")
 
-    address.grid(row=0, column=1)
-    port.grid(row=1, column=1)
-    nickname.grid(row=2, column=1)
-    username.grid(row=3, column=1)
-    password.grid(row=4, column=1)
+        tk.Label(self._root, text="Address").grid(row=0, column=0, sticky="e")
+        tk.Label(self._root, text="Port").grid(row=1, column=0, sticky="e")
+        tk.Label(self._root, text="Nickname").grid(row=2, column=0, sticky="e")
+        tk.Label(self._root, text="Username").grid(row=3, column=0, sticky="e")
+        tk.Label(self._root, text="Password").grid(row=4, column=0, sticky="e")
 
-    formData: Server = Server()
+        address = tk.Entry(self._root)
+        address.focus_set()
+        port = tk.Entry(self._root)
+        nickname = tk.Entry(self._root)
+        username = tk.Entry(self._root)
+        password = tk.Entry(self._root, show='*')
 
-    def fetchForm(event=None):
-        formData._address = address.get()
-        formData._port = port.get()
-        formData._nickname = nickname.get()
-        formData._username = username.get()
-        formData._password = username.get()
-        root.unbind("<Destroy>")
-        root.destroy()
+        address.grid(row=0, column=1)
+        port.grid(row=1, column=1)
+        nickname.grid(row=2, column=1)
+        username.grid(row=3, column=1)
+        password.grid(row=4, column=1)
 
-    tk.Button(root, text="Connect", command=fetchForm).grid(
-        row=5, column=0, sticky=tk.W, pady=4)
+        def fetchForm(event=None):
+            self._return = Server(address.get(), port.get(
+            ), nickname.get(), username.get(), password.get())
+            self._root.unbind("<Destroy>")
+            self._root.destroy()
 
-    root.bind("<Return>", lambda e: fetchForm(e))
-    root.bind("<Destroy>", lambda e: closeAppHandler(e))
-    root.bind("<Escape>", lambda e: closeAppHandler(e))
+        tk.Button(self._root, text="Connect", command=fetchForm).grid(
+            row=5, column=0, sticky=tk.W, pady=4)
 
-    root.mainloop()
+        self._root.bind("<Return>", lambda e: fetchForm(e))
+        self._root.bind("<Destroy>", lambda e: closeAppHandler(e))
+        self._root.bind("<Escape>", lambda e: closeAppHandler(e))
 
-    return formData
+    def loop(self):
+        self._root.mainloop()
 
 
 class ServerPannel:
@@ -139,7 +144,7 @@ class InputForm:
 listServer = ("#General", "#memes", "#nsfwUwU")
 
 
-class mainFrame:
+class MainFrame:
     _root = tk.Tk
     _serverPannel: ServerPannel
     _chatPannel: ChatPannel
@@ -152,6 +157,7 @@ class mainFrame:
         self._root.title("ft_irc : connected to " +
                          server._address+":"+server._port+" as "+server._username)
         self._root.geometry("500x500")
+        self._root.minsize(400, 300)
 
         self._topFrame = tk.Frame(self._root)
         self._topFrame.pack(side="top", fill="both", expand=True)
@@ -169,23 +175,14 @@ class mainFrame:
         self._root.bind("<Escape>", lambda e: closeAppHandler(e))
         self._root.bind("<Destroy>", lambda e: closeAppHandler(e))
 
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage(
-        #     "papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("salut")
-        # self._chatPannel.addMessage("pouet")
-
         self._serverPannel.setList(listServer)
 
+    def loop(self):
         self._root.mainloop()
 
 
 if __name__ == '__main__':
-    server: Server = connect()
-    mainFrame(server)
+    connectForm = ConnectFrame()
+    connectForm.loop()
+    mainFrame = MainFrame(connectForm._return)
+    mainFrame.loop()
