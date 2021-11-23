@@ -1,4 +1,4 @@
-NAME = ft_irc
+NAME = ft_irc_client
 
 CC = clang++
 MAKE = make --no-print-directory
@@ -10,8 +10,10 @@ CFLAGS += -fsanitize=address
 
 HEADERS = \
 
+SRCS_PATH = ./src
+
 SRCS = \
-		./main.cpp \
+		$(SRCS_PATH)/main.cpp \
 
 OBJS = $(SRCS:%.cpp=%.o)
 
