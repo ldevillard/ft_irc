@@ -3,14 +3,13 @@
 #include "Ircserv.hpp"
 
 struct	ServData {
-	std::string	msg = "uwu les copains!\n";
-	struct	sockaddr_in address;
-	char	buffer[1024] = { 0 };
-	size_t	addlen = sizeof(address);
+	std::string	_msg;
+	struct	sockaddr_in _address;
+	char	_buffer[1024];
+	size_t	_addlen;
 	int	_port;
-	int	server_fd;
-	int	new_socket;
-	int	valread;
-	int	opt = 1;
-	int	port = 8080;
+	int	_server_fd;
+	int	_new_socket;
+	int	_valread;
+	int	_opt;
 };
