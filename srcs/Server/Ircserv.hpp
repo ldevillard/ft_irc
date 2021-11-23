@@ -21,5 +21,5 @@ class Server
 		std::string _host;
 		std::string	_password;
 		id_t		_port;
-		ServData	*data;
+		ServData	*_data;
 };
