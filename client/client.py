@@ -79,15 +79,17 @@ class ServerPannel:
     def __init__(self, widget):
         self._frame = tk.Frame(widget)
         self._frame.pack(side=tk.LEFT, fill="both")
-        listVar = tk.StringVar(value=list)
         self._list = tk.Listbox(
-            self._frame, listvariable=listVar, selectmode="extended")
+            self._frame, selectmode="extended")
         self._list.grid(row=0, column=0, sticky="NWES")
         self._scrollBar = tk.Scrollbar(
             self._frame, orient="vertical", command=self._list.yview)
         self._list.config(yscrollcommand=self._scrollBar.set)
         self._list.pack(side=tk.LEFT, fill="both", expand=True)
         self._scrollBar.pack(side=tk.RIGHT, fill="both")
+
+    def setList(self, list: tuple):
+        self._list.config(listvariable=tk.StringVar(value=list))
 
 
 class ChatPannel:
@@ -112,14 +114,16 @@ class ChatPannel:
         self._text.config(state="disabled")
 
 
-list = ('Java', 'C#', 'C', 'C++', 'Python',
-        'Go', 'JavaScript', 'PHP', 'Swift')
+listServer = ('Java', 'C#', 'C', 'C++', 'Python',
+              'Go', 'JavaScript', 'PHP', 'Swift')
 
 
 class mainFrame:
     _root = tk.Tk
     _serverPannel: ServerPannel
     _chatPannel: ChatPannel
+    _topFrame: tk.Frame
+    _botFrame: tk.Frame
 
     def __init__(self, server: Server):
         self._root = tk.Tk()
@@ -127,25 +131,32 @@ class mainFrame:
                          server._address+":"+server._port)
         self._root.geometry("500x500")
 
-        self._serverPannel = ServerPannel(self._root)
-        self._chatPannel = ChatPannel(self._root)
+        self._topFrame = tk.Frame(self._root)
+        self._topFrame.pack(side="top", fill="both", expand=True)
+        self._botFrame = tk.Frame(self._root)
+        self._botFrame.pack(side="bottom", fill="both")
+
+        self._serverPannel = ServerPannel(self._topFrame)
+        self._chatPannel = ChatPannel(self._topFrame)
 
         self._root.bind("<Escape>", lambda e: closeAppHandler(e))
+        self._root.bind("<Destroy>", lambda e: closeAppHandler(e))
+
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage(
+            "papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("salut")
+        self._chatPannel.addMessage("pouet")
+
+        self._serverPannel.setList(listServer)
 
         self._root.mainloop()
-
-
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage(
-#     "papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("salut")
-# chatPannel.addMessage("pouet")
 
 
 if __name__ == '__main__':
