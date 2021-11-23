@@ -19,7 +19,7 @@ int	main()
 	connect(socketClient, (const struct sockaddr *)&addrClient, sizeof(addrClient));
 	std::cout << "connected" << std::endl;
  
-	char *str = NULL;
+	char str[19];
 	recv(socketClient, str, 19, 0);
 	std::cout << str << std::endl;
 
