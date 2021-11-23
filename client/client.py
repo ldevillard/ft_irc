@@ -33,26 +33,39 @@ def closeAppHandler(event=None):
 class ConnectFrame:
     _root: tk.Tk
     _return: Server
+    _topFrame: tk.Frame
+    _botFrame: tk.Frame
 
     def __init__(self):
         self._root = tk.Tk()
         self._root.title("ft_irc : connect")
         self._root.maxsize(300, 200)
         self._root.minsize(300, 200)
-        self._root.grid_anchor("center")
 
-        tk.Label(self._root, text="Address").grid(row=0, column=0, sticky="e")
-        tk.Label(self._root, text="Port").grid(row=1, column=0, sticky="e")
-        tk.Label(self._root, text="Nickname").grid(row=2, column=0, sticky="e")
-        tk.Label(self._root, text="Username").grid(row=3, column=0, sticky="e")
-        tk.Label(self._root, text="Password").grid(row=4, column=0, sticky="e")
+        self._topFrame = tk.Frame(self._root)
+        self._topFrame.pack(side="top", fill="both", expand=True)
 
-        address = tk.Entry(self._root)
+        self._botFrame = tk.Frame(self._root)
+        self._botFrame.pack(side="bottom", fill="both")
+
+        self._topFrame.grid_anchor("center")
+
+        tk.Label(self._topFrame, text="Address").grid(
+            row=0, column=0, sticky="e")
+        tk.Label(self._topFrame, text="Port").grid(row=1, column=0, sticky="e")
+        tk.Label(self._topFrame, text="Nickname").grid(
+            row=2, column=0, sticky="e")
+        tk.Label(self._topFrame, text="Username").grid(
+            row=3, column=0, sticky="e")
+        tk.Label(self._topFrame, text="Password").grid(
+            row=4, column=0, sticky="e")
+
+        address = tk.Entry(self._topFrame)
         address.focus_set()
-        port = tk.Entry(self._root)
-        nickname = tk.Entry(self._root)
-        username = tk.Entry(self._root)
-        password = tk.Entry(self._root, show='*')
+        port = tk.Entry(self._topFrame)
+        nickname = tk.Entry(self._topFrame)
+        username = tk.Entry(self._topFrame)
+        password = tk.Entry(self._topFrame, show='*')
 
         address.grid(row=0, column=1)
         port.grid(row=1, column=1)
@@ -66,8 +79,9 @@ class ConnectFrame:
             self._root.unbind("<Destroy>")
             self._root.destroy()
 
-        tk.Button(self._root, text="Connect", command=fetchForm).grid(
-            row=5, column=0, sticky=tk.W, pady=4)
+        self._botFrame.grid_anchor("center")
+        tk.Button(self._botFrame, text="Connect",
+                  command=fetchForm).grid(row=0, column=0, pady=4)
 
         self._root.bind("<Return>", lambda e: fetchForm(e))
         self._root.bind("<Destroy>", lambda e: closeAppHandler(e))
