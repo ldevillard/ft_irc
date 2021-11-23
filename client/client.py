@@ -1,7 +1,7 @@
 from os import stat
 import tkinter as tk
 import sys
-from tkinter.constants import BOTH
+from tkinter.constants import ANCHOR, BOTH
 from typing import Text
 
 
@@ -37,6 +37,7 @@ def connect():
     tk.Label(root, text="Password").grid(row=4, column=0, sticky="e")
 
     address = tk.Entry(root)
+    address.focus_set()
     port = tk.Entry(root)
     nickname = tk.Entry(root)
     username = tk.Entry(root)
@@ -80,7 +81,7 @@ class ServerPannel:
         self._frame = tk.Frame(widget)
         self._frame.pack(side=tk.LEFT, fill="both")
         self._list = tk.Listbox(
-            self._frame, selectmode="extended")
+            self._frame, selectmode="extended", height=0)
         self._list.grid(row=0, column=0, sticky="NWES")
         self._scrollBar = tk.Scrollbar(
             self._frame, orient="vertical", command=self._list.yview)
@@ -101,7 +102,7 @@ class ChatPannel:
         self._frame = tk.Frame(widget)
         self._frame.pack(side=tk.RIGHT, fill="both", expand=True)
 
-        self._text = tk.Text(self._frame, state="disabled", width=0)
+        self._text = tk.Text(self._frame, state="disabled", width=0, height=0)
         self._scrollBar = tk.Scrollbar(
             self._frame, orient="vertical", command=self._text.yview)
         self._text.config(yscrollcommand=self._scrollBar.set)
@@ -109,26 +110,47 @@ class ChatPannel:
         self._scrollBar.pack(side=tk.RIGHT, fill="both")
 
     def addMessage(self, text):
+        isAtEnd = self._text.yview()[1] >= 0.9
         self._text.config(state="normal")
         self._text.insert(tk.END, text+"\n")
         self._text.config(state="disabled")
+        if isAtEnd == True:
+            self._text.yview_moveto(1.0)
 
 
-listServer = ('Java', 'C#', 'C', 'C++', 'Python',
-              'Go', 'JavaScript', 'PHP', 'Swift')
+class InputForm:
+    _input: tk.Text
+    _submit: tk.Button
+
+    def __init__(self, widget):
+
+        self._input = tk.Entry(widget, width=0)
+        self._submit = tk.Button(command=self.submit, text="Send")
+        self._input.pack(side=tk.LEFT, fill="both", expand=True)
+        self._submit.pack(side=tk.RIGHT, fill="both")
+
+        self._input.focus_set()
+
+    def submit(self, chatpannel: ChatPannel):
+        chatpannel.addMessage(self._input.get())
+        self._input.delete(0, tk.END)
+
+
+listServer = ("#General", "#memes", "#nsfwUwU")
 
 
 class mainFrame:
     _root = tk.Tk
     _serverPannel: ServerPannel
     _chatPannel: ChatPannel
+    _inputForm: InputForm
     _topFrame: tk.Frame
     _botFrame: tk.Frame
 
     def __init__(self, server: Server):
         self._root = tk.Tk()
         self._root.title("ft_irc : connected to " +
-                         server._address+":"+server._port)
+                         server._address+":"+server._port+" as "+server._username)
         self._root.geometry("500x500")
 
         self._topFrame = tk.Frame(self._root)
@@ -138,21 +160,26 @@ class mainFrame:
 
         self._serverPannel = ServerPannel(self._topFrame)
         self._chatPannel = ChatPannel(self._topFrame)
+        self._inputForm = InputForm(self._botFrame)
 
+        def submitMessage(event=None):
+            self._inputForm.submit(self._chatPannel)
+
+        self._root.bind("<Return>", lambda e: submitMessage(e))
         self._root.bind("<Escape>", lambda e: closeAppHandler(e))
         self._root.bind("<Destroy>", lambda e: closeAppHandler(e))
 
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage(
-            "papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("salut")
-        self._chatPannel.addMessage("pouet")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage(
+        #     "papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("salut")
+        # self._chatPannel.addMessage("pouet")
 
         self._serverPannel.setList(listServer)
 
