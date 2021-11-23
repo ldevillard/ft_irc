@@ -14,12 +14,12 @@ class Server
 {
 	public:
 		Server(std::string host, int port, std::string password);
-		void	server_init(ServData &new_server);
-		void	address_init(sockaddr_in &addr, int port);
+		void	server_init();
+		void	address_init();
 		int		connect();
 	private:
 		std::string _host;
 		std::string	_password;
 		id_t		_port;
-		ServData	*_data;
+		ServData	_data;
 };

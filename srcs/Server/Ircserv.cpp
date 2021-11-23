@@ -4,25 +4,25 @@ Server::Server(std::string host, int port, std::string password) : _host(host), 
 {
 }
 
-void	Server::address_init(sockaddr_in &addr, int port)
+void	Server::address_init()
 {
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = htons(port);
+	_data.address.sin_family = AF_INET;
+	_data.address.sin_addr.s_addr = INADDR_ANY;
+	_data.address.sin_port = htons(_port);
 }
 
-void	Server::server_init(ServData &new_server)
+void	Server::server_init()
 {
-	if (!(new_server.server_fd = socket(AF_INET, SOCK_STREAM, 0)))
+	if (!(_data.server_fd = socket(AF_INET, SOCK_STREAM, 0)))
 		throw ServerException::socket_creation();
-	if (setsockopt(new_server.server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &new_server.opt, sizeof(new_server.opt)))
+	if (setsockopt(_data.server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &_data.opt, sizeof(_data.opt)))
 		throw ServerException::socket_config();
-	address_init(new_server.address, new_server.port);
-	if (bind(new_server.server_fd, (struct sockaddr *)&new_server.address, sizeof(new_server.address)) < 0)
+	address_init();
+	if (bind(_data.server_fd, (struct sockaddr *)&_data.address, sizeof(_data.address)) < 0)
 		throw ServerException::binding();
-	if (listen(new_server.server_fd, 3) < 0)
+	if (listen(_data.server_fd, 3) < 0)
 		throw ServerException::listening();
-	if ((new_server.new_socket = accept(new_server.server_fd, (struct sockaddr *)&new_server.address, (socklen_t *)&new_server.addlen)) < 0)
+	if ((_data.new_socket = accept(_data.server_fd, (struct sockaddr *)&_data.address, (socklen_t *)&_data.addlen)) < 0)
 		throw ServerException::receiving();
 }
 
@@ -30,16 +30,16 @@ int	Server::connect()
 {
 	try
 	{
-		server_init(*_data);
+		server_init();
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 		return (1);
 	}
-	_data->valread = read(_data->new_socket, _data->buffer, 1024);
-	std::cout << _data->buffer << std::endl;
-	send(_data->new_socket, _data->msg.c_str(), _data->msg.length(), 0);
+	_data.valread = read(_data.new_socket, _data.buffer, 1024);
+	std::cout << _data.buffer << std::endl;
+	send(_data.new_socket, _data.msg.c_str(), _data.msg.length(), 0);
 	std::cout << "Message sent!" << std::endl;
 	return (0);
 }
