@@ -26,20 +26,20 @@ void	Server::server_init(ServData &new_server)
 		throw std::runtime_error("connection accept failure");
 }
 
-int	connect()
+int	Server::connect()
 {
 	try
 	{
-		server_init(_Serv);
+		server_init(*_data);
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 		return (1);
 	}
-	new_server.valread = read(new_server.new_socket, new_server.buffer, 1024);
-	std::cout << new_server.buffer << std::endl;
-	send(new_server.new_socket, new_server.msg.c_str(), new_server.msg.length(), 0);
+	_data->valread = read(_data->new_socket, _data->buffer, 1024);
+	std::cout << _data->buffer << std::endl;
+	send(_data->new_socket, _data->msg.c_str(), _data->msg.length(), 0);
 	std::cout << "Message sent!" << std::endl;
 	return (0);
 }
