@@ -1,9 +1,10 @@
+import select
 import tkinter as tk
 import socket
 import sys
 import asyncio
 from threading import Thread
-from time import sleep
+from time import sleep, thread_time
 
 
 class Server:
@@ -132,7 +133,7 @@ class ChatPannel:
     def addMessage(self, text):
         isAtEnd = self._text.yview()[1] >= 0.9
         self._text.config(state="normal")
-        self._text.insert(tk.END, text+"\n")
+        self._text.insert(tk.END, text)
         self._text.config(state="disabled")
         if isAtEnd == True:
             self._text.yview_moveto(1.0)
@@ -152,7 +153,7 @@ class InputForm:
         self._input.focus_set()
 
     def submit(self, chatpannel: ChatPannel):
-        chatpannel.addMessage(self._input.get())
+        chatpannel.addMessage(self._input.get()+"\n")
         self._input.delete(0, tk.END)
 
 
@@ -162,18 +163,32 @@ listServer = ("#General", "#memes", "#nsfwUwU")
 class IRCClient:
     _socket: socket.socket
     _server: Server
+    _channel: str
 
     def __init__(self, server: Server):
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server = server
 
+        self._socket.settimeout(0.5)
+
     def connect(self):
         self._socket.connect((self._server._address, self._server._port))
-        self._socket.send(bytes("JOIN " + "general" + "\n", "UTF-8"))
+
+        self._channel = "#general"
 
     def get_res(self):
-        return str(self._socket.recv(512))
+        try:
+            return str(self._socket.recv(512))
+        except(socket.timeout):
+            return ""
+
+    def send_cmd(self, cmd: str, msg: str):
+        command = "{} {}\r\n".format(cmd, msg)
+        self._socket.send(command.encode("UTF-8"))
+
+    def join_channel(self):
+        self.send_cmd("JOIN", self._channel)
 
 
 class MainFrame:
@@ -186,13 +201,14 @@ class MainFrame:
     _irc: IRCClient
     _server: Server
     _thread: Thread
+    _continueThread: bool
 
     def __init__(self, server: Server):
         self._server = server
         self._root = tk.Tk()
         self._root.title("ft_irc : connected to " +
                          server._address+":"+str(server._port)+" as "+server._username)
-        self._root.geometry("500x500")
+        self._root.geometry("700x500")
         self._root.minsize(400, 300)
 
         self._topFrame = tk.Frame(self._root)
@@ -207,34 +223,48 @@ class MainFrame:
         def submitMessage(event=None):
             self._inputForm.submit(self._chatPannel)
 
+        def closeWThread(e):
+            self._continueThread = False
+            self._thread.join()
+            closeAppHandler(e)
+
         self._root.bind("<Return>", lambda e: submitMessage(e))
-        self._root.bind("<Escape>", lambda e: closeAppHandler(e))
-        self._root.bind("<Destroy>", lambda e: closeAppHandler(e))
+        self._root.bind("<Escape>", lambda e: closeWThread(e))
+        self._root.bind("<Destroy>", lambda e: closeWThread(e))
 
         self._serverPannel.setList(listServer)
 
     async def init(self):
-        self._chatPannel.addMessage("* Initialize connection")
+        self._chatPannel.addMessage("* Initialize connection\n")
         self._irc = IRCClient(self._server)
         self._chatPannel.addMessage(
-            "* Connecting to " + self._server._address+":"+str(self._server._port))
+            "* Connecting to " + self._server._address+":"+str(self._server._port)+'\n')
         self._irc.connect()
 
+        self._irc.send_cmd("NICK", self._server._username)
+        self._irc.send_cmd(
+            "USER", "{} * * :{}".format(self._server._username, self._server._username))
+
     def update(self):
-        while True:
+        while self._continueThread:
             data = self._irc.get_res()
+            print(data)
             self._chatPannel.addMessage(data)
-            # print(data)
+            sleep(1)
 
     def loop(self):
         self._root.mainloop()
 
 
+def thread_process(mainFrame: MainFrame):
+    asyncio.run(mainFrame.update())
+
+
 async def run(mainFrame: MainFrame):
     await mainFrame.init()
+    mainFrame._continueThread = True
     mainFrame._thread = Thread(target=mainFrame.update)
     mainFrame._thread.start()
-    # mainFrame.update()
 
 
 if __name__ == '__main__':
