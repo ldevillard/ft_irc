@@ -71,46 +71,81 @@ def connect():
     return formData
 
 
-class ChatPannel:
-    _pannel: tk.Text
+class ServerPannel:
+    _frame: tk.Frame
+    _list: tk.Listbox
     _scrollBar: tk.Scrollbar
 
     def __init__(self, widget):
-        self._pannel = tk.Text(widget, state="disabled", width=0)
+        self._frame = tk.Frame(widget)
+        self._frame.pack(side=tk.LEFT, fill="both")
+        listVar = tk.StringVar(value=list)
+        self._list = tk.Listbox(
+            self._frame, listvariable=listVar, selectmode="extended")
+        self._list.grid(row=0, column=0, sticky="NWES")
         self._scrollBar = tk.Scrollbar(
-            widget, orient="vertical", command=self._pannel.yview)
-        self._pannel.config(yscrollcommand=self._scrollBar.set)
+            self._frame, orient="vertical", command=self._list.yview)
+        self._list.config(yscrollcommand=self._scrollBar.set)
+        self._list.pack(side=tk.LEFT, fill="both", expand=True)
+        self._scrollBar.pack(side=tk.RIGHT, fill="both")
 
-        self._pannel.pack(side=tk.LEFT, fill="both", expand=True)
+
+class ChatPannel:
+    _frame: tk.Frame
+    _text: tk.Text
+    _scrollBar: tk.Scrollbar
+
+    def __init__(self, widget):
+        self._frame = tk.Frame(widget)
+        self._frame.pack(side=tk.RIGHT, fill="both", expand=True)
+
+        self._text = tk.Text(self._frame, state="disabled", width=0)
+        self._scrollBar = tk.Scrollbar(
+            self._frame, orient="vertical", command=self._text.yview)
+        self._text.config(yscrollcommand=self._scrollBar.set)
+        self._text.pack(side=tk.LEFT, fill="both", expand=True)
         self._scrollBar.pack(side=tk.RIGHT, fill="both")
 
     def addMessage(self, text):
-        self._pannel.config(state="normal")
-        self._pannel.insert(tk.END, text+"\n")
-        self._pannel.config(state="disabled")
+        self._text.config(state="normal")
+        self._text.insert(tk.END, text+"\n")
+        self._text.config(state="disabled")
 
 
-def mainFrame(server: Server):
-    root = tk.Tk()
-    root.title("ft_irc : connected to "+server._address+":"+server._port)
-    root.geometry("500x500")
+list = ('Java', 'C#', 'C', 'C++', 'Python',
+        'Go', 'JavaScript', 'PHP', 'Swift')
 
-    chatPannel = ChatPannel(root)
 
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("salut")
-    chatPannel.addMessage("pouet")
+class mainFrame:
+    _root = tk.Tk
+    _serverPannel: ServerPannel
+    _chatPannel: ChatPannel
 
-    root.bind("<Escape>", lambda e: closeAppHandler(e))
+    def __init__(self, server: Server):
+        self._root = tk.Tk()
+        self._root.title("ft_irc : connected to " +
+                         server._address+":"+server._port)
+        self._root.geometry("500x500")
 
-    root.mainloop()
+        self._serverPannel = ServerPannel(self._root)
+        self._chatPannel = ChatPannel(self._root)
+
+        self._root.bind("<Escape>", lambda e: closeAppHandler(e))
+
+        self._root.mainloop()
+
+
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage(
+#     "papeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepupapeupipepu")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("salut")
+# chatPannel.addMessage("pouet")
 
 
 if __name__ == '__main__':
