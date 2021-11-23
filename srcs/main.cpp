@@ -6,9 +6,11 @@ int main(int ac, char **av)
 	{
 		if (ac != 3)
 			throw ServerException::argument();
-		for (int i = 0; i != NULL; i++)
+		for (int i = 0; av[1][i]; i++)
 			if (!isdigit(av[1][i]))
-				throw ServerException::argument();
+				throw ServerException::non_numeric_argument();
+		Server("127.0.0.1", atoi(av[1]), av[2]);
+		//start server
 	}
 	catch (std::exception const &e)
 	{
