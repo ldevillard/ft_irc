@@ -20,7 +20,6 @@ void *func(void *arg)
 
 	std::cout << "Bienvenu sur Teamspeak 4 : " + msg << std::endl;
 
-	//delete arg;
 	close(socket);
 	pthread_exit(NULL);
 }
@@ -51,11 +50,10 @@ int	main()
 
 		std::cout << "client : " << socketClient << std::endl;
 
-		int *arg = new int;
-		arg = &socketClient;
-
-		pthread_create(&clientThread, NULL, func, arg);
+		pthread_create(&clientThread, NULL, func, &socketClient);
 	}
+
+	pthread_join(clientThread, NULL);
 
 	std::cout << "close" << std::endl;
 	close(socketServer);
