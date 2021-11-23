@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"github.copilot.enable": {
+			"*": false,
+		},
+		"C_Cpp.default.cppStandard": "c++98"
+	}
+}
