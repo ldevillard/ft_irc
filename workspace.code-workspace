@@ -8,6 +8,15 @@
 		"github.copilot.enable": {
 			"*": false,
 		},
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/**.o": true
+		},
 		"C_Cpp.default.cppStandard": "c++98",
 		"C_Cpp.default.includePath": [],
 		"files.associations": {
