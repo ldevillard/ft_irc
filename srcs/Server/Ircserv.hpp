@@ -18,6 +18,5 @@ class Server
 		ServData	_data;
 	private:
 		std::string _host;
-		std::string	_password;
 		id_t		_port;
-};
+		std::string	_password;
