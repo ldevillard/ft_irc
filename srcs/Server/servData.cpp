@@ -5,7 +5,7 @@ ServData::~ServData()
 {
 }
 
-ServData::ServData() : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _opt(1), _port(8080)
+ServData::ServData() : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _port(8080), _opt(1)
 {
 	init();
 }
