@@ -29,9 +29,13 @@ void ServData::init()
 
 int	ServData::connect()
 {
-	_valread = read(_new_socket, _buffer, 1024);
-	std::cout << _buffer << std::endl;
-	send(_new_socket, _msg.c_str(), _msg.length(), 0);
-	std::cout << "Message sent!" << std::endl;
+	for (;;)
+	{
+		bzero(_buffer, sizeof(_buffer));
+		_valread = read(_new_socket, _buffer, sizeof(_buffer));
+		std::cout << "current buffer : " << _buffer << std::endl;
+		send(_new_socket, _msg.c_str(), _msg.length(), 0);
+		std::cout << "Message sent!" << std::endl;
+	}
 	return (0);
 }
