@@ -1,6 +1,14 @@
 #pragma once
 
-#include "Ircserv.hpp"
+#include <exception>
+#include <string>
+#include <cstring>
+#include <stdlib.h>
+#include <iostream>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include "../Utils/ServerException.hpp"
 
 class	ServData {
 	private :

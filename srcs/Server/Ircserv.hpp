@@ -11,14 +11,13 @@
 #include "../Utils/ServerException.hpp"
 #include "servData.hpp"
 
-
 class Server
 {
 	public:
 		Server(std::string host, int port, std::string password);
+		ServData	_data;
 	private:
 		std::string _host;
 		std::string	_password;
 		id_t		_port;
-		ServData	_data;
 };

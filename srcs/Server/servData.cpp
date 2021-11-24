@@ -33,4 +33,5 @@ int	ServData::connect()
 	std::cout << _buffer << std::endl;
 	send(_new_socket, _msg.c_str(), _msg.length(), 0);
 	std::cout << "Message sent!" << std::endl;
+	return (0);
 }

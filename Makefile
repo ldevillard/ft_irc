@@ -9,10 +9,13 @@ CFLAGS = -g
 CFLAGS += -fsanitize=address
 
 HEADERS = \
+		./srcs/servData.hpp \
+		./srcs/Ircserv.hpp
 
 SRCS = \
 		./srcs/main.cpp \
-		./srcs/Server/Ircserv.cpp
+		./srcs/Server/Ircserv.cpp \
+		./srcs/Server/servData.cpp
 
 OBJS = $(SRCS:%.cpp=%.o)
 
