@@ -8,18 +8,20 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include "servData.hpp"
+#include "ServData.hpp"
+
+struct ServData;
 
 class Server
 {
 	public:
-		Server(std::string host, int port, std::string password);
+		Server(std::string host, id_t port, std::string password);
 		void	server_init(ServData &new_server);
 		void	address_init(sockaddr_in &addr, int port);
 		int		connect();
 	private:
 		std::string _host;
-		std::string	_password;
 		id_t		_port;
+		std::string	_password;
 		ServData	*_data;
 };

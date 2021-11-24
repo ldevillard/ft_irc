@@ -12,7 +12,8 @@ HEADERS = \
 
 SRCS = \
 		./srcs/main.cpp \
-		./srcs/Server/Ircserv.cpp
+		./srcs/Server/Ircserv.cpp\
+		./srcs/Server/ServData.cpp
 
 OBJS = $(SRCS:%.cpp=%.o)
 
