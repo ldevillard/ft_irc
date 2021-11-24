@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include "ServData.hpp"
+#include <cstdlib>
 
 struct ServData;
 
