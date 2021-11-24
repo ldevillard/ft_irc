@@ -15,11 +15,9 @@ class Server
 {
 	public:
 		Server(std::string host, int port, std::string password);
-		void	server_init(ServData data);
-		void	address_init(ServData data);
-		int		connect();
 	private:
 		std::string _host;
 		std::string	_password;
 		id_t		_port;
+		ServData	_data;
 };
