@@ -1,5 +1,14 @@
 #include "servData.hpp"
 
+ServData::~ServData()
+{
+}
+
+ServData::ServData() : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _opt(1), _port(8080)
+{
+	init();
+}
+
 void ServData::init()
 {
 	if (!(_server_fd = socket(AF_INET, SOCK_STREAM, 0)))
@@ -17,23 +26,11 @@ void ServData::init()
 		throw ServerException::receiving();
 }
 
+
 int	ServData::connect()
 {
 	_valread = read(_new_socket, _buffer, 1024);
 	std::cout << _buffer << std::endl;
 	send(_new_socket, _msg.c_str(), _msg.length(), 0);
 	std::cout << "Message sent!" << std::endl;
-}
-
-ServData::ServData() : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _opt(1), _port(8080)
-{
-	try
-	{
-		init();
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-		return ;
-	}
 }

@@ -2,12 +2,13 @@
 
 #include <exception>
 #include <string>
-#include <iostream>
-#include "../Utils/ServerException.hpp"
 #include <cstring>
+#include <stdlib.h>
+#include <iostream>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include "../Utils/ServerException.hpp"
 #include "servData.hpp"
 
 

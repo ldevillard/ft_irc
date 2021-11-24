@@ -1,4 +1,5 @@
 #include "Server/Ircserv.hpp"
+#include "Server/servData.hpp"
 
 int main(int ac, char **av)
 {
@@ -10,7 +11,6 @@ int main(int ac, char **av)
 			if (!isdigit(av[1][i]))
 				throw ServerException::non_numeric_argument();
 		Server serv("127.0.0.1", atoi(av[1]), av[2]);
-		serv.connect();
 	}
 	catch (std::exception const &e)
 	{
