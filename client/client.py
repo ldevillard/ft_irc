@@ -153,7 +153,7 @@ class InputForm:
         self._input.focus_set()
 
     def submit(self, chatpannel: ChatPannel):
-        chatpannel.addMessage(self._input.get()+"\n")
+        chatpannel.addMessage(self._input.get())
         self._input.delete(0, tk.END)
 
 
@@ -268,8 +268,15 @@ async def run(mainFrame: MainFrame):
 
 
 if __name__ == '__main__':
-    connectForm = ConnectFrame()
-    connectForm.loop()
-    mainFrame = MainFrame(connectForm._return)
+    server: Server
+    if sys.argv.__len__() == 6:
+        server = Server(sys.argv[1], sys.argv[2],
+                        sys.argv[3], sys.argv[4], sys.argv[5])
+    else:
+        connectForm = ConnectFrame()
+        connectForm.loop()
+        server = connectForm._return
+
+    mainFrame = MainFrame(server)
     asyncio.run(run(mainFrame))
     mainFrame.loop()
