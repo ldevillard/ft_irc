@@ -14,9 +14,10 @@
 class Server
 {
 	public:
-		Server(std::string host, int port, std::string password);
+		Server(std::string host, id_t port, std::string password);
 		ServData	_data;
 	private:
 		std::string _host;
 		id_t		_port;
 		std::string	_password;
+};
