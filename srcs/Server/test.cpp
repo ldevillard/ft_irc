@@ -3,6 +3,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <iostream>
 #define PORT 8080
 
 // int main(int argc, char const *argv[])
@@ -45,6 +46,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <cstring>
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
@@ -55,17 +57,17 @@ void func(int sockfd)
 	for (;;)
 	{
 		bzero(buff, sizeof(buff));
-		printf("Enter the string : ");
+		std::cout << "Enter the string : " << std::endl;
 		n = 0;
 		while ((buff[n++] = getchar()) != '\n')
 			;
 		send(sockfd, buff, sizeof(buff), 0);
 		bzero(buff, sizeof(buff));
 		recv(sockfd, buff, sizeof(buff), 0);
-		printf("From Server : %s", buff);
-		if (buff == "exit")
+		std::cout << "From Server : " << buff << std::endl;
+		if (!strcmp(buff, "exist"))
 		{
-			printf("Client Exit...\n");
+			std::cout << "Client Exit..." << std::endl;
 			break;
 		}
 	}
@@ -80,11 +82,11 @@ int main()
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1)
 	{
-		printf("socket creation failed...\n");
+		std::cout << "socket creation failed..." << std::endl;
 		exit(0);
 	}
 	else
-		printf("Socket successfully created..\n");
+		std::cout << "Socket successfully created.." << std::endl;
 	bzero(&servaddr, sizeof(servaddr));
 
 	// assign IP, PORT
@@ -95,11 +97,11 @@ int main()
 	// connect the client socket to server socket
 	if (connect(sockfd, (SA *)&servaddr, sizeof(servaddr)) != 0)
 	{
-		printf("connection with the server failed...\n");
+		std::cout << "connection with the server failed..." << std::endl;
 		exit(0);
 	}
 	else
-		printf("connected to the server..\n");
+		std::cout << "connected to the server.." << std::endl;
 
 	// function for chat
 	func(sockfd);
