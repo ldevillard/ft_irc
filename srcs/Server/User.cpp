@@ -12,12 +12,12 @@ int User::recoverData(char *buf)
 	if (check_info() == 2)
 	{
 		std::string nick(buf);
-		return (setNick(nick));
+		return (setNickFirstTime(nick));
 	}
 	else if (check_info() == 1)
 	{
 		std::string username(buf);
-		return (setUser(username));
+		return (setUserFirstTime(username));
 	}
 	return 0;
 }
@@ -31,7 +31,7 @@ int User::check_info()
 	return 0;
 }
 
-int User::setNick(std::string &nick)
+int User::setNickFirstTime(std::string &nick)
 {
 	int i = 0;
 
@@ -41,7 +41,6 @@ int User::setNick(std::string &nick)
 
 	while (i < (int)nick.size() - 2)
 	{
-		std::cout << (int)nick[i] << std::endl;
 		if (!isalnum(nick[i]))
 		{
 			_nick.clear();
@@ -53,7 +52,7 @@ int User::setNick(std::string &nick)
 	return 0;
 }
 
-int User::setUser(std::string &user)
+int User::setUserFirstTime(std::string &user)
 {
 	int i = user.size() - 1;
 	int j = 0;
