@@ -12,12 +12,14 @@ INCLUDE_PATH= ./srcs/Server
 HEADERS = \
 		$(INCLUDE_PATH)/servData.hpp \
 		$(INCLUDE_PATH)/Ircserv.hpp \
+		$(INCLUDE_PATH)/User.hpp \
 
 SRCS_PATH= ./srcs
 SRCS = \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/Server/Ircserv.cpp \
 		$(SRCS_PATH)/Server/servData.cpp \
+		$(SRCS_PATH)/Server/User.cpp\
 
 OBJS = $(SRCS:%.cpp=%.o)
 
