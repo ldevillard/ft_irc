@@ -10,9 +10,10 @@ int main(int ac, char **av)
 			if (!isdigit(av[1][i]))
 				throw ServerException::non_numeric_argument();
 		Server serv("127.0.0.1", atoi(av[1]), av[2]);
-		serv.connect();
-		serv.connect();
-		serv.connect();
+		while (true)
+		{
+			serv.connect();
+		}
 	}
 	catch (std::exception const &e)
 	{
