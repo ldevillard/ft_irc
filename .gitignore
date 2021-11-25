@@ -1,3 +1,5 @@
 *.o
 *.tmp
 ircserv
+.vscode
+.idea
