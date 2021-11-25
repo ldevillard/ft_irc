@@ -11,6 +11,12 @@
 #include "../Utils/ServerException.hpp"
 
 class	ServData {
+
+	public :
+		ServData();
+		~ServData();
+		int	connect();
+
 	private :
 		std::string	_msg;
 		struct	sockaddr_in _address;
@@ -22,8 +28,4 @@ class	ServData {
 		int	_valread;
 		int	_opt;
 		void	init();
-	public :
-		ServData();
-		~ServData();
-		int	connect();
 };

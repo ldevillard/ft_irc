@@ -15,7 +15,7 @@ void ServData::init()
 	// std::signal(SIGPIPE, SIG_IGN);
 	if (!(_server_fd = socket(AF_INET, SOCK_STREAM, 0)))
 		throw ServerException::socket_creation();
-	if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &_opt, sizeof(_opt)))
+	if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR, &_opt, sizeof(_opt))) // | SO_REUSEPORT
 		throw ServerException::socket_config();
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
