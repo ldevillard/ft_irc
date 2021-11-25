@@ -10,13 +10,11 @@ ServData::~ServData()
 
 ServData::ServData() : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _port(8080), _opt(1)
 {
-	init();
 }
 
 ServData::ServData(id_t port) : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _port(port), _opt(1)
 {
 	std::cout << "Port : " << _port << std::endl;
-	init();
 }
 
 void ServData::init()
@@ -37,14 +35,13 @@ void ServData::init()
 		throw ServerException::listening();
 	if ((_client_socket = accept(_server_fd, (struct sockaddr *)&_address, (socklen_t *)&_addlen)) < 0)
 		throw ServerException::receiving();
-	//if (!getsockname(_client_socket, (struct sockaddr *)&_address, (socklen_t *)&_addlen))
-	//	std::cout << _address.sin_addr.s_addr << std::endl;
 	std::cout << "Init done" << std::endl;
 	close (_server_fd);
 }
 
 int ServData::connect()
 {
+	init();
 	User user;
 	for (;;)
 	{
@@ -58,7 +55,7 @@ int ServData::connect()
 		if (_valread == 0)
 		{
 			std::cout << "Client disconnected!" << std::endl;
-			break;
+			break ;
 		}
 		if (_valread > 0)
 		{
@@ -82,7 +79,7 @@ int ServData::connect()
 
 		std::cout << "Nickname : " + user.getNick() + " and Username : " + user.getUser() << std::endl;
 	}
-	close(_client_socket);
+	close(_server_fd);
 	// while (_new_socket > 0)
 	// {
 	// 	bzero(_buffer, sizeof(_buffer));
