@@ -8,18 +8,19 @@ CFLAGS += -g
 # CFLAGS += -O3 -fno-builtin
 CFLAGS += -fsanitize=address
 
-INCLUDE_PATH= ./srcs/Server
+INCLUDE_PATH= ./includes
 HEADERS = \
-		$(INCLUDE_PATH)/servData.hpp \
 		$(INCLUDE_PATH)/Ircserv.hpp \
+		$(INCLUDE_PATH)/servData.hpp \
+		$(INCLUDE_PATH)/ServerException.hpp \
 		$(INCLUDE_PATH)/User.hpp \
 
-SRCS_PATH= ./srcs
+SRCS_PATH= ./src
 SRCS = \
+		$(SRCS_PATH)/Ircserv.cpp \
 		$(SRCS_PATH)/main.cpp \
-		$(SRCS_PATH)/Server/Ircserv.cpp \
-		$(SRCS_PATH)/Server/servData.cpp \
-		$(SRCS_PATH)/Server/User.cpp\
+		$(SRCS_PATH)/servData.cpp \
+		$(SRCS_PATH)/User.cpp\
 
 OBJS = $(SRCS:%.cpp=%.o)
 

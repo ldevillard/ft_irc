@@ -1,8 +1,8 @@
-#include "servData.hpp"
 #include <csignal>
 #include <netdb.h>
-#include "User.hpp"
 #include <string>
+#include "../includes/servData.hpp"
+#include "../includes/User.hpp"
 
 ServData::~ServData()
 {
@@ -36,7 +36,7 @@ void ServData::init()
 	if ((_client_socket = accept(_server_fd, (struct sockaddr *)&_address, (socklen_t *)&_addlen)) < 0)
 		throw ServerException::receiving();
 	std::cout << "Init done" << std::endl;
-	close (_server_fd);
+	close(_server_fd);
 }
 
 int ServData::connect()
@@ -55,18 +55,18 @@ int ServData::connect()
 		if (_valread == 0)
 		{
 			std::cout << "Client disconnected!" << std::endl;
-			break ;
+			break;
 		}
 		if (_valread > 0)
 		{
 			int i = user.recoverData(_buffer);
-			if (i)// Parsing data if needed
+			if (i) // Parsing data if needed
 			{
 				if (i == 1)
 					std::cout << "Connection refused: username invalid!" << std::endl;
 				else if (i == 2)
 					std::cout << "Connection refused: nickname invalid!" << std::endl;
-				
+
 				break;
 			}
 

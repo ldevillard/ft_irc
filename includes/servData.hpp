@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include "../Utils/ServerException.hpp"
+#include "./ServerException.hpp"
 
 class	ServData {
 

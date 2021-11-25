@@ -8,9 +8,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include "../Utils/ServerException.hpp"
-#include "servData.hpp"
 #include <vector>
+#include "./ServerException.hpp"
+#include "./servData.hpp"
 #include "User.hpp"
 
 class Server
