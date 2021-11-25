@@ -1,5 +1,6 @@
 #include "servData.hpp"
 #include <csignal>
+#include <netdb.h>
 
 ServData::~ServData()
 {
@@ -32,9 +33,12 @@ void ServData::init()
 		throw ServerException::binding();
 	if (listen(_server_fd, 3) < 0)
 		throw ServerException::listening();
-	if ((_new_socket = accept(_server_fd, (struct sockaddr *)&_address, (socklen_t *)&_addlen)) < 0)
+	if ((_client_socket = accept(_server_fd, (struct sockaddr *)&_address, (socklen_t *)&_addlen)) < 0)
 		throw ServerException::receiving();
+	if (!getsockname(_client_socket, (struct sockaddr *)&_address, (socklen_t *)&_addlen))
+		std::cout << _address.sin_addr.s_addr << std::endl;
 	std::cout << "Init done" << std::endl;
+	close (_server_fd);
 }
 
 int ServData::connect()
@@ -42,18 +46,27 @@ int ServData::connect()
 	for (;;)
 	{
 		bzero(_buffer, sizeof(_buffer));
-		_valread = recv(_new_socket, _buffer, sizeof(_buffer), 0);
+		_valread = recv(_client_socket, _buffer, sizeof(_buffer), 0);
+		if (_valread == -1)
+		{
+			std::cerr << "Error inr recv(). Quiting" << std::endl;
+			break;
+		}
+		if (_valread == 0)
+		{
+			std::cout << "Client disconnected!" << std::endl;
+			break;
+		}
 		if (_valread > 0)
 		{
 			std::cout << _buffer << std::endl;
 			bzero(_buffer, sizeof(_buffer));
-			send(_new_socket, _buffer, sizeof(_buffer), 0);
+			send(_client_socket, _buffer, _valread + 1, 0);
 			// send(_new_socket, _msg.c_str(), _msg.length(), 0);
 			// recv(_new_socket, _buffer, sizeof(_buffer), 0);
-			std::cout << "Message sent!" << std::endl;
 		}
 	}
-	close(_new_socket);
+	close(_client_socket);
 	// while (_new_socket > 0)
 	// {
 	// 	bzero(_buffer, sizeof(_buffer));
