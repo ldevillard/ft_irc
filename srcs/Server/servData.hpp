@@ -14,6 +14,7 @@ class	ServData {
 
 	public :
 		ServData();
+		ServData(id_t port);
 		~ServData();
 		int	connect();
 

@@ -10,12 +10,20 @@ ServData::ServData() : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _por
 	init();
 }
 
+ServData::ServData(id_t port) : _msg("Salut les gars\n"), _addlen(sizeof(_address)), _port(port), _opt(1)
+{
+	std::cout << "Port : " << _port << std::endl;
+	init();
+}
+
 void ServData::init()
 {
 	// std::signal(SIGPIPE, SIG_IGN);
 	if (!(_server_fd = socket(AF_INET, SOCK_STREAM, 0)))
 		throw ServerException::socket_creation();
-	if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR, &_opt, sizeof(_opt))) // | SO_REUSEPORT
+	if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR, &_opt, sizeof(_opt)))
+		throw ServerException::socket_config();
+	if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEPORT, &_opt, sizeof(_opt)))
 		throw ServerException::socket_config();
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
@@ -29,8 +37,7 @@ void ServData::init()
 	std::cout << "Init done" << std::endl;
 }
 
-
-int	ServData::connect()
+int ServData::connect()
 {
 	for (;;)
 	{

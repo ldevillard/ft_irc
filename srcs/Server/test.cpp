@@ -65,7 +65,7 @@ void func(int sockfd)
 		bzero(buff, sizeof(buff));
 		recv(sockfd, buff, sizeof(buff), 0);
 		std::cout << "From Server : " << buff << std::endl;
-		if (!strcmp(buff, "exist"))
+		if (!strcmp(buff, "exit"))
 		{
 			std::cout << "Client Exit..." << std::endl;
 			break;
