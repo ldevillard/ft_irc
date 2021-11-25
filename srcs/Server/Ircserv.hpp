@@ -10,6 +10,8 @@
 #include <sys/socket.h>
 #include "../Utils/ServerException.hpp"
 #include "servData.hpp"
+#include <vector>
+#include "User.hpp"
 
 class Server
 {
@@ -22,4 +24,6 @@ class Server
 		std::string _host;
 		id_t		_port;
 		std::string	_password;
+		std::vector<User> _users;
+
 };
