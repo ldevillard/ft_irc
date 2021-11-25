@@ -6,7 +6,7 @@ MAKE = make --no-print-directory
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 CFLAGS += -g
 # CFLAGS += -O3 -fno-builtin
-# CFLAGS += -fsanitize=address
+CFLAGS += -fsanitize=address
 
 INCLUDE_PATH= ./srcs/Server
 HEADERS = \
