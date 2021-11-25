@@ -11,6 +11,8 @@ int main(int ac, char **av)
 				throw ServerException::non_numeric_argument();
 		Server serv("127.0.0.1", atoi(av[1]), av[2]);
 		serv.connect();
+		serv.connect();
+		serv.connect();
 	}
 	catch (std::exception const &e)
 	{
