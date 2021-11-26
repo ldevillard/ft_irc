@@ -80,17 +80,17 @@ int ServData::connect()
 		bzero(_buffer, SOCKET_BUFFER_SIZE);
 		strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
 		for (size_t i = 0; i < SOCKET_BUFFER_SIZE && userSave[i]; i++)
-			_buffer[i] = userSave[i];
+		{
+			_buffer[i] = userSave[0];
+			userSave.erase(0, 1);
+		}
 		if (_buffer[0] == '\n' && !_buffer[1])
 			_buffer[0] = 0;
-		userSave.erase();
 		actualLine += std::string(_buffer);
 		while (read && !std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
 		{
 			bzero(_buffer, SOCKET_BUFFER_SIZE);
 			_valread = recv(_client_socket, _buffer, SOCKET_BUFFER_SIZE, 0);
-			if (_buffer[0] == '\n' && !_buffer[1])
-				_buffer[0] = 0;
 			if (_valread == -1)
 			{
 				std::cerr << "Error inr recv(). Quiting" << std::endl;
@@ -123,7 +123,6 @@ int ServData::connect()
 			else
 				userSave.erase();
 		}
-
 		std::cout << "* line = " << actualLine << std::endl;
 
 		// bzero(_buffer, sizeof(_buffer));

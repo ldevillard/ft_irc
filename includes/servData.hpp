@@ -10,7 +10,7 @@
 #include <sys/socket.h>
 #include "./ServerException.hpp"
 
-#define SOCKET_BUFFER_SIZE 10
+#define SOCKET_BUFFER_SIZE 100
 
 class ServData
 {
