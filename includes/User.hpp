@@ -7,7 +7,7 @@ class User
 	public:
 		User();
 
-		int recoverData(char *buf);
+		int recoverData(std::string line);
 
 		const std::string &getUser() const { return _user; }
 		const std::string &getNick() const { return _nick; }

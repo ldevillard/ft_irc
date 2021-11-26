@@ -1,6 +1,8 @@
 #include <csignal>
 #include <netdb.h>
 #include <string>
+#include <cstring>
+#include <map>
 #include "../includes/servData.hpp"
 #include "../includes/User.hpp"
 
@@ -39,40 +41,116 @@ void ServData::init()
 	close(_server_fd);
 }
 
+void printBuffer(char buffer[SOCKET_BUFFER_SIZE])
+{
+	for (size_t i = 0; i < SOCKET_BUFFER_SIZE; i++)
+	{
+		if ((int)buffer[i] == 13)
+			std::cout << "[" << (int)buffer[i] << "="
+					  << "\\r"
+					  << "]";
+		else if ((int)buffer[i] == 10)
+
+			std::cout << "[" << (int)buffer[i] << "="
+					  << "\\n"
+					  << "]";
+		else
+			std::cout << "[" << (int)buffer[i] << "=" << buffer[i] << "]";
+	}
+	std::cout << std::endl
+			  << std::endl;
+}
+
 int ServData::connect()
 {
 	init();
 	User user;
+	std::map<int, std::string> save;
+
+	int port = 1; // user socket port
+
+	save.insert(std::make_pair<int, std::string>(port, ""));
 	for (;;)
 	{
-		bzero(_buffer, sizeof(_buffer));
-		_valread = recv(_client_socket, _buffer, sizeof(_buffer), 0);
-		if (_valread == -1)
+		std::string actualLine;
+		std::string &userSave = save.at(port);
+		_valread = 1;
+		bzero(_buffer, SOCKET_BUFFER_SIZE);
+		strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
+		for (size_t i = 0; i < SOCKET_BUFFER_SIZE && userSave[i]; i++)
+			_buffer[i] = userSave[i];
+		if (_buffer[0] == '\n' && !_buffer[1])
+			_buffer[0] = 0;
+		userSave.erase();
+		actualLine += std::string(_buffer);
+		while (!std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
 		{
-			std::cerr << "Error inr recv(). Quiting" << std::endl;
-			break;
-		}
-		if (_valread == 0)
-		{
-			std::cout << "Client disconnected!" << std::endl;
-			break;
-		}
-		if (_valread > 0)
-		{
-			int i = user.recoverData(_buffer);
-			if (i) // Parsing data if needed
+			bzero(_buffer, SOCKET_BUFFER_SIZE);
+			_valread = recv(_client_socket, _buffer, SOCKET_BUFFER_SIZE, 0);
+			if (_buffer[0] == '\n' && !_buffer[1])
+				_buffer[0] = 0;
+			if (_valread == -1)
 			{
-				if (i == 1)
-					std::cout << "Connection refused: username invalid!" << std::endl;
-				else if (i == 2)
-					std::cout << "Connection refused: nickname invalid!" << std::endl;
+				std::cerr << "Error inr recv(). Quiting" << std::endl;
 				break;
 			}
-
-			std::cout << _buffer;
-			bzero(_buffer, sizeof(_buffer));
-			send(_client_socket, _buffer, _valread + 1, 0);
+			else if (_valread == 0)
+			{
+				std::cout << "Client disconnected!" << std::endl;
+				break;
+			}
+			actualLine += std::string(_buffer);
 		}
+		{
+			while (actualLine.find("\r") != std::string::npos)
+				actualLine.replace(actualLine.find("\r"), 1, "\n");
+			while (actualLine.find("\n\n") != std::string::npos)
+				actualLine.replace(actualLine.find("\n\n"), 2, "\n");
+			std::size_t pos = actualLine.find("\n");
+			if (pos != std::string::npos)
+			{
+				userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
+				actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
+			}
+			else
+				userSave.erase();
+		}
+
+		std::cout << "* line = " << actualLine << std::endl;
+
+		// bzero(_buffer, sizeof(_buffer));
+		// _valread = recv(_client_socket, _buffer, sizeof(_buffer), 0);
+		// if (_valread == -1)
+		// {
+		// 	std::cerr << "Error inr recv(). Quiting" << std::endl;
+		// 	break;
+		// }
+		// if (_valread == 0)
+		// {
+		// 	std::cout << "Client disconnected!" << std::endl;
+		// 	break;
+		// }
+		// if (_valread > 0)
+		// {
+		// 	if (std::strchr(_buffer, '\n'))
+		// 	{
+		// 	}
+
+		// 	std::cout << "* buffer [" << _buffer << "]" << std::endl;
+
+		int i = user.recoverData(actualLine);
+		if (i) // Parsing data if needed
+		{
+			if (i == 1)
+				std::cout << "Connection refused: username invalid!" << std::endl;
+			else if (i == 2)
+				std::cout << "Connection refused: nickname invalid!" << std::endl;
+			break;
+		}
+
+		// 	bzero(_buffer, sizeof(_buffer));
+		send(_client_socket, actualLine.c_str(), actualLine.length(), 0);
+		// }
 
 		std::cout << "Nickname : " + user.getNick() + " and Username : " + user.getUser() << std::endl;
 	}

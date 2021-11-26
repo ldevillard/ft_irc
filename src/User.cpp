@@ -7,17 +7,15 @@ User::User()
 	_nick.clear();
 }
 
-int User::recoverData(char *buf)
+int User::recoverData(std::string line)
 {
 	if (check_info() == 2)
 	{
-		std::string nick(buf);
-		return (setNickFirstTime(nick));
+		return (setNickFirstTime(line));
 	}
 	else if (check_info() == 1)
 	{
-		std::string username(buf);
-		return (setUserFirstTime(username));
+		return (setUserFirstTime(line));
 	}
 	return 0;
 }
