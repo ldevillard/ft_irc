@@ -74,6 +74,8 @@ int ServData::connect()
 	{
 		std::string actualLine;
 		std::string &userSave = save.at(port);
+		bool read = true;
+
 		_valread = 1;
 		bzero(_buffer, SOCKET_BUFFER_SIZE);
 		strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
@@ -83,7 +85,7 @@ int ServData::connect()
 			_buffer[0] = 0;
 		userSave.erase();
 		actualLine += std::string(_buffer);
-		while (!std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
+		while (read && !std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
 		{
 			bzero(_buffer, SOCKET_BUFFER_SIZE);
 			_valread = recv(_client_socket, _buffer, SOCKET_BUFFER_SIZE, 0);
@@ -92,15 +94,21 @@ int ServData::connect()
 			if (_valread == -1)
 			{
 				std::cerr << "Error inr recv(). Quiting" << std::endl;
+				userSave.erase();
+				read = false;
 				break;
 			}
 			else if (_valread == 0)
 			{
 				std::cout << "Client disconnected!" << std::endl;
+				userSave.erase();
+				read = false;
 				break;
 			}
 			actualLine += std::string(_buffer);
 		}
+		if (!read)
+			break;
 		{
 			while (actualLine.find("\r") != std::string::npos)
 				actualLine.replace(actualLine.find("\r"), 1, "\n");
@@ -138,15 +146,15 @@ int ServData::connect()
 
 		// 	std::cout << "* buffer [" << _buffer << "]" << std::endl;
 
-		int i = user.recoverData(actualLine);
-		if (i) // Parsing data if needed
-		{
-			if (i == 1)
-				std::cout << "Connection refused: username invalid!" << std::endl;
-			else if (i == 2)
-				std::cout << "Connection refused: nickname invalid!" << std::endl;
-			break;
-		}
+		// int i = user.recoverData(actualLine);
+		// if (i) // Parsing data if needed
+		// {
+		// 	if (i == 1)
+		// 		std::cout << "Connection refused: username invalid!" << std::endl;
+		// 	else if (i == 2)
+		// 		std::cout << "Connection refused: nickname invalid!" << std::endl;
+		// 	break;
+		// }
 
 		// 	bzero(_buffer, sizeof(_buffer));
 		send(_client_socket, actualLine.c_str(), actualLine.length(), 0);
