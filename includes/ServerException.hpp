@@ -60,4 +60,20 @@ class ServerException
 				return "receiving failed!";
 			}
 		};
+
+		class select : public std::exception
+		{
+			const char * what () const throw ()
+			{
+				return "select error!";
+			}
+		};
+
+		class send : public std::exception
+		{
+			const char * what () const throw ()
+			{
+				return "send error!";
+			}
+		};
 };
