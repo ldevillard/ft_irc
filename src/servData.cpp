@@ -79,11 +79,7 @@ int ServData::connect()
 		_valread = 1;
 		bzero(_buffer, SOCKET_BUFFER_SIZE);
 		strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
-		for (size_t i = 0; i < SOCKET_BUFFER_SIZE && userSave[i]; i++)
-		{
-			_buffer[i] = userSave[0];
-			userSave.erase(0, 1);
-		}
+		userSave.erase();
 		if (_buffer[0] == '\n' && !_buffer[1])
 			_buffer[0] = 0;
 		actualLine += std::string(_buffer);
@@ -105,6 +101,9 @@ int ServData::connect()
 				read = false;
 				break;
 			}
+			if ((_buffer[0] == '\n' && !_buffer[1] && actualLine.empty()) ||
+				(_buffer[0] == '\r' && _buffer[1] == '\n' && !_buffer[2] && actualLine.empty()))
+				_buffer[0] = 0;
 			actualLine += std::string(_buffer);
 		}
 		if (!read)
@@ -159,7 +158,7 @@ int ServData::connect()
 		send(_client_socket, actualLine.c_str(), actualLine.length(), 0);
 		// }
 
-		std::cout << "Nickname : " + user.getNick() + " and Username : " + user.getUser() << std::endl;
+		// std::cout << "Nickname : " + user.getNick() + " and Username : " + user.getUser() << std::endl;
 	}
 	close(_client_socket);
 	return (0);
