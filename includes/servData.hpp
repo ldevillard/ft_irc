@@ -32,20 +32,25 @@ public:
 
 private:
 	ServData();
+
 	struct sockaddr_in _address;
 	char _buffer[SOCKET_BUFFER_SIZE];
 	std::string _msg;
-	int _port;
-	int _valread;
-	int _opt;
-	int _max_clients;
+	size_t _addrlen;
+	fd_set _read_fds;
 	int _client_sockets[5];
-	int _sd;
-	int _max_sd;
 	int _activity;
 	int _master_socket;
-	size_t _addrlen;
+	int _max_clients;
+	int _max_sd;
 	int _new_socket;
-	fd_set _read_fds;
+	int _opt;
+	int _port;
+	int _sd;
+	int _valread;
+
 	void	setup();
+	void	onInteraction();
+	void	onConnection();
+	void	setupFD();
 };

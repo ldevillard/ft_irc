@@ -8,12 +8,12 @@ ServData::ServData()
 {
 }
 
-ServData::ServData(id_t port) : _msg("IRC better than ever before!\n"), _port(port), _opt(1), _max_clients(5),  _addrlen(sizeof(_address))
+ServData::ServData(id_t port) : _msg("IRC better than ever before!\n"), _port(port), _opt(1), _max_clients(5), _addrlen(sizeof(_address))
 {
 	std::cout << "Port : " << _port << std::endl;
 }
 
-void	ServData::setup()
+void ServData::setup()
 {
 	// Create a master socket
 	std::signal(SIGPIPE, SIG_IGN);
@@ -60,28 +60,122 @@ void printBuffer(char buffer[SOCKET_BUFFER_SIZE])
 			  << std::endl;
 }
 
+void ServData::onInteraction()
+{
+	for (int i = 0; i < _max_clients; i++)
+	{
+		_sd = _client_sockets[i];
+		if (FD_ISSET(_sd, &_read_fds))
+		{
+			std::string userSave = "";
+			bool goin = true;
+
+			while (goin || !userSave.empty())
+			{
+				bool read = true;
+				std::string actualLine;
+				goin = false;
+				_valread = 1;
+				bzero(_buffer, SOCKET_BUFFER_SIZE);
+				strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
+				userSave.erase();
+				actualLine += std::string(_buffer);
+				while (read && !std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
+				{
+					bzero(_buffer, SOCKET_BUFFER_SIZE);
+					_valread = recv(_sd, _buffer, SOCKET_BUFFER_SIZE, 0);
+					if (_buffer[0] == '\n' && _buffer[1] == 0)
+						_buffer[0] = 0;
+					if (_valread == -1)
+					{
+						std::cerr << "Error inr recv(). Quiting" << std::endl;
+						userSave.erase();
+						read = false;
+						break;
+					}
+					else if (_valread == 0)
+					{
+						std::cout << "Client disconnected!" << std::endl;
+						userSave.erase();
+						read = false;
+						close(_sd);
+						_client_sockets[i] = 0;
+						break;
+					}
+					if ((_buffer[0] == '\n' && !_buffer[1] && actualLine.empty()) ||
+						(_buffer[0] == '\r' && _buffer[1] == '\n' && !_buffer[2] && actualLine.empty()))
+						_buffer[0] = 0;
+					actualLine += std::string(_buffer);
+				}
+				if (!read)
+					break;
+				{
+					while (actualLine.find("\r") != std::string::npos)
+						actualLine.replace(actualLine.find("\r"), 1, "\n");
+					while (actualLine.find("\n\n") != std::string::npos)
+						actualLine.replace(actualLine.find("\n\n"), 2, "\n");
+					std::size_t pos = actualLine.find("\n");
+					if (pos != std::string::npos)
+					{
+						userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
+						actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
+					}
+					else
+						userSave.erase();
+				}
+				send(_sd, actualLine.c_str(), actualLine.length(), 0);
+			}
+		}
+	}
+}
+
+void ServData::onConnection()
+{
+	if (FD_ISSET(_master_socket, &_read_fds))
+	{
+		if ((_new_socket = accept(_master_socket, (struct sockaddr *)&_address, (socklen_t *)&_addrlen)) < 0)
+			throw ServerException::receiving();
+		// gives infos that we'll use in send and recv
+		std::cout << "New connection : socket fd [" << _new_socket << "] ip [" << inet_ntoa(_address.sin_addr) << "] port [" << ntohs(_address.sin_port) << "]" << std::endl;
+		// add new socket to sockets array
+		for (int i = 0; i < _max_clients; i++)
+		{
+			if (!_client_sockets[i])
+			{
+				_client_sockets[i] = _new_socket;
+				std::cout << "Adding to sockets array as : " << i << std::endl;
+				break;
+			}
+		}
+	}
+}
+
+void ServData::setupFD()
+{
+	// reset the socket set
+	FD_ZERO(&_read_fds);
+	// add master to the set
+	FD_SET(_master_socket, &_read_fds);
+	_max_sd = _master_socket;
+	// add child sockets to set
+	for (int i = 0; i < _max_clients; i++)
+	{
+		_sd = _client_sockets[i];
+		// if valid socket you can add it to the read list
+		if (_sd > 0)
+			FD_SET(_sd, &_read_fds);
+		// highest fd number, needed for poll()
+		if (_sd > _max_sd)
+			_max_sd = _sd;
+	}
+}
+
 int ServData::connect()
 {
-	int i;
 	setup();
 	while (true)
 	{
-		// reset the socket set
-		FD_ZERO(&_read_fds);
-		// add master to the set
-		FD_SET(_master_socket, &_read_fds);
-		_max_sd = _master_socket;
-		// add child sockets to set
-		for (i = 0; i < _max_clients; i++)
-		{
-			_sd = _client_sockets[i];
-			// if valid socket you can add it to the read list
-			if (_sd > 0)
-				FD_SET(_sd, &_read_fds);
-			// highest fd number, needed for poll()
-			if (_sd > _max_sd)
-				_max_sd = _sd;
-		}
+		setupFD();
 		// Wait for an activity on one of the socket
 		// Timeout set to null so infinite waiting
 		// migh change later to poll
@@ -90,89 +184,9 @@ int ServData::connect()
 			throw ServerException::select();
 		// If something happens on the master socket
 		// then it's an incoming connection
-		if (FD_ISSET(_master_socket, &_read_fds))
-		{
-			if ((_new_socket = accept(_master_socket, (struct sockaddr *)&_address, (socklen_t *)&_addrlen)) < 0)
-				throw ServerException::receiving();
-			// gives infos that we'll use in send and recv
-			std::cout << "New connection : socket fd [" << _new_socket << "] ip [" << inet_ntoa(_address.sin_addr) << "] port [" << ntohs(_address.sin_port) << "]" << std::endl;
-			// add new socket to sockets array
-			for (i = 0; i < _max_clients; i++)
-			{
-				if (!_client_sockets[i])
-				{
-					_client_sockets[i] = _new_socket;
-					std::cout << "Adding to sockets array as : " << i << std::endl;
-					break;
-				}
-			}
-		}
+		onConnection();
 		// Else it's some IO interaction on another socket
-		for (i = 0; i < _max_clients; i++)
-		{
-			_sd = _client_sockets[i];
-			if (FD_ISSET(_sd, &_read_fds))
-			{
-				std::string userSave = "";
-				bool goin = true;
-
-				while (goin || !userSave.empty())
-				{
-					bool read = true;
-					std::string actualLine;
-					goin = false;
-					_valread = 1;
-					bzero(_buffer, SOCKET_BUFFER_SIZE);
-					strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
-					userSave.erase();
-					actualLine += std::string(_buffer);
-					while (read && !std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
-					{
-						bzero(_buffer, SOCKET_BUFFER_SIZE);
-						_valread = recv(_sd, _buffer, SOCKET_BUFFER_SIZE, 0);
-						if (_buffer[0] == '\n' && _buffer[1] == 0)
-							_buffer[0] = 0;
-						if (_valread == -1)
-						{
-							std::cerr << "Error inr recv(). Quiting" << std::endl;
-							userSave.erase();
-							read = false;
-							break;
-						}
-						else if (_valread == 0)
-						{
-							std::cout << "Client disconnected!" << std::endl;
-							userSave.erase();
-							read = false;
-							close(_sd);
-							_client_sockets[i] = 0;
-							break;
-						}
-						if ((_buffer[0] == '\n' && !_buffer[1] && actualLine.empty()) ||
-							(_buffer[0] == '\r' && _buffer[1] == '\n' && !_buffer[2] && actualLine.empty()))
-							_buffer[0] = 0;
-						actualLine += std::string(_buffer);
-					}
-					if (!read)
-						break;
-					{
-						while (actualLine.find("\r") != std::string::npos)
-							actualLine.replace(actualLine.find("\r"), 1, "\n");
-						while (actualLine.find("\n\n") != std::string::npos)
-							actualLine.replace(actualLine.find("\n\n"), 2, "\n");
-						std::size_t pos = actualLine.find("\n");
-						if (pos != std::string::npos)
-						{
-							userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
-							actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
-						}
-						else
-							userSave.erase();
-					}
-					send(_sd, actualLine.c_str(), actualLine.length(), 0);
-				}
-			}
-		}
+		onInteraction();
 	}
 	return (0);
 }
