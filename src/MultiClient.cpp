@@ -22,8 +22,8 @@ int main(void)
 	int master_socket;
 	int addrlen;
 	int new_socket;
-	int client_socket[30]; // depends on max clients
-	int max_clients = 30;
+	int client_socket[5]; // depends on max clients
+	int max_clients = 5;
 	int activity;
 	int i;
 	int valread;
@@ -93,10 +93,6 @@ int main(void)
 				throw ServerException::receiving();
 			// gives infos that we'll use in send and recv
 			std::cout << "New connection : socket fd [" << new_socket << "] ip [" << inet_ntoa(address.sin_addr) << "] port [" << ntohs(address.sin_port) << "]" << std::endl;
-			// sends a "greeting" message
-			if (send(new_socket, msg.c_str(), msg.length(), 0) != (ssize_t)msg.length())
-				throw ServerException::send();
-			std::cout << "Welcome message sent" << std::endl;
 			// add new socket to sockets array
 			for (i = 0; i < max_clients; i++)
 			{
@@ -114,64 +110,64 @@ int main(void)
 			sd = client_socket[i];
 			if (FD_ISSET(sd, &read_fds))
 			{
-				std::map<int, std::string> save;
-				std::string actualLine;
-				save.insert(std::make_pair<int, std::string>(8080, ""));
-				std::string &userSave = save.at(8080);
-				bool read = true;
+				std::string userSave = "";
+				bool goin = true;
 
-				valread = 1;
-				bzero(buffer, SOCKET_BUFFER_SIZE);
-				strncpy(buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
-				for (size_t i = 0; i < SOCKET_BUFFER_SIZE && userSave[i]; i++)
+				while (goin || !userSave.empty())
 				{
-					buffer[i] = userSave[0];
-					userSave.erase(0, 1);
-				}
-				actualLine += std::string(buffer);
-				while (read && !std::strchr(buffer, '\n') && !std::strchr(buffer, '\r'))
-				{
+					bool read = true;
+					std::string actualLine;
+					goin = false;
+					valread = 1;
 					bzero(buffer, SOCKET_BUFFER_SIZE);
-					valread = recv(sd, buffer, SOCKET_BUFFER_SIZE, 0);
-					if (buffer[0] == '\n' && buffer[1] == 0)
-						buffer[0] = 0;
-					std::cout << valread << std::endl;
-					if (valread == -1)
-					{
-						std::cerr << "Error inr recv(). Quiting" << std::endl;
-						userSave.erase();
-						read = false;
-						break;
-					}
-					else if (valread == 0)
-					{
-						std::cout << "Client disconnected!" << std::endl;
-						userSave.erase();
-						read = false;
-						close (sd);
-						client_socket[i] = 0;
-						break;
-					}
+					strncpy(buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
+					userSave.erase();
 					actualLine += std::string(buffer);
-				}
-				if (!read)
-					break;
-				{
-					while (actualLine.find("\r") != std::string::npos)
-						actualLine.replace(actualLine.find("\r"), 1, "\n");
-					while (actualLine.find("\n\n") != std::string::npos)
-						actualLine.replace(actualLine.find("\n\n"), 2, "\n");
-					std::size_t pos = actualLine.find("\n");
-					if (pos != std::string::npos)
+					while (read && !std::strchr(buffer, '\n') && !std::strchr(buffer, '\r'))
 					{
-						userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
-						actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
+						bzero(buffer, SOCKET_BUFFER_SIZE);
+						valread = recv(sd, buffer, SOCKET_BUFFER_SIZE, 0);
+						if (buffer[0] == '\n' && buffer[1] == 0)
+							buffer[0] = 0;
+						if (valread == -1)
+						{
+							std::cerr << "Error inr recv(). Quiting" << std::endl;
+							userSave.erase();
+							read = false;
+							break;
+						}
+						else if (valread == 0)
+						{
+							std::cout << "Client disconnected!" << std::endl;
+							userSave.erase();
+							read = false;
+							close(sd);
+							client_socket[i] = 0;
+							break;
+						}
+						if ((buffer[0] == '\n' && !buffer[1] && actualLine.empty()) ||
+							(buffer[0] == '\r' && buffer[1] == '\n' && !buffer[2] && actualLine.empty()))
+							buffer[0] = 0;
+						actualLine += std::string(buffer);
 					}
-					else
-						userSave.erase();
+					if (!read)
+						break;
+					{
+						while (actualLine.find("\r") != std::string::npos)
+							actualLine.replace(actualLine.find("\r"), 1, "\n");
+						while (actualLine.find("\n\n") != std::string::npos)
+							actualLine.replace(actualLine.find("\n\n"), 2, "\n");
+						std::size_t pos = actualLine.find("\n");
+						if (pos != std::string::npos)
+						{
+							userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
+							actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
+						}
+						else
+							userSave.erase();
+					}
+					send(sd, actualLine.c_str(), actualLine.length(), 0);
 				}
-				std::cout << "* line = " << actualLine << std::endl;
-				send(sd, actualLine.c_str(), actualLine.length(), 0);
 			}
 		}
 	}
