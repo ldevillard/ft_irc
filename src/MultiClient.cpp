@@ -77,6 +77,7 @@ int main(void)
 
 		// Wait for an activity on one of the socket
 		// Timeout set to null so infinite waiting
+		// migh change later to poll
 		activity = select(max_sd + 1, &read_fds, NULL, NULL, NULL);
 		if ((activity < 0) && (errno != EINTR))
 			std::cout << "Select error!" << std::endl;
