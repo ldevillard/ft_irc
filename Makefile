@@ -44,7 +44,4 @@ re: fclean
 run: all
 	./ircserv 8080 bite
 
-multi: 
-	$(CC) $(CFLAGS) -o multi-server $(SRCS_PATH)/MultiClient.cpp
-
 .PHONY: all clean fclean re
