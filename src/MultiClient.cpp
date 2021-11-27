@@ -1,40 +1,44 @@
-#include <stdio.h> 
-#include <string.h>   //strlen 
-#include <stdlib.h> 
-#include <errno.h> 
-#include <unistd.h>   //close 
-#include <arpa/inet.h>    //close 
-#include <sys/types.h> 
-#include <sys/socket.h> 
-#include <netinet/in.h> 
+#include <stdio.h>
+#include <string.h> //strlen
+#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>	   //close
+#include <arpa/inet.h> //close
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <csignal>
+#include <map>
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
-#include <poll.h> // Poll() (yeah no shit)
+#include <poll.h>	  // Poll() (yeah no shit)
 #include <iostream>
 #include <cstring>
 #include "../includes/ServerException.hpp"
+#define SOCKET_BUFFER_SIZE 2048
 
 int main(void)
 {
-	int	opt = true;
-	int	master_socket;
-	int	addrlen;
-	int	new_socket;
-	int	client_socket[30]; // depends on max clients
-	int	max_clients = 30;
-	int	activity;
-	int	i;
-	int	valread;
-	int	sd;
-	int	max_sd;
-	struct	sockaddr_in address;
+	int opt = true;
+	int master_socket;
+	int addrlen;
+	int new_socket;
+	int client_socket[30]; // depends on max clients
+	int max_clients = 30;
+	int activity;
+	int i;
+	int valread;
+	int sd;
+	int max_sd;
+	struct sockaddr_in address;
 
-	char buffer[1024];
+	char buffer[SOCKET_BUFFER_SIZE];
 
 	fd_set read_fds;
 
-	std::string	msg = "Yo les potes\n";
+	std::string msg = "Yo les potes\n";
 
 	// Create a master socket
+	std::signal(SIGPIPE, SIG_IGN);
 	for (int i = 0; i < max_clients; i++)
 		client_socket[i] = 0;
 	if ((master_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -81,7 +85,7 @@ int main(void)
 		activity = select(max_sd + 1, &read_fds, NULL, NULL, NULL);
 		if ((activity < 0) && (errno != EINTR))
 			std::cout << "Select error!" << std::endl;
-		
+
 		// If something happens on the master socket
 		// then it's an incoming connection
 		if (FD_ISSET(master_socket, &read_fds))
@@ -90,18 +94,18 @@ int main(void)
 				throw ServerException::receiving();
 			// gives infos that we'll use in send and recv
 			std::cout << "New connection : socket fd [" << new_socket << "] ip [" << inet_ntoa(address.sin_addr) << "] port [" << ntohs(address.sin_port) << "]" << std::endl;
-			//sends a "greeting" message
+			// sends a "greeting" message
 			if (send(new_socket, msg.c_str(), msg.length(), 0) != msg.length())
 				std::cout << "Error during send!" << std::endl;
 			std::cout << "Welcome message sent" << std::endl;
-			//add new socket to sockets array
+			// add new socket to sockets array
 			for (i = 0; i < max_clients; i++)
 			{
 				if (!client_socket[i])
 				{
 					client_socket[i] = new_socket;
 					std::cout << "Adding to sockets array as : " << i << std::endl;
-					break ;
+					break;
 				}
 			}
 		}
@@ -111,21 +115,81 @@ int main(void)
 			sd = client_socket[i];
 			if (FD_ISSET(sd, &read_fds))
 			{
-				// check if it's a disconnection and read the inc msg
-				if ((valread = read(sd, buffer, 1024)) == 0)
+				// // check if it's a disconnection and read the inc msg
+				// valread = recv(sd, buffer, 1024, 0);
+				// std::cout << "Valread : " << valread << std::endl;
+				// if (valread == 0)
+				// {
+				// 	// We might be able to catch some info on the client disconnected if needed
+				// 	std::cout << "Client disconnected!" << std::endl;
+				// 	// close the socked and mark it available
+				// 	close (sd);
+				// 	client_socket[i] = 0;
+				// }
+				// // Echoes the inc msg
+				// else
+				// {
+				// 	buffer[valread] = '\0';
+				// 	send(sd, buffer, strlen(buffer), 0);
+				// }
+				std::map<int, std::string> save;
+				std::string actualLine;
+				save.insert(std::make_pair<int, std::string>(8080, ""));
+				std::string &userSave = save.at(8080);
+				bool read = true;
+
+				valread = 1;
+				bzero(buffer, SOCKET_BUFFER_SIZE);
+				strncpy(buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
+				for (size_t i = 0; i < SOCKET_BUFFER_SIZE && userSave[i]; i++)
 				{
-					// We might be able to catch some info on the client disconnected if needed
-					std::cout << "Client disconnected!" << std::endl;
-					// close the socked and mark it available
-					close (sd);
-					client_socket[i] = 0;
+					buffer[i] = userSave[0];
+					userSave.erase(0, 1);
 				}
-				// Echoes the inc msg
-				else
+				actualLine += std::string(buffer);
+				while (read && !std::strchr(buffer, '\n') && !std::strchr(buffer, '\r'))
 				{
-					buffer[valread] = '\0';
-					send(sd, buffer, strlen(buffer), 0);
+					bzero(buffer, SOCKET_BUFFER_SIZE);
+					valread = recv(sd, buffer, SOCKET_BUFFER_SIZE, 0);
+					if (buffer[0] == '\n' && buffer[1] == 0)
+						buffer[0] = 0;
+					std::cout << valread << std::endl;
+					if (valread == -1)
+					{
+						std::cerr << "Error inr recv(). Quiting" << std::endl;
+						userSave.erase();
+						read = false;
+						break;
+					}
+					else if (valread == 0)
+					{
+						std::cout << "Client disconnected!" << std::endl;
+						userSave.erase();
+						read = false;
+						close (sd);
+						client_socket[i] = 0;
+						break;
+					}
+					actualLine += std::string(buffer);
 				}
+				if (!read)
+					break;
+				{
+					while (actualLine.find("\r") != std::string::npos)
+						actualLine.replace(actualLine.find("\r"), 1, "\n");
+					while (actualLine.find("\n\n") != std::string::npos)
+						actualLine.replace(actualLine.find("\n\n"), 2, "\n");
+					std::size_t pos = actualLine.find("\n");
+					if (pos != std::string::npos)
+					{
+						userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
+						actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
+					}
+					else
+						userSave.erase();
+				}
+				std::cout << "* line = " << actualLine << std::endl;
+				send(sd, actualLine.c_str(), actualLine.length(), 0);
 			}
 		}
 	}

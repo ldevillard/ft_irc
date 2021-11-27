@@ -124,40 +124,7 @@ int ServData::connect()
 				userSave.erase();
 		}
 		std::cout << "* line = " << actualLine << std::endl;
-
-		// bzero(_buffer, sizeof(_buffer));
-		// _valread = recv(_client_socket, _buffer, sizeof(_buffer), 0);
-		// if (_valread == -1)
-		// {
-		// 	std::cerr << "Error inr recv(). Quiting" << std::endl;
-		// 	break;
-		// }
-		// if (_valread == 0)
-		// {
-		// 	std::cout << "Client disconnected!" << std::endl;
-		// 	break;
-		// }
-		// if (_valread > 0)
-		// {
-		// 	if (std::strchr(_buffer, '\n'))
-		// 	{
-		// 	}
-
-		// 	std::cout << "* buffer [" << _buffer << "]" << std::endl;
-
-		// int i = user.recoverData(actualLine);
-		// if (i) // Parsing data if needed
-		// {
-		// 	if (i == 1)
-		// 		std::cout << "Connection refused: username invalid!" << std::endl;
-		// 	else if (i == 2)
-		// 		std::cout << "Connection refused: nickname invalid!" << std::endl;
-		// 	break;
-		// }
-
-		// 	bzero(_buffer, sizeof(_buffer));
 		send(_client_socket, actualLine.c_str(), actualLine.length(), 0);
-		// }
 
 		std::cout << "Nickname : " + user.getNick() + " and Username : " + user.getUser() << std::endl;
 	}
