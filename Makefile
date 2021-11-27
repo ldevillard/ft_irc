@@ -41,4 +41,7 @@ fclean: clean
 re: fclean
 		$(MAKE) all
 
+run: all
+	./ircserv 8080 bite
+
 .PHONY: all clean fclean re
