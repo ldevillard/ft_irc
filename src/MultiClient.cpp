@@ -84,8 +84,7 @@ int main(void)
 		// migh change later to poll
 		activity = select(max_sd + 1, &read_fds, NULL, NULL, NULL);
 		if ((activity < 0) && (errno != EINTR))
-			std::cout << "Select error!" << std::endl;
-
+			throw ServerException::select();
 		// If something happens on the master socket
 		// then it's an incoming connection
 		if (FD_ISSET(master_socket, &read_fds))
@@ -95,8 +94,8 @@ int main(void)
 			// gives infos that we'll use in send and recv
 			std::cout << "New connection : socket fd [" << new_socket << "] ip [" << inet_ntoa(address.sin_addr) << "] port [" << ntohs(address.sin_port) << "]" << std::endl;
 			// sends a "greeting" message
-			if (send(new_socket, msg.c_str(), msg.length(), 0) != msg.length())
-				std::cout << "Error during send!" << std::endl;
+			if (send(new_socket, msg.c_str(), msg.length(), 0) != (ssize_t)msg.length())
+				throw ServerException::send();
 			std::cout << "Welcome message sent" << std::endl;
 			// add new socket to sockets array
 			for (i = 0; i < max_clients; i++)
@@ -115,23 +114,6 @@ int main(void)
 			sd = client_socket[i];
 			if (FD_ISSET(sd, &read_fds))
 			{
-				// // check if it's a disconnection and read the inc msg
-				// valread = recv(sd, buffer, 1024, 0);
-				// std::cout << "Valread : " << valread << std::endl;
-				// if (valread == 0)
-				// {
-				// 	// We might be able to catch some info on the client disconnected if needed
-				// 	std::cout << "Client disconnected!" << std::endl;
-				// 	// close the socked and mark it available
-				// 	close (sd);
-				// 	client_socket[i] = 0;
-				// }
-				// // Echoes the inc msg
-				// else
-				// {
-				// 	buffer[valread] = '\0';
-				// 	send(sd, buffer, strlen(buffer), 0);
-				// }
 				std::map<int, std::string> save;
 				std::string actualLine;
 				save.insert(std::make_pair<int, std::string>(8080, ""));
