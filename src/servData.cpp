@@ -86,6 +86,7 @@ void ServData::onInteraction()
 					_valread = recv(_sd, _buffer, SOCKET_BUFFER_SIZE, 0);
 					if (_buffer[0] == '\n' && _buffer[1] == 0)
 						_buffer[0] = 0;
+					//crash/error
 					if (_valread == -1)
 					{
 						std::cerr << "Error inr recv(). Quiting" << std::endl;
@@ -93,6 +94,7 @@ void ServData::onInteraction()
 						read = false;
 						break;
 					}
+					//simple deconnection
 					else if (_valread == 0)
 					{
 						std::cout << "Client disconnected!" << std::endl;
