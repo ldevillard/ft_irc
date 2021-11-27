@@ -8,7 +8,7 @@ ServData::ServData()
 {
 }
 
-ServData::ServData(id_t port) : _msg("IRC better than ever before!\n"), _port(port), _opt(1), _max_clients(5), _addrlen(sizeof(_address))
+ServData::ServData(id_t port) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)),_max_clients(5), _opt(1), _port(port)
 {
 	std::cout << "Port : " << _port << std::endl;
 }
