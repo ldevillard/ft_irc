@@ -8,7 +8,7 @@ ServData::ServData()
 {
 }
 
-ServData::ServData(id_t port) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)),_max_clients(5), _opt(1), _port(port)
+ServData::ServData(id_t port) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)), _max_clients(5), _opt(1), _port(port)
 {
 	std::cout << "Port : " << _port << std::endl;
 }
@@ -75,7 +75,6 @@ void ServData::onInteraction()
 				bool read = true;
 				std::string actualLine;
 				goin = false;
-				_valread = 1;
 				bzero(_buffer, SOCKET_BUFFER_SIZE);
 				strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
 				userSave.erase();
@@ -84,8 +83,6 @@ void ServData::onInteraction()
 				{
 					bzero(_buffer, SOCKET_BUFFER_SIZE);
 					_valread = recv(_sd, _buffer, SOCKET_BUFFER_SIZE, 0);
-					if (_buffer[0] == '\n' && _buffer[1] == 0)
-						_buffer[0] = 0;
 					//crash/error
 					if (_valread == -1)
 					{
@@ -122,9 +119,9 @@ void ServData::onInteraction()
 						userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
 						actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
 					}
-					else
-						userSave.erase();
 				}
+
+				std::cout << "* <" << i << "> " << actualLine << std::endl;
 				send(_sd, actualLine.c_str(), actualLine.length(), 0);
 			}
 		}

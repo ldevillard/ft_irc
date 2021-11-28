@@ -20,7 +20,7 @@
 #include "../includes/servData.hpp"
 #include "../includes/User.hpp"
 
-#define SOCKET_BUFFER_SIZE 2048
+#define SOCKET_BUFFER_SIZE 5
 
 class ServData
 {
