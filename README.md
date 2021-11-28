@@ -5,6 +5,7 @@
 #### Client
 
 -   https://www.codeguru.com/network/c-class-library-for-irc/
+-   [Multi client and sockets basis](https://www.geeksforgeeks.org/socket-programming-cc/)
 
 #### Doc
 
