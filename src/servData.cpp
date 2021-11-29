@@ -43,6 +43,27 @@ void ServData::setup()
 	std::cout << "Waiting for connections..." << std::endl;
 }
 
+int readLine(int fd, std::string &line)
+{
+	char buff = 0;
+	int loop = 2;
+	int read;
+	while ((loop == 1 && buff != '\n') || loop == 2)
+	{
+		if (loop == 2)
+			loop = 1;
+		buff = 0;
+		read = recv(fd, &buff, 1, 0);
+		if (read <= 0)
+			return read - 1;
+		else
+			line.push_back(buff);
+	}
+	if (line.c_str()[line.length() - 1] == '\r')
+		line.erase(line.length() - 1, 1);
+	return line.length();
+}
+
 void ServData::onInteraction()
 {
 	for (int i = 0; i < _max_clients; i++)
@@ -50,42 +71,31 @@ void ServData::onInteraction()
 		_sd = _client_sockets[i];
 		if (FD_ISSET(_sd, &_read_fds))
 		{
-			std::string actualLine;
-			int read = 2;
-			_buffer = 0;
-			while ((read == 1 && _buffer != '\n') || read == 2)
-			{
-				read = 1;
-				_buffer = 0;
-				_valread = recv(_sd, &_buffer, 1, 0);
-				if (_valread == -1)
-				{
-					std::cerr << "Error inr recv(). Quiting" << std::endl;
-					read = 0;
-				}
-				else if (_valread == 0)
-				{
-					std::cout << "Client disconnected!" << std::endl;
-					read = 0;
-					close(_sd);
-					_client_sockets[i] = 0;
-				}
-				else
-					actualLine.push_back(_buffer);
-			}
-			if (!read)
-				break;
-			else if (actualLine.c_str()[actualLine.length() - 1] == '\r')
-				actualLine.erase(actualLine.length() - 1, 1);
+			std::string line;
 
-			handleLine(_sd, i, actualLine);
-			/*PARSING COMMANDS
+			int status = readLine(_sd, line);
+			if (status == -2)
+			{
+				std::cerr << "Error inr recv(). Quiting" << std::endl;
+			}
+			else if (status == -1)
+			{
+				std::cout << "Client disconnected!" << std::endl;
+				close(_sd);
+				_client_sockets[i] = 0;
+			}
+			else
+			{
+
+				handleLine(_sd, i, line);
+				/*PARSING COMMANDS
 				
 				need to pass User that execute the command
 				and servData(this) to send the result
 				*/
-			Parser parser(actualLine, this); //if there's a cmd it'll execute it
-			send(_sd, actualLine.c_str(), actualLine.length(), 0);
+				Parser parser(line, this); //if there's a cmd it'll execute it
+				send(_sd, line.c_str(), line.length(), 0);
+			}
 		}
 	}
 }

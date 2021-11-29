@@ -4,76 +4,76 @@
 
 class ServerException
 {
-	public:
-		class argument : public std::exception
+public:
+	class argument : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "arguments: ./ircserv <port> <password>";
-			}
-		};
+			return "arguments: ./ircserv <port> <password>";
+		}
+	};
 
-		class non_numeric_argument : public std::exception
+	class non_numeric_argument : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "non numeric argument!";
-			}
-		};
+			return "non numeric argument!";
+		}
+	};
 
-		class socket_creation : public std::exception
+	class socket_creation : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "can't create socket!";
-			}
-		};
+			return "can't create socket!";
+		}
+	};
 
-		class socket_config : public std::exception
+	class socket_config : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "can't configure socket!";
-			}
-		};
+			return "can't configure socket!";
+		}
+	};
 
-		class binding : public std::exception
+	class binding : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "binding failed!";
-			}
-		};
+			return "binding failed!";
+		}
+	};
 
-		class listening : public std::exception
+	class listening : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "listening failed!";
-			}
-		};
+			return "listening failed!";
+		}
+	};
 
-		class receiving : public std::exception
+	class receiving : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "receiving failed!";
-			}
-		};
+			return "receiving failed!";
+		}
+	};
 
-		class select : public std::exception
+	class select : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "select error!";
-			}
-		};
+			return "select error!";
+		}
+	};
 
-		class send : public std::exception
+	class send : public std::exception
+	{
+		const char *what() const throw()
 		{
-			const char * what () const throw ()
-			{
-				return "send error!";
-			}
-		};
+			return "send error!";
+		}
+	};
 };

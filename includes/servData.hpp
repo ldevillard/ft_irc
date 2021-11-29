@@ -32,7 +32,6 @@ private:
 	ServData();
 
 	struct sockaddr_in _address;
-	char _buffer;
 	std::string _msg;
 	size_t _addrlen;
 	fd_set _read_fds;
@@ -45,7 +44,6 @@ private:
 	int _opt;
 	int _port;
 	int _sd;
-	int _valread;
 	std::string _password;
 	std::vector<User> _users;
 
