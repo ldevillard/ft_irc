@@ -20,4 +20,8 @@ class Parser
 
 		std::string _line;
 		std::vector<Command*> _cmds_list;
+
+		/*probably need servdata
+		to pass argument to send the
+		result of a command to the server*/
 };
