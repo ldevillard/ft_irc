@@ -18,6 +18,7 @@ class Server
 	public:
 		Server(std::string host, id_t port, std::string password);
 		void connect();
+		ServData getData() const { return _data; }
 
 	private:
 		ServData	_data;
