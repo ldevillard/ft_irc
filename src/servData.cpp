@@ -1,4 +1,5 @@
 #include "../includes/servData.hpp"
+#include "../includes/Parser.hpp"
 
 void handleLine(int sd, int uid, std::string line);
 
@@ -83,7 +84,7 @@ void ServData::onInteraction()
 				need to pass User that execute the command
 				and servData(this) to send the result
 				*/
-			Parser parser(actualLine); //if there's a cmd it'll execute it
+			Parser parser(actualLine, this); //if there's a cmd it'll execute it
 			send(_sd, actualLine.c_str(), actualLine.length(), 0);
 		}
 	}

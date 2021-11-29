@@ -1,7 +1,9 @@
 #include "../includes/Parser.hpp"
 
-Parser::Parser(std::string line) : _line(line)
+Parser::Parser(std::string line, ServData *data) : _line(line), _data(data)
 {
+	(void)_data;
+
 	initCommands();
 
 	if (isCommand())
@@ -10,8 +12,12 @@ Parser::Parser(std::string line) : _line(line)
 
 void Parser::initCommands()
 {
-	_cmds_list.push_back(new Help());
+	_cmds_list.push_back(new Help(_cmds_list));
 	//push all commands
+
+	std::vector<Command*>::iterator it;
+	for(it = _cmds_list.begin(); it != _cmds_list.end(); it++)
+		(*it)->setServer(_data);
 }
 
 bool	Parser::isCommand()

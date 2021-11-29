@@ -1,12 +1,16 @@
 #pragma once
 
 #include "../Command.hpp"
+#include <vector>
 
 class Command;
 
 class Help : public Command
 {
 	public:
-		Help();
-		void execute() const;
+		Help(std::vector<Command*> &cmds);
+		void execute();
+
+	private:
+		std::vector<Command*> &_cmds;
 };
