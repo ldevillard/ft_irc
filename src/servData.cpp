@@ -1,5 +1,9 @@
 #include "../includes/servData.hpp"
 #include "../includes/Parser.hpp"
+#include "../includes/rpl_codes.hpp"
+
+std::string response(int response_code, std::string name, std::string command, std::string message);
+void sendMsg(User *user, std::string str);
 
 ServData::~ServData()
 {
@@ -49,14 +53,14 @@ int readLine(User &user)
 	read = recv(user.getSd(), &buff, 1, 0);
 	if (read <= 0)
 		return read;
-	else if (buff != 0)
-		line.push_back(buff);
-	if (buff == '\n')
+	else if (buff == '\n')
 	{
 		if (line.at(line.length() - 1) == '\r')
 			line.erase(line.length() - 1, 1);
 		return 2;
 	}
+	else if (buff != 0)
+		line.push_back(buff);
 	return 1;
 }
 
@@ -89,22 +93,24 @@ void ServData::onInteraction()
 				std::string line = std::string(_clients[i]->getBufferLine());
 				_clients[i]->getBufferLine().erase();
 
-				std::cout << "* <" << i << "> " << line << std::endl;
+				std::cout << "<- [" << _clients[i]->getSd() << "] " << line << std::endl;
 
-				// if (line == "JOIN #salut")
-				// {
-				// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
-				// std::cout << "send \"" << msg << "\"" << std::endl;
-				// send(sd, msg.c_str(), msg.length(), 0);
-				// }
+				if (line == "JOIN #salut")
+				{
+					sendMsg(_clients[i], response(RPL_TOPIC, "gauthier", "JOIN", "#salut"));
+					// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
+					// std::cout << "send \"" << msg << "\"" << std::endl;
+					// send(sd, msg.c_str(), msg.length(), 0);
+				}
 
 				/*PARSING COMMANDS
 				
 				need to pass User that execute the command
 				and servData(this) to send the result
 				*/
+
 				Parser parser(line, this); //if there's a cmd it'll execute it
-				send(_sd, line.c_str(), line.length(), 0);
+				// send(_sd, line.c_str(), line.length(), 0);
 			}
 		}
 	}
@@ -118,6 +124,7 @@ void ServData::onConnection()
 			throw ServerException::receiving();
 		// gives infos that we'll use in send and recv
 		std::cout << "New connection : socket fd [" << _new_socket << "] ip [" << inet_ntoa(_address.sin_addr) << "] port [" << ntohs(_address.sin_port) << "]" << std::endl;
+
 		// add new socket to sockets array
 		for (int i = 0; i < _max_clients; i++)
 		{

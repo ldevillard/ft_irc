@@ -15,27 +15,14 @@ std::string c_itoa(int n)
 	return res;
 }
 
-// std::string create_msg(int code, User &user, ServData &server, std::string arg1, std::string arg2)
-// {
-// 	std::string sample;
-// 	std::string trueCode;
-
-// 	trueCode = c_itoa(code);
-
-// 	switch (code)
-// 	{
-// 	case 1:
-
-// 		break;
-
-// 	default:
-// 		break;
-// 	}
-// }
-
-void send_to_chan(channel &channel)
+void sendMsg(User *user, std::string str)
 {
-	(void)channel;
+	if (user)
+	{
+
+		std::cout << "-> [" << user->getSd() << "] " << str << std::endl;
+		send(user->getSd(), str.c_str(), str.length(), 0);
+	}
 }
 
 std::string response(int response_code, std::string name, std::string command, std::string message)
