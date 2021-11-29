@@ -1,10 +1,23 @@
 #include "../../includes/Commands/Help.hpp"
 
-Help::Help() : Command("HELP", "Display all the commands and descriptions.")
+Help::Help(std::vector<Command*> &cmds) : Command("HELP", "Display all the commands and descriptions."), _cmds(cmds)
 {
 }
 
-void Help::execute() const
+void Help::execute()
 {
-	std::cout << "Execute help command!" << std::endl;
+	std::string result;
+
+	std::vector<Command*>::iterator it;
+
+	for(it = _cmds.begin(); it != _cmds.end(); it++)
+	{
+		result += (*it)->getName();
+		result += ": ";
+		result += (*it)->getDesc();
+		result += "\n";
+
+	}
+
+	std::cout << result; //send to server
 }
