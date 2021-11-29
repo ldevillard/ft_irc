@@ -20,6 +20,8 @@
 #include "User.hpp"
 #include <vector>
 
+#define MAX_CLIENTS 5
+
 class ServData
 {
 
@@ -35,7 +37,7 @@ private:
 	std::string _msg;
 	size_t _addrlen;
 	fd_set _read_fds;
-	int _client_sockets[5];
+	User *_clients[MAX_CLIENTS];
 	int _activity;
 	int _master_socket;
 	int _max_clients;

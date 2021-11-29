@@ -19,7 +19,7 @@ void ServData::setup()
 	// Create a master socket
 	std::signal(SIGPIPE, SIG_IGN);
 	for (int i = 0; i < _max_clients; i++)
-		_client_sockets[i] = 0;
+		_clients[i] = NULL;
 	if ((_master_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 		throw ServerException::socket_creation();
 	// It should work without this part, it just allows the socket to handle multiple connections
@@ -41,36 +41,36 @@ void ServData::setup()
 	std::cout << "Waiting for connections..." << std::endl;
 }
 
-int readLine(int fd, std::string &line)
+int readLine(User &user)
 {
 	char buff = 0;
 	int read;
-	while (buff != '\n')
+	std::string &line = user.getBufferLine();
+
+	read = recv(user.getSd(), &buff, 1, 0);
+	if (read <= 0)
+		return read - 1;
+	else if (buff)
+		line.push_back(buff);
+	if (buff == '\n')
 	{
-		buff = 0;
-		std::cout << "start read" << std::endl;
-		read = recv(fd, &buff, 1, 0);
-		std::cout << "stop read " << (int)buff << std::endl;
-		if (read <= 0)
-			return read - 1;
-		else if (buff)
-			line.push_back(buff);
+		if (line.c_str()[line.length() - 1] == '\r')
+			line.erase(line.length() - 1, 1);
+		return 1;
 	}
-	if (line.c_str()[line.length() - 1] == '\r')
-		line.erase(line.length() - 1, 1);
-	return line.length();
+	return 0;
 }
 
 void ServData::onInteraction()
 {
 	for (int i = 0; i < _max_clients; i++)
 	{
-		_sd = _client_sockets[i];
-		if (FD_ISSET(_sd, &_read_fds))
-		{
-			std::string line;
 
-			int status = readLine(_sd, line);
+		if (_clients[i] && FD_ISSET(_clients[i]->getSd(), &_read_fds))
+		{
+			_sd = _clients[i]->getSd();
+
+			int status = readLine(*_clients[i]);
 			if (status == -2)
 			{
 				std::cerr << "Error inr recv(). Quiting" << std::endl;
@@ -79,10 +79,14 @@ void ServData::onInteraction()
 			{
 				std::cout << "Client disconnected!" << std::endl;
 				close(_sd);
-				_client_sockets[i] = 0;
+				delete _clients[i];
+				_clients[i] = NULL;
 			}
-			else
+			else if (status == 1)
 			{
+				std::string line = std::string(_clients[i]->getBufferLine());
+				_clients[i]->getBufferLine().erase();
+
 				std::cout << "* <" << i << "> " << line << std::endl;
 
 				// if (line == "JOIN #salut")
@@ -116,9 +120,10 @@ void ServData::onConnection()
 		// add new socket to sockets array
 		for (int i = 0; i < _max_clients; i++)
 		{
-			if (!_client_sockets[i])
+			if (!_clients[i])
 			{
-				_client_sockets[i] = _new_socket;
+				_clients[i] = new User();
+				_clients[i]->setSd(_new_socket);
 				std::cout << "Adding to sockets array as : " << i << std::endl;
 				break;
 			}
@@ -136,13 +141,16 @@ void ServData::setupFD()
 	// add child sockets to set
 	for (int i = 0; i < _max_clients; i++)
 	{
-		_sd = _client_sockets[i];
-		// if valid socket you can add it to the read list
-		if (_sd > 0)
-			FD_SET(_sd, &_read_fds);
-		// highest fd number, needed for poll()
-		if (_sd > _max_sd)
-			_max_sd = _sd;
+		if (_clients[i])
+		{
+			_sd = _clients[i]->getSd();
+			// if valid socket you can add it to the read list
+			if (_sd > 0)
+				FD_SET(_sd, &_read_fds);
+			// highest fd number, needed for poll()
+			if (_sd > _max_sd)
+				_max_sd = _sd;
+		}
 	}
 }
 
