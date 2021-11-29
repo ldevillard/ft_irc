@@ -122,6 +122,7 @@ void ServData::onInteraction()
 				}
 
 				std::cout << "* <" << i << "> " << actualLine << std::endl;
+				//PARSING COMMANDS
 				send(_sd, actualLine.c_str(), actualLine.length(), 0);
 			}
 		}
