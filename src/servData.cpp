@@ -32,7 +32,7 @@ void ServData::setup()
 	// Define the kind of socket created
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
-	_address.sin_port = htons(8080);
+	_address.sin_port = htons(_port);
 	// Bind the socket to the desired port
 	if (bind(_master_socket, (struct sockaddr *)&_address, sizeof(_address)) < 0)
 		throw ServerException::binding();
