@@ -1,5 +1,7 @@
 #include "../includes/servData.hpp"
 
+void handleLine(int sd, int uid, std::string line);
+
 ServData::~ServData()
 {
 }
@@ -121,7 +123,8 @@ void ServData::onInteraction()
 					}
 				}
 
-				std::cout << "* <" << i << "> " << actualLine << std::endl;
+
+				handleLine(_sd, i, actualLine);
 				/*PARSING COMMANDS
 				
 				need to pass User that execute the command

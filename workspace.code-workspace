@@ -89,7 +89,12 @@
 			"ios": "cpp",
 			"locale": "cpp",
 			"mutex": "cpp",
-			"ratio": "cpp"
+			"ratio": "cpp",
+			"compare": "cpp",
+			"condition_variable": "cpp",
+			"iomanip": "cpp",
+			"thread": "cpp",
+			"typeindex": "cpp"
 		}
 	}
 }

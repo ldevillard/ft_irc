@@ -25,6 +25,7 @@ SRCS = \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/servData.cpp \
 		$(SRCS_PATH)/User.cpp\
+		$(SRCS_PATH)/handleLine.cpp\
 		$(SRCS_PATH)/Parser.cpp\
 		$(SRCS_PATH)/Command.cpp\
 		$(SRCS_PATH)/Commands/Help.cpp\
