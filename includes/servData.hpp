@@ -20,6 +20,7 @@
 #include "../includes/servData.hpp"
 #include "../includes/User.hpp"
 #include "../includes/Parser.hpp"
+#include "User.hpp"
 
 #define SOCKET_BUFFER_SIZE 5
 
@@ -27,7 +28,7 @@ class ServData
 {
 
 public:
-	ServData(id_t port);
+	ServData(id_t port, std::string password);
 	~ServData();
 	int connect();
 
@@ -49,6 +50,8 @@ private:
 	int _port;
 	int _sd;
 	int _valread;
+	std::string _password;
+	std::vector<User> _users;
 
 	void	setup();
 	void	onInteraction();
