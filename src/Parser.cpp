@@ -1,7 +1,9 @@
 #include "../includes/Parser.hpp"
 
-Parser::Parser(std::string line) : _line(line)
+Parser::Parser(std::string line, ServData *data) : _line(line), _data(data)
 {
+	(void)_data;
+
 	initCommands();
 
 	if (isCommand())

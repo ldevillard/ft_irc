@@ -5,11 +5,12 @@
 #include <iostream>
 #include "Command.hpp"
 #include "Commands/Help.hpp"
+#include "servData.hpp"
 
 class Parser
 {
 	public:
-		Parser(std::string line);
+		Parser(std::string line, ServData *data);
 
 		void	executeCommand();
 		bool		isCommand();
@@ -21,7 +22,5 @@ class Parser
 		std::string _line;
 		std::vector<Command*> _cmds_list;
 
-		/*probably need servdata
-		to pass argument to send the
-		result of a command to the server*/
+		ServData *_data;
 };

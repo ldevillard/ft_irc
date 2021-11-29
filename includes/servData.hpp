@@ -17,10 +17,8 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <poll.h>	  // Poll() (yeah no shit)
 #include <iostream>
-#include "../includes/servData.hpp"
-#include "../includes/User.hpp"
-#include "../includes/Parser.hpp"
 #include "User.hpp"
+#include <vector>
 
 #define SOCKET_BUFFER_SIZE 5
 
