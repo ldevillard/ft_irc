@@ -51,27 +51,27 @@ void ServData::onInteraction()
 		if (FD_ISSET(_sd, &_read_fds))
 		{
 			std::string actualLine;
-			bool read = true;
+			int read = 2;
 			_buffer = 0;
-			while (read && _buffer != '\n')
+			while ((read == 1 && _buffer != '\n') || read == 2)
 			{
+				read = 1;
 				_buffer = 0;
 				_valread = recv(_sd, &_buffer, 1, 0);
 				if (_valread == -1)
 				{
 					std::cerr << "Error inr recv(). Quiting" << std::endl;
-					read = false;
-					break;
+					read = 0;
 				}
 				else if (_valread == 0)
 				{
 					std::cout << "Client disconnected!" << std::endl;
-					read = false;
+					read = 0;
 					close(_sd);
 					_client_sockets[i] = 0;
-					break;
 				}
-				actualLine.push_back(_buffer);
+				else
+					actualLine.push_back(_buffer);
 			}
 			if (!read)
 				break;
