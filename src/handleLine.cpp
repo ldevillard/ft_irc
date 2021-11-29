@@ -4,6 +4,7 @@
 #include "../includes/channel.hpp"
 #include "../includes/servData.hpp"
 #include <sstream>
+#include "../includes/rpl_codes.hpp"
 
 std::string c_itoa(int n)
 {
@@ -52,10 +53,10 @@ void handleLine(int sd, int uid, std::string line)
 
 	// if (line == "JOIN #salut")
 	// {
-	std::string msg = response(371, "gapoulai", "", ":pouet");
-	std::cout << "send \"" << msg << "\"" << std::endl;
-	send(sd, msg.c_str(), msg.length(), 0);
+	// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
+	// std::cout << "send \"" << msg << "\"" << std::endl;
+	// send(sd, msg.c_str(), msg.length(), 0);
 	// }
 
-	// send(sd, line.c_str(), line.length(), 0);
+	send(sd, line.c_str(), line.length(), 0);
 }

@@ -22,8 +22,6 @@
 #include "../includes/Parser.hpp"
 #include "User.hpp"
 
-#define SOCKET_BUFFER_SIZE 5
-
 class ServData
 {
 
@@ -36,7 +34,7 @@ private:
 	ServData();
 
 	struct sockaddr_in _address;
-	char _buffer[SOCKET_BUFFER_SIZE];
+	char _buffer;
 	std::string _msg;
 	size_t _addrlen;
 	fd_set _read_fds;
@@ -53,9 +51,8 @@ private:
 	std::string _password;
 	std::vector<User> _users;
 
-	void	setup();
-	void	onInteraction();
-	void	onConnection();
-	void	setupFD();
-
+	void setup();
+	void onInteraction();
+	void onConnection();
+	void setupFD();
 };

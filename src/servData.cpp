@@ -42,26 +42,6 @@ void ServData::setup()
 	std::cout << "Waiting for connections..." << std::endl;
 }
 
-void printBuffer(char buffer[SOCKET_BUFFER_SIZE])
-{
-	for (size_t i = 0; i < SOCKET_BUFFER_SIZE; i++)
-	{
-		if ((int)buffer[i] == 13)
-			std::cout << "[" << (int)buffer[i] << "="
-					  << "\\r"
-					  << "]";
-		else if ((int)buffer[i] == 10)
-
-			std::cout << "[" << (int)buffer[i] << "="
-					  << "\\n"
-					  << "]";
-		else
-			std::cout << "[" << (int)buffer[i] << "=" << buffer[i] << "]";
-	}
-	std::cout << std::endl
-			  << std::endl;
-}
-
 void ServData::onInteraction()
 {
 	for (int i = 0; i < _max_clients; i++)
@@ -69,70 +49,42 @@ void ServData::onInteraction()
 		_sd = _client_sockets[i];
 		if (FD_ISSET(_sd, &_read_fds))
 		{
-			std::string userSave = "";
-			bool goin = true;
-
-			while (goin || !userSave.empty())
+			std::string actualLine;
+			bool read = true;
+			_buffer = 0;
+			while (read && _buffer != '\n')
 			{
-				bool read = true;
-				std::string actualLine;
-				goin = false;
-				bzero(_buffer, SOCKET_BUFFER_SIZE);
-				strncpy(_buffer, userSave.c_str(), std::min((size_t)SOCKET_BUFFER_SIZE, userSave.length()));
-				userSave.erase();
-				actualLine += std::string(_buffer);
-				while (read && !std::strchr(_buffer, '\n') && !std::strchr(_buffer, '\r'))
+				_buffer = 0;
+				_valread = recv(_sd, &_buffer, 1, 0);
+				if (_valread == -1)
 				{
-					bzero(_buffer, SOCKET_BUFFER_SIZE);
-					_valread = recv(_sd, _buffer, SOCKET_BUFFER_SIZE, 0);
-					//crash/error
-					if (_valread == -1)
-					{
-						std::cerr << "Error inr recv(). Quiting" << std::endl;
-						userSave.erase();
-						read = false;
-						break;
-					}
-					//simple deconnection
-					else if (_valread == 0)
-					{
-						std::cout << "Client disconnected!" << std::endl;
-						userSave.erase();
-						read = false;
-						close(_sd);
-						_client_sockets[i] = 0;
-						break;
-					}
-					if ((_buffer[0] == '\n' && !_buffer[1] && actualLine.empty()) ||
-						(_buffer[0] == '\r' && _buffer[1] == '\n' && !_buffer[2] && actualLine.empty()))
-						_buffer[0] = 0;
-					actualLine += std::string(_buffer);
-				}
-				if (!read)
+					std::cerr << "Error inr recv(). Quiting" << std::endl;
+					read = false;
 					break;
-				{
-					while (actualLine.find("\r") != std::string::npos)
-						actualLine.replace(actualLine.find("\r"), 1, "\n");
-					while (actualLine.find("\n\n") != std::string::npos)
-						actualLine.replace(actualLine.find("\n\n"), 2, "\n");
-					std::size_t pos = actualLine.find("\n");
-					if (pos != std::string::npos)
-					{
-						userSave += actualLine.substr(pos + 1, (actualLine.length()) - ((std::size_t)pos + 1));
-						actualLine.erase(pos, (actualLine.length()) - ((std::size_t)pos));
-					}
 				}
+				else if (_valread == 0)
+				{
+					std::cout << "Client disconnected!" << std::endl;
+					read = false;
+					close(_sd);
+					_client_sockets[i] = 0;
+					break;
+				}
+				actualLine.push_back(_buffer);
+			}
+			if (!read)
+				break;
+			else if (actualLine.c_str()[actualLine.length() - 1] == '\r')
+				actualLine.erase(actualLine.length() - 1, 1);
 
-
-				handleLine(_sd, i, actualLine);
-				/*PARSING COMMANDS
+			handleLine(_sd, i, actualLine);
+			/*PARSING COMMANDS
 				
 				need to pass User that execute the command
 				and servData(this) to send the result
 				*/
-				Parser parser(actualLine); //if there's a cmd it'll execute it
-				send(_sd, actualLine.c_str(), actualLine.length(), 0);
-			}
+			Parser parser(actualLine); //if there's a cmd it'll execute it
+			send(_sd, actualLine.c_str(), actualLine.length(), 0);
 		}
 	}
 }
