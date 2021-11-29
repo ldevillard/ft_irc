@@ -50,6 +50,7 @@
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
+
 void func(int sockfd)
 {
 	char buff[MAX];
@@ -62,14 +63,14 @@ void func(int sockfd)
 		while ((buff[n++] = getchar()) != '\n')
 			;
 		send(sockfd, buff, sizeof(buff), 0);
-		// bzero(buff, sizeof(buff));
-		// recv(sockfd, buff, sizeof(buff), 0);
-		// std::cout << "From Server : " << buff << std::endl;
-		// if (!strcmp(buff, "exit"))
-		// {
-		// 	std::cout << "Client Exit..." << std::endl;
-		// 	break;
-		// }
+		bzero(buff, sizeof(buff));
+		recv(sockfd, buff, sizeof(buff), 0);
+		std::cout << "From Server : " << buff << std::endl;
+		if (!strcmp(buff, "exit"))
+		{
+			std::cout << "Client Exit..." << std::endl;
+			break;
+		}
 	}
 }
 

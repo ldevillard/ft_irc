@@ -46,19 +46,18 @@ int readLine(User &user)
 	char buff = 0;
 	int read;
 	std::string &line = user.getBufferLine();
-
 	read = recv(user.getSd(), &buff, 1, 0);
 	if (read <= 0)
-		return read - 1;
-	else if (buff)
+		return read;
+	else if (buff != 0)
 		line.push_back(buff);
 	if (buff == '\n')
 	{
-		if (line.c_str()[line.length() - 1] == '\r')
+		if (line.at(line.length() - 1) == '\r')
 			line.erase(line.length() - 1, 1);
-		return 1;
+		return 2;
 	}
-	return 0;
+	return 1;
 }
 
 void ServData::onInteraction()
@@ -71,18 +70,21 @@ void ServData::onInteraction()
 			_sd = _clients[i]->getSd();
 
 			int status = readLine(*_clients[i]);
-			if (status == -2)
+			if (status == -1)
 			{
 				std::cerr << "Error inr recv(). Quiting" << std::endl;
+				close(_sd);
+				delete _clients[i];
+				_clients[i] = NULL;
 			}
-			else if (status == -1)
+			else if (status == 0)
 			{
 				std::cout << "Client disconnected!" << std::endl;
 				close(_sd);
 				delete _clients[i];
 				_clients[i] = NULL;
 			}
-			else if (status == 1)
+			else if (status == 2)
 			{
 				std::string line = std::string(_clients[i]->getBufferLine());
 				_clients[i]->getBufferLine().erase();
@@ -96,7 +98,6 @@ void ServData::onInteraction()
 				// send(sd, msg.c_str(), msg.length(), 0);
 				// }
 
-				send(_sd, line.c_str(), line.length(), 0);
 				/*PARSING COMMANDS
 				
 				need to pass User that execute the command
