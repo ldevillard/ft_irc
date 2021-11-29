@@ -1,9 +1,8 @@
 #include "../includes/servData.hpp"
-#include "../includes/Parser.hpp"
+#include "../includes/parser.hpp"
 #include "../includes/rpl_codes.hpp"
-
-std::string response(int response_code, std::string name, std::string command, std::string message);
-void sendMsg(User *user, std::string str);
+#include "../includes/user.hpp"
+#include "../includes/channel.hpp"
 
 ServData::~ServData()
 {
@@ -97,7 +96,20 @@ void ServData::onInteraction()
 
 				if (line == "JOIN #salut")
 				{
-					sendMsg(_clients[i], response(RPL_TOPIC, "gauthier", "JOIN", "#salut"));
+					channel *chan = new channel("salut");
+					_clients[i]->setNickName("gauthier");
+					_clients[i]->setUserName("gogoledozo");
+
+					chan->broadcastMsg("salut");
+
+					sendMsgToUser(_clients[i], response(RPL_INFO, "gauthier", "", ":joining #salut channel"));
+					sendMsgToUser(_clients[i], "gauthier!gauthier@127.0.0.1 JOIN #salut");
+					sendMsgToUser(_clients[i], ":127.0.0.1 332 gauthier #salut :generic channel");
+					sendMsgToUser(_clients[i], ":127.0.0.1 353 gauthier = #salut :@gauthier");
+					sendMsgToUser(_clients[i], ":127.0.0.1 366 gauthier #salut :End of NAMES list");
+
+					// sendMsgToUser(_clients[i], response(RPL_TOPIC, "gauthier", "JOIN", "#salut"));
+					// sendMsgToUser(_clients[i], response(RPL_TOPIC, "gauthier", "JOIN", "#salut"));
 					// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
 					// std::cout << "send \"" << msg << "\"" << std::endl;
 					// send(sd, msg.c_str(), msg.length(), 0);
@@ -110,7 +122,7 @@ void ServData::onInteraction()
 				*/
 
 				Parser parser(line, this); //if there's a cmd it'll execute it
-				// send(_sd, line.c_str(), line.length(), 0);
+										   // send(_sd, line.c_str(), line.length(), 0);
 			}
 		}
 	}

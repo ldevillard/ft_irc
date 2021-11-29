@@ -11,22 +11,24 @@ CFLAGS += -fsanitize=address
 INCLUDE_PATH= ./includes
 
 HEADERS = \
+		$(INCLUDE_PATH)/commands/help.hpp \
+		$(INCLUDE_PATH)/channel.hpp \
+		$(INCLUDE_PATH)/command.hpp \
+		$(INCLUDE_PATH)/parser.hpp \
+		$(INCLUDE_PATH)/rpl_codes.hpp \
 		$(INCLUDE_PATH)/servData.hpp \
-		$(INCLUDE_PATH)/ServerException.hpp \
-		$(INCLUDE_PATH)/User.hpp \
-		$(INCLUDE_PATH)/Parser.hpp \
-		$(INCLUDE_PATH)/Command.hpp \
-		$(INCLUDE_PATH)/Commands/Help.hpp\
+		$(INCLUDE_PATH)/serverException.hpp \
+		$(INCLUDE_PATH)/user.hpp \
 
 SRCS_PATH= ./src
 SRCS = \
+		$(SRCS_PATH)/commands/help.cpp \
+		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
+		$(SRCS_PATH)/parser.cpp\
+		$(SRCS_PATH)/sendMessages.cpp \
 		$(SRCS_PATH)/servData.cpp \
-		$(SRCS_PATH)/User.cpp\
-		$(SRCS_PATH)/handleLine.cpp\
-		$(SRCS_PATH)/Parser.cpp\
-		$(SRCS_PATH)/Command.cpp\
-		$(SRCS_PATH)/Commands/Help.cpp\
+		$(SRCS_PATH)/user.cpp \
 
 OBJS = $(SRCS:%.cpp=%.o)
 

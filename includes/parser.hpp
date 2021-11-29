@@ -3,8 +3,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "Command.hpp"
-#include "Commands/Help.hpp"
+#include "command.hpp"
+#include "commands/help.hpp"
 #include "servData.hpp"
 
 class Parser

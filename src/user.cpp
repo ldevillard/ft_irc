@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../includes/User.hpp"
+#include "../includes/user.hpp"
 
 User::User()
 {

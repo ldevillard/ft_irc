@@ -1,4 +1,4 @@
-#include "../../includes/Commands/Help.hpp"
+#include "../../includes/commands/help.hpp"
 
 Help::Help(std::vector<Command*> &cmds) : Command("HELP", "Display all the commands and descriptions."), _cmds(cmds)
 {

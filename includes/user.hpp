@@ -19,6 +19,9 @@ public:
 	int setUserFirstTime(std::string &user);
 	int setNickFirstTime(std::string &nick);
 
+	void setUserName(std::string name) { _user = name; }
+	void setNickName(std::string name) { _nick = name; }
+
 	int check_info(); //0 if OK, 1 if no user set, 2 if no nick set
 
 private:

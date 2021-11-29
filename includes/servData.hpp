@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./ServerException.hpp"
+#include "./serverException.hpp"
 #include <netdb.h>
 #include <string>
 #include <cstring>
@@ -17,7 +17,7 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <poll.h>	  // Poll() (yeah no shit)
 #include <iostream>
-#include "User.hpp"
+#include "user.hpp"
 #include <vector>
 
 #define MAX_CLIENTS 5

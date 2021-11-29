@@ -1,4 +1,4 @@
-#include "../includes/Parser.hpp"
+#include "../includes/parser.hpp"
 
 Parser::Parser(std::string line, ServData *data) : _line(line), _data(data)
 {

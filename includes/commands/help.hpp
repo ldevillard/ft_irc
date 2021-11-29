@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Command.hpp"
+#include "../command.hpp"
 #include <vector>
 
 class Command;
