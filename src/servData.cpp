@@ -124,10 +124,8 @@ void ServData::onInteraction()
 				std::cout << "* <" << i << "> " << actualLine << std::endl;
 				/*PARSING COMMANDS
 				
-				probably need to send
-				servData (this) to parser
-				to pass arguments for the
-				executing of commands
+				need to pass User that execute the command
+				and servData(this) to send the result
 				*/
 				Parser parser(actualLine); //if there's a cmd it'll execute it
 				send(_sd, actualLine.c_str(), actualLine.length(), 0);
