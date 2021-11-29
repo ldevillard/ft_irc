@@ -1,8 +1,6 @@
 #include "../includes/servData.hpp"
 #include "../includes/Parser.hpp"
 
-void handleLine(int sd, int uid, std::string line);
-
 ServData::~ServData()
 {
 }
@@ -46,17 +44,16 @@ void ServData::setup()
 int readLine(int fd, std::string &line)
 {
 	char buff = 0;
-	int loop = 2;
 	int read;
-	while ((loop == 1 && buff != '\n') || loop == 2)
+	while (buff != '\n')
 	{
-		if (loop == 2)
-			loop = 1;
 		buff = 0;
+		std::cout << "start read" << std::endl;
 		read = recv(fd, &buff, 1, 0);
+		std::cout << "stop read " << (int)buff << std::endl;
 		if (read <= 0)
 			return read - 1;
-		else
+		else if (buff)
 			line.push_back(buff);
 	}
 	if (line.c_str()[line.length() - 1] == '\r')
@@ -86,8 +83,16 @@ void ServData::onInteraction()
 			}
 			else
 			{
+				std::cout << "* <" << i << "> " << line << std::endl;
 
-				handleLine(_sd, i, line);
+				// if (line == "JOIN #salut")
+				// {
+				// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
+				// std::cout << "send \"" << msg << "\"" << std::endl;
+				// send(sd, msg.c_str(), msg.length(), 0);
+				// }
+
+				send(_sd, line.c_str(), line.length(), 0);
 				/*PARSING COMMANDS
 				
 				need to pass User that execute the command

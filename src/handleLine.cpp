@@ -46,17 +46,3 @@ std::string response(int response_code, std::string name, std::string command, s
 	std::string response = ":127.0.0.1/6667 " + code + " " + name + " " + command + message + "\r\n";
 	return response;
 }
-
-void handleLine(int sd, int uid, std::string line)
-{
-	std::cout << "* <" << uid << "> " << line << std::endl;
-
-	// if (line == "JOIN #salut")
-	// {
-	// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
-	// std::cout << "send \"" << msg << "\"" << std::endl;
-	// send(sd, msg.c_str(), msg.length(), 0);
-	// }
-
-	send(sd, line.c_str(), line.length(), 0);
-}

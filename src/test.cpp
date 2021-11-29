@@ -62,14 +62,14 @@ void func(int sockfd)
 		while ((buff[n++] = getchar()) != '\n')
 			;
 		send(sockfd, buff, sizeof(buff), 0);
-		bzero(buff, sizeof(buff));
-		recv(sockfd, buff, sizeof(buff), 0);
-		std::cout << "From Server : " << buff << std::endl;
-		if (!strcmp(buff, "exit"))
-		{
-			std::cout << "Client Exit..." << std::endl;
-			break;
-		}
+		// bzero(buff, sizeof(buff));
+		// recv(sockfd, buff, sizeof(buff), 0);
+		// std::cout << "From Server : " << buff << std::endl;
+		// if (!strcmp(buff, "exit"))
+		// {
+		// 	std::cout << "Client Exit..." << std::endl;
+		// 	break;
+		// }
 	}
 }
 
