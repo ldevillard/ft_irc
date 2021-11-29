@@ -19,6 +19,7 @@
 #include <iostream>
 #include "../includes/servData.hpp"
 #include "../includes/User.hpp"
+#include "../includes/Parser.hpp"
 
 #define SOCKET_BUFFER_SIZE 5
 
@@ -53,4 +54,5 @@ private:
 	void	onInteraction();
 	void	onConnection();
 	void	setupFD();
+
 };

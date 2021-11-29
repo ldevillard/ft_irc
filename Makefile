@@ -9,11 +9,15 @@ CFLAGS += -g
 CFLAGS += -fsanitize=address
 
 INCLUDE_PATH= ./includes
+
 HEADERS = \
 		$(INCLUDE_PATH)/Ircserv.hpp \
 		$(INCLUDE_PATH)/servData.hpp \
 		$(INCLUDE_PATH)/ServerException.hpp \
 		$(INCLUDE_PATH)/User.hpp \
+		$(INCLUDE_PATH)/Parser.hpp \
+		$(INCLUDE_PATH)/Command.hpp \
+		$(INCLUDE_PATH)/Commands/Help.hpp\
 
 SRCS_PATH= ./src
 SRCS = \
@@ -21,6 +25,9 @@ SRCS = \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/servData.cpp \
 		$(SRCS_PATH)/User.cpp\
+		$(SRCS_PATH)/Parser.cpp\
+		$(SRCS_PATH)/Command.cpp\
+		$(SRCS_PATH)/Commands/Help.cpp\
 
 OBJS = $(SRCS:%.cpp=%.o)
 
