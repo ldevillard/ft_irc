@@ -13,6 +13,7 @@ INCLUDE_PATH= ./includes
 HEADERS = \
 		$(INCLUDE_PATH)/commands/help.hpp \
 		$(INCLUDE_PATH)/commands/join.hpp \
+		$(INCLUDE_PATH)/commands/nick.hpp \
 		$(INCLUDE_PATH)/channel.hpp \
 		$(INCLUDE_PATH)/command.hpp \
 		$(INCLUDE_PATH)/parser.hpp \
@@ -25,6 +26,7 @@ SRCS_PATH= ./src
 SRCS = \
 		$(SRCS_PATH)/commands/help.cpp \
 		$(SRCS_PATH)/commands/join.cpp \
+		$(SRCS_PATH)/commands/nick.cpp \
 		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/parser.cpp\

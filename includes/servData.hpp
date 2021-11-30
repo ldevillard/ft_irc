@@ -29,6 +29,7 @@ public:
 	ServData(id_t port, std::string password);
 	~ServData();
 	int connect();
+	User *getUser(std::string name);
 
 private:
 	ServData();

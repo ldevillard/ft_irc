@@ -16,7 +16,7 @@ class Parser
 
 	private:
 		void initCommands();
-		std::string getFirstWord();
+		std::vector<std::string> split(std::string &line);
 
 		std::string _line;
 		std::vector<Command*> _cmds_list;

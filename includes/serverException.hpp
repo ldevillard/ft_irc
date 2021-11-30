@@ -76,4 +76,20 @@ public:
 			return "send error!";
 		}
 	};
+
+	class nickAlreadyUsed : public std::exception
+	{
+		const char *what() const throw()
+		{
+			return "nickname already used!";
+		}
+	};
+
+	class invalidNick : public std::exception
+	{
+		const char *what() const throw()
+		{
+			return "invalid nickname!";
+		}
+	};
 };

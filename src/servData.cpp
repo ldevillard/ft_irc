@@ -189,3 +189,16 @@ int ServData::connect()
 	}
 	return (0);
 }
+
+User *ServData::getUser(std::string name)
+{
+	int i = 0;
+
+	while (i < MAX_CLIENTS)
+	{
+		if (_clients[i] && _clients[i]->getNick() == name)
+			return _clients[i];
+		i++;
+	}
+	return NULL;
+}

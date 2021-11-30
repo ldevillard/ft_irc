@@ -3,6 +3,10 @@
 #include <string>
 #include <iostream>
 #include "servData.hpp"
+#include "serverException.hpp"
+
+void sendMsgToUser(User *user, std::string str);
+std::string response(int response_code, std::string name, std::string command, std::string message);
 
 class Command
 {
@@ -14,6 +18,7 @@ class Command
 		std::string getName() const { return _name; }
 
 		void setServer(ServData *server) { _server = server; }
+		void setArgs(std::vector<std::string> &args) { _args = args; }
 
 		virtual void execute() = 0;
 
@@ -23,4 +28,5 @@ class Command
 
 		ServData *_server;
 		User	*_user;
+		std::vector<std::string> _args;
 };
