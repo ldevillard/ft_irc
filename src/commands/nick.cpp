@@ -8,8 +8,8 @@ Nick::Nick(User *user) : Command("NICK", "<nickname> : Change client nickname.",
 void Nick::execute()
 {
 	std::string nick = _user->getNick();
-	
-	if (_args.size() > 1)
+
+	if (_args.size() > 1 && _args[1] != ":")
 	{
 		std::string newNick = _args[1];
 		User *user = _server->getUser(newNick);
