@@ -39,11 +39,11 @@ int User::setNickFirstTime(std::string &nick)
 
 	while (i < (int)nick.size())
 	{
-		if (!isalnum(nick[i]))
+		/*if (!isalnum(nick[i]))
 		{
 			_nick.clear();
 			return 2;
-		}
+		}*/
 		_nick += nick[i];
 		i++;
 	}
@@ -65,11 +65,11 @@ int User::setUserFirstTime(std::string &user)
 
 	while (j < i)
 	{
-		if (!isalnum(user[j]))
+		/*if (!isalnum(user[j]))
 		{
 			_user.clear();
 			return 1;
-		}
+		}*/
 		_user += user[j];
 		j++;
 	}

@@ -115,22 +115,9 @@ void ServData::onInteraction()
 					// send(sd, msg.c_str(), msg.length(), 0);
 				}
 
-				/*PARSING COMMANDS
-				
-				need to pass User that execute the command
-				and servData(this) to send the result
-				*/
-				/*if (_clients[i]->recoverData(line)) //if Wrong disconnect the client
-				{
-					sendMsgToUser(_clients[i], "Fatal: Wrong name or nickname chosen!");
-					std::cout << "Client disconnected!" << std::endl;
-					close(_sd);
-					delete _clients[i];
-					_clients[i] = NULL;
-				}
-				else*/
-					Parser parser(line, this, _clients[i]); //if there's a cmd it'll execute it
-										   // send(_sd, line.c_str(), line.length(), 0);
+				_clients[i]->recoverData(line); //recover nickname and username if needed
+				Parser parser(line, this, _clients[i]);
+				// send(_sd, line.c_str(), line.length(), 0);
 			}
 		}
 	}
