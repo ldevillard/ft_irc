@@ -9,6 +9,8 @@ User::User()
 
 int User::recoverData(std::string line)
 {
+	if (line[0] == 'P' && line[1] == 'A' && line[2] == 'S' && line[3] == 'S')
+		return 0;
 	if (check_info() == 2)
 	{
 		return (setNickFirstTime(line));
