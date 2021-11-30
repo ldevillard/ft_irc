@@ -1,12 +1,13 @@
 #pragma once
 
 #include "../command.hpp"
+#include "../user.hpp"
 
 class Command;
 
 class Join : public Command
 {
 	public:
-		Join();
+		Join(User *user);
 		void execute();
 };

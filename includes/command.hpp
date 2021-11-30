@@ -7,7 +7,7 @@
 class Command
 {
 	public:
-		Command(std::string name, std::string desc);
+		Command(std::string name, std::string desc, User *user);
 		virtual ~Command();
 
 		std::string getDesc() const { return _desc; }
@@ -22,4 +22,5 @@ class Command
 		std::string _desc;
 
 		ServData *_server;
+		User	*_user;
 };

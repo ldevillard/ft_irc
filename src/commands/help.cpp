@@ -1,6 +1,6 @@
 #include "../../includes/commands/help.hpp"
 
-Help::Help(std::vector<Command*> &cmds) : Command("HELP", "Display all the commands and descriptions."), _cmds(cmds)
+Help::Help(std::vector<Command*> &cmds, User *user) : Command("HELP", "Display all the commands and descriptions.", user), _cmds(cmds)
 {
 }
 

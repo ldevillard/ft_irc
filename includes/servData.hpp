@@ -47,7 +47,6 @@ private:
 	int _port;
 	int _sd;
 	std::string _password;
-	std::vector<User> _users;
 
 	void setup();
 	void onInteraction();

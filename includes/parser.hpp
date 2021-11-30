@@ -9,7 +9,7 @@
 class Parser
 {
 	public:
-		Parser(std::string line, ServData *data);
+		Parser(std::string line, ServData *data, User *user);
 
 		void	executeCommand();
 		bool		isCommand();
@@ -22,4 +22,5 @@ class Parser
 		std::vector<Command*> _cmds_list;
 
 		ServData *_data;
+		User	*_user;
 };

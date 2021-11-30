@@ -37,7 +37,7 @@ int User::setNickFirstTime(std::string &nick)
 		i++;
 	i++;
 
-	while (i < (int)nick.size() - 2)
+	while (i < (int)nick.size())
 	{
 		if (!isalnum(nick[i]))
 		{

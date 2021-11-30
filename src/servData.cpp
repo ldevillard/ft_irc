@@ -120,8 +120,19 @@ void ServData::onInteraction()
 				need to pass User that execute the command
 				and servData(this) to send the result
 				*/
+				/*if (_clients[i]->recoverData(line))
+				{
+					std::cout << "nick : " << _clients[i]->getNick() << std::endl;
+					std::cout << "user : " << _clients[i]->getUser() << std::endl;
+					sendMsgToUser(_clients[i], response(RPL_INFO, "", "", "Fatal: Wrong name or nickname chosen!"));
+					std::cout << "Client disconnected!" << std::endl;
+					close(_sd);
+					delete _clients[i];
+					_clients[i] = NULL;
+				}
+				else*/
 
-				Parser parser(line, this); //if there's a cmd it'll execute it
+				Parser parser(line, this, _clients[i]); //if there's a cmd it'll execute it
 										   // send(_sd, line.c_str(), line.length(), 0);
 			}
 		}
