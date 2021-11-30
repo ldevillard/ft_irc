@@ -4,7 +4,6 @@
 #include <string>
 #include <iostream>
 #include "command.hpp"
-#include "commands/help.hpp"
 #include "servData.hpp"
 
 class Parser

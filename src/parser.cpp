@@ -1,4 +1,6 @@
 #include "../includes/parser.hpp"
+#include "../includes/commands/help.hpp"
+#include "../includes/commands/join.hpp"
 
 Parser::Parser(std::string line, ServData *data) : _line(line), _data(data)
 {
@@ -13,6 +15,7 @@ Parser::Parser(std::string line, ServData *data) : _line(line), _data(data)
 void Parser::initCommands()
 {
 	_cmds_list.push_back(new Help(_cmds_list));
+	_cmds_list.push_back(new Join());
 	//push all commands
 
 	std::vector<Command*>::iterator it;
