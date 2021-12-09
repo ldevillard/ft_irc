@@ -1,13 +1,10 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "message.hpp"
 #include "user.hpp"
 
-std::string response(int response_code, std::string name, std::string command, std::string message);
-void sendMsgToUser(User *user, std::string str);
-// void sendMsgToChannel(channel *chan, std::string str);
-
-class channel
+class Channel
 {
 private:
 	std::vector<User *> _members;
@@ -15,17 +12,14 @@ private:
 	std::string _channelName;
 
 public:
-	channel(std::string name) : _channelName(name) {}
-	~channel();
+	Channel(std::string name) : _channelName(name) {}
+	~Channel();
 
-	void addUser(User *user)
-	{
-		_members.push_back(user);
-	}
+	void join(User *user);
 
 	void broadcastMsg(std::string msg)
 	{
 		for (std::vector<User *>::iterator user = _members.begin(); user != _members.end(); user++)
-			sendMsgToUser(*user, msg);
+			message::sendMsgToUser(*user, msg);
 	}
 };

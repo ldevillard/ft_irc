@@ -5,8 +5,7 @@
 #include "servData.hpp"
 #include "serverException.hpp"
 
-void sendMsgToUser(User *user, std::string str);
-std::string response(int response_code, std::string name, std::string command, std::string message);
+
 
 class Command
 {

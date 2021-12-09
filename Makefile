@@ -27,10 +27,10 @@ SRCS = \
 		$(SRCS_PATH)/commands/help.cpp \
 		$(SRCS_PATH)/commands/join.cpp \
 		$(SRCS_PATH)/commands/nick.cpp \
+		$(SRCS_PATH)/channel.cpp \
 		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/parser.cpp\
-		$(SRCS_PATH)/sendMessages.cpp \
 		$(SRCS_PATH)/servData.cpp \
 		$(SRCS_PATH)/user.cpp \
 
