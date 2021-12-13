@@ -3,6 +3,7 @@
 #include "../includes/commands/join.hpp"
 #include "../includes/commands/nick.hpp"
 #include "../includes/commands/part.hpp"
+#include "../includes/commands/privmsg.hpp"
 
 Parser::Parser(std::string line, ServData *data, User *user) : _line(line), _data(data), _user(user)
 {
@@ -29,6 +30,7 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Join(_user));
 	_cmds_list.push_back(new Nick(_user));
 	_cmds_list.push_back(new Part(_user));
+	_cmds_list.push_back(new Privmsg(_user));
 	//push all commands
 
 	std::vector<Command*>::iterator it;
