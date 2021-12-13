@@ -12,11 +12,15 @@ void Join::execute()
 {
 	if (_args[1] != "#")
 	{
-		Channel *chan = new Channel(_args[1]);
-		_server->getChannels().push_back(chan);
+		Channel *chan = _server->findChannel(_args[1]);
+
+		if (chan == NULL)
+		{
+			chan = new Channel(_args[1]);
+			_server->getChannels().insert(std::make_pair(_args[1], chan));
+		}
 
 		chan->broadcastMsg(_args[1]);
-
 		chan->join(_user);
 	}
 }
