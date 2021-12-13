@@ -19,6 +19,7 @@
 #include <iostream>
 #include "user.hpp"
 #include <vector>
+#include "channel.hpp"
 
 #define MAX_CLIENTS 5
 
@@ -30,6 +31,19 @@ public:
 	~ServData();
 	int connect();
 	User *getUser(std::string name);
+	std::vector<Channel*> &getChannels() { return _chan_list; }
+	
+	Channel *findChannel(std::string name)
+	{
+		std::vector<Channel*>::iterator it;
+
+		for (it = _chan_list.begin(); it != _chan_list.end(); it++)
+		{
+			if (name == (*it)->getName())
+				return (*it);
+		}
+		return (NULL);
+	}
 
 private:
 	ServData();
@@ -48,6 +62,7 @@ private:
 	int _port;
 	int _sd;
 	std::string _password;
+	std::vector<Channel*> _chan_list;
 
 	void setup();
 	void onInteraction();
