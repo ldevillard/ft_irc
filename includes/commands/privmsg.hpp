@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../command.hpp"
-#include "../user.hpp"
+#include "../client.hpp"
 #include <vector>
 
 class Command;
@@ -9,6 +9,6 @@ class Command;
 class Privmsg : public Command
 {
 	public:
-		Privmsg(User *user);
+		Privmsg(Client *user);
 		void execute();
 };
