@@ -11,11 +11,11 @@ Privmsg::Privmsg(User *user) : Command("PRIVMSG", "<target> <text to be send>: S
 
 void Privmsg::execute()
 {
-    /*if (_args[1] != "#")
+    if (_args[1] != "#")
     {
         Channel *chan = _server->findChannel(_args[1]);
 
         if (chan != NULL)
-            chan->broadcastMsg("No way dude !");
-    }*/
+            chan->broadcastMsg(":" + _user->getNick() + " PRIVMSG " + _args[1] + " : " + _args[2]);
+    }
 }
