@@ -29,3 +29,18 @@ class Command
 		Client	*_user;
 		std::vector<std::string> _args;
 };
+
+/* COMMANDS :
+HELP
+JOIN
+KICK
+LIST
+NICK
+NOTICE
+PART
+PASS
+PRIVMSG
+QUIT
+USER
+WHO
+*/
