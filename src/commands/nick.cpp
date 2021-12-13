@@ -18,7 +18,10 @@ void Nick::execute()
 			throw ServerException::nickAlreadyUsed();
 
 		if (newNick.size() > 0)
+		{
 			_user->setNickName(newNick);
+			_user->setUserName(newNick);
+		}
 		else
 			throw ServerException::invalidNick();
 	}
