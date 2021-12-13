@@ -15,13 +15,14 @@ HEADERS = \
 		$(INCLUDE_PATH)/commands/join.hpp \
 		$(INCLUDE_PATH)/commands/nick.hpp \
 		$(INCLUDE_PATH)/commands/part.hpp \
+		$(INCLUDE_PATH)/commands/user.hpp \
 		$(INCLUDE_PATH)/channel.hpp \
+		$(INCLUDE_PATH)/client.hpp \
 		$(INCLUDE_PATH)/command.hpp \
 		$(INCLUDE_PATH)/parser.hpp \
 		$(INCLUDE_PATH)/rpl_codes.hpp \
 		$(INCLUDE_PATH)/servData.hpp \
 		$(INCLUDE_PATH)/serverException.hpp \
-		$(INCLUDE_PATH)/user.hpp \
 
 SRCS_PATH= ./src
 SRCS = \
@@ -29,12 +30,12 @@ SRCS = \
 		$(SRCS_PATH)/commands/join.cpp \
 		$(SRCS_PATH)/commands/nick.cpp \
 		$(SRCS_PATH)/commands/part.cpp \
+		$(SRCS_PATH)/commands/user.cpp \
 		$(SRCS_PATH)/channel.cpp \
 		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/parser.cpp\
 		$(SRCS_PATH)/servData.cpp \
-		$(SRCS_PATH)/user.cpp \
 
 OBJS = $(SRCS:%.cpp=%.o)
 

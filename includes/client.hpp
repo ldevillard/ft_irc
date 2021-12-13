@@ -2,27 +2,39 @@
 #include <string>
 #include <sys/socket.h>
 
-class User
+class Client
 {
 public:
-	User();
+	Client()
+	{
+		_isRegistered = false;
+		_user.clear();
+		_nick.clear();
+	}
 
 	int recoverData(std::string line);
 
-	const std::string &getUser() const { return _user; }
-	const std::string &getNick() const { return _nick; }
+	const std::string &getUserName() const { return _user; }
+	const std::string &getNickName() const { return _nick; }
 	const std::string &getAddress() const { return _address; }
+	const bool &isRegistered() const { return _isRegistered; }
 
 	const int &getSd() const { return _sd; }
 	void setSd(int sd) { _sd = sd; }
 	std::string &getBufferLine() { return _bufferLine; }
 
-	int setUserFirstTime(std::string &user);
-	int setNickFirstTime(std::string &nick);
-
-	void setUserName(std::string name) { _user = name; }
-	void setNickName(std::string name) { _nick = name; }
+	void setUserName(std::string name)
+	{
+		if (name != "none")
+			_user = name;
+	}
+	void setNickName(std::string name)
+	{
+		if (name != "none")
+			_nick = name;
+	}
 	void setAddress(std::string address) { _address = address; }
+	void setRegistered(bool state) { _isRegistered = state; }
 
 	void sendMsg(std::string msg)
 	{
@@ -38,4 +50,5 @@ private:
 	int _sd;
 	std::string _bufferLine;
 	std::string _address;
+	bool _isRegistered;
 };

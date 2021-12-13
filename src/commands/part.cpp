@@ -5,7 +5,7 @@
 #include "../../includes/message.hpp"
 #include <vector>
 
-Part::Part(User *user) : Command("PART", "<channel> : Leave wanted channel", user)
+Part::Part(Client *user) : Command("PART", "<channel> : Leave wanted channel", user)
 {
 }
 

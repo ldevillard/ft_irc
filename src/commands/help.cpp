@@ -1,7 +1,7 @@
 #include "../../includes/commands/help.hpp"
 #include "../../includes/rpl_codes.hpp"
 
-Help::Help(std::vector<Command*> &cmds, User *user) : Command("HELP", "Display all the commands and descriptions.", user), _cmds(cmds)
+Help::Help(std::vector<Command*> &cmds, Client *user) : Command("HELP", "Display all the commands and descriptions.", user), _cmds(cmds)
 {
 }
 

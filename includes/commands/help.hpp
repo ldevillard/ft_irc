@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../command.hpp"
-#include "../user.hpp"
+#include "../client.hpp"
 #include <vector>
 
 class Command;
@@ -9,7 +9,7 @@ class Command;
 class Help : public Command
 {
 	public:
-		Help(std::vector<Command*> &cmds, User *user);
+		Help(std::vector<Command*> &cmds, Client *user);
 		void execute();
 
 	private:

@@ -17,7 +17,7 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <poll.h>	  // Poll() (yeah no shit)
 #include <iostream>
-#include "user.hpp"
+#include "client.hpp"
 #include <vector>
 #include "channel.hpp"
 
@@ -30,9 +30,9 @@ public:
 	ServData(id_t port, std::string password);
 	~ServData();
 	int connect();
-	User *getUser(std::string name);
+	Client *getUser(std::string name);
 	std::vector<Channel*> &getChannels() { return _chan_list; }
-	
+		
 	Channel *findChannel(std::string name)
 	{
 		std::vector<Channel*>::iterator it;
@@ -52,7 +52,7 @@ private:
 	std::string _msg;
 	size_t _addrlen;
 	fd_set _read_fds;
-	User *_clients[MAX_CLIENTS];
+	Client *_clients[MAX_CLIENTS];
 	int _activity;
 	int _master_socket;
 	int _max_clients;

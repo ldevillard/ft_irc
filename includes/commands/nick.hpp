@@ -1,13 +1,13 @@
 #pragma once
 
 #include "../command.hpp"
-#include "../user.hpp"
+#include "../client.hpp"
 
 class Command;
 
 class Nick : public Command
 {
 	public:
-		Nick(User *user);
+		Nick(Client *user);
 		void execute();
 };

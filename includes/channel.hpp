@@ -2,32 +2,32 @@
 #include <vector>
 #include <string>
 #include "message.hpp"
-#include "user.hpp"
+#include "client.hpp"
 
 class Channel
 {
 private:
-	std::vector<User *> _members;
-	std::vector<User *> _ops;
+	std::vector<Client *> _members;
+	std::vector<Client *> _ops;
 	std::string _channelName;
 
 public:
 	Channel(std::string name) : _channelName(name) {}
 	~Channel();
 
-	void join(User *user);
+	void join(Client *user);
 
 	std::string &getName() { return _channelName; }
 
 	void broadcastMsg(std::string msg)
 	{
-		for (std::vector<User *>::iterator user = _members.begin(); user != _members.end(); user++)
+		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
 			message::sendMsgToUser(*user, msg);
 	}
 
-	bool isUserInChannel(User *user)
+	bool isUserInChannel(Client *user)
 	{
-		std::vector<User*>::iterator it;
+		std::vector<Client*>::iterator it;
 
 		for (it = _members.begin(); it != _members.end(); it++)
 		{

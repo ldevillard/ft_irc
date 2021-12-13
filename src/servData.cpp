@@ -1,7 +1,7 @@
 #include "../includes/servData.hpp"
 #include "../includes/parser.hpp"
 #include "../includes/rpl_codes.hpp"
-#include "../includes/user.hpp"
+#include "../includes/client.hpp"
 #include "../includes/channel.hpp"
 #include "../includes/message.hpp"
 
@@ -45,7 +45,7 @@ void ServData::setup()
 	std::cout << "Waiting for connections..." << std::endl;
 }
 
-int readLine(User &user)
+int readLine(Client &user)
 {
 	char buff = 0;
 	int read;
@@ -95,32 +95,6 @@ void ServData::onInteraction()
 
 				std::cout << "<- [" << _clients[i]->getSd() << "] " << line << std::endl;
 
-				if (line == "JOIN #salut")
-				{
-					Channel *chan = new Channel("#salut");
-					(void)chan;
-
-					chan->join(_clients[i]);
-
-					// sendMsgToUser(_clients[i], response(RPL_WELCOME, "Gauthier", "", ":Welcome to the Internet Relay Network"));
-
-					// message::sendMsgToUser(_clients[i], ":Gauthier!Gauthier@127.0.0.1 JOIN #salut");
-					// sendMsgToUser(_clients[i], "Gauthier!Gauthier@127.0.0.1 JOIN #salut");
-					// sendMsgToUser(_clients[i], ":127.0.0.1 332 Gauthier #salut :generic channel");
-					// sendMsgToUser(_clients[i], ":127.0.0.1 353 Gauthier = #salut :Gauthier");
-					// sendMsgToUser(_clients[i], ":127.0.0.1 366 Gauthier #salut :End of NAMES list");
-					// sendMsgToUser(_clients[i], ":server!server@127.0.0.1 PRIVMSG #salut :Hello Channel");
-
-					// chan->broadcastMsg(response(RPL_INFO, "Gauthier", "", ":joining #salut channel"));
-
-					// sendMsgToUser(_clients[i], response(RPL_TOPIC, "gauthier", "JOIN", "#salut"));
-					// sendMsgToUser(_clients[i], response(RPL_TOPIC, "gauthier", "JOIN", "#salut"));
-					// std::string msg = response(RPL_INFO, "gapoulain", "", ":pouet");
-					// std::cout << "send \"" << msg << "\"" << std::endl;
-					// send(sd, msg.c_str(), msg.length(), 0);
-				}
-
-				// _clients[i]->recoverData(line); //recover nickname and username if needed
 				Parser parser(line, this, _clients[i]);
 				// send(_sd, line.c_str(), line.length(), 0);
 			}
@@ -141,12 +115,8 @@ void ServData::onConnection()
 		{
 			if (!_clients[i])
 			{
-				_clients[i] = new User();
+				_clients[i] = new Client();
 				_clients[i]->setSd(_new_socket);
-
-				// c'est temporaire ^^
-				_clients[i]->setNickName("Gauthier");
-				_clients[i]->setUserName("gogoledozo");
 
 				_clients[i]->setAddress(inet_ntoa(_address.sin_addr));
 				std::cout << "Adding to sockets array as : " << i << std::endl;
@@ -200,13 +170,13 @@ int ServData::connect()
 	return (0);
 }
 
-User *ServData::getUser(std::string name)
+Client *ServData::getUser(std::string name)
 {
 	int i = 0;
 
 	while (i < MAX_CLIENTS)
 	{
-		if (_clients[i] && _clients[i]->getNick() == name)
+		if (_clients[i] && _clients[i]->getNickName() == name)
 			return _clients[i];
 		i++;
 	}
