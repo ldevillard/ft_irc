@@ -32,7 +32,7 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 				if (!user->getNickName().empty() && !user->getUserName().empty())
 				{
 					user->setRegistered(true);
-					user->sendMsg(std::to_string(RPL_WELCOME) + ":welcome to ft_irc");
+					user->sendMsg(":127.0.0.1 " + std::to_string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
 				}
 			}
 			else
