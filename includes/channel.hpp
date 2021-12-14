@@ -36,6 +36,14 @@ public:
 		// updateChannelInfos();
 	}
 
+	bool isEmpty()
+	{
+		if (_members.size() > 0)
+			return false;
+		else
+			return true;
+	}
+
 	std::string &getName() { return _channelName; }
 
 	void broadcastMsg(std::string msg)
