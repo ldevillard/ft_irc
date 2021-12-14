@@ -21,7 +21,10 @@ void Part::execute()
 			{
 				chan->leave(_user);
 				if (chan->isEmpty() == true)
+                {
 					_server->getChannels().erase(chan->getName());
+                    delete chan;
+                }
 			}
 			else
 				_user->sendMsg(":127.0.0.1 " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");

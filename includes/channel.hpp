@@ -14,7 +14,7 @@ private:
 
 public:
 	Channel(std::string name) : _channelName(name) {}
-	~Channel();
+	~Channel(){}
 
 	void join(Client *user)
 	{
