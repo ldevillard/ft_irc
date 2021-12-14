@@ -64,7 +64,7 @@ void Privmsg::execute()
 	{
 		Client *targetUser = _server->getUser(chanName);
 		if (!targetUser)
-			_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+			_user->sendMsg(std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": No such nick!");
 		else
 		{
 			targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " PRIVMSG " + targetUser->getNickName() + " :" + makeMessage());
