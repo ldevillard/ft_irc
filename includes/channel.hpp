@@ -19,11 +19,22 @@ public:
 	void join(Client *user)
 	{
 		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " JOIN " + _channelName);
+		broadcastMsg(":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " JOIN " + _channelName);
 		_members.push_back(user);
-		updateUsersList();
+		sendChannelInfos(user);
 	}
 
-	void leave(Client *user);
+	void leave(Client *user)
+	{
+		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " PART " + _channelName);
+		broadcastMsg(":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " PART " + _channelName);
+
+		std::vector<Client *>::iterator it = _members.begin();
+		while ((*it) != user)
+			it++;
+		_members.erase(it);
+		// updateChannelInfos();
+	}
 
 	bool isEmpty()
 	{
@@ -50,6 +61,11 @@ public:
 		}
 	}
 
+	std::vector<Client *> getMembers(void)
+	{
+		return _members;
+	}
+
 	bool isUserInChannel(Client *user)
 	{
 		std::vector<Client *>::iterator it;
@@ -69,18 +85,14 @@ public:
 		return false;
 	}
 
-	void updateUsersList(void)
+	void sendChannelInfos(Client *user)
 	{
 		std::string usersList = "";
-		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
-		{
-			usersList += (*user)->getNickName() + " ";
-		}
+		for (std::vector<Client *>::iterator userIt = _members.begin(); userIt != _members.end(); userIt++)
+			usersList += (*userIt)->getNickName() + " ";
 
-		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
-		{
-			message::sendMsgToUser(*user, (":127.0.0.1 " + std::string(RPL_NAMREPLY) + " " + (*user)->getNickName() + " = " + _channelName + " :" + usersList));
-			message::sendMsgToUser(*user, (":127.0.0.1 " + std::string(RPL_ENDOFNAMES) + " " + (*user)->getNickName() + " = " + _channelName + " :End of NAMES list"));
-		}
+		message::sendMsgToUser(user, (":127.0.0.1 " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
+		message::sendMsgToUser(user, (":127.0.0.1 " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
+		message::sendMsgToUser(user, (":127.0.0.1 " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " :End of NAMES list"));
 	}
 };
