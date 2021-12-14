@@ -25,6 +25,15 @@ public:
 			message::sendMsgToUser(*user, msg);
 	}
 
+	void broadcastMsgExept(std::string msg, Client *sender)
+	{
+		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
+		{
+			if (*user != sender)
+				message::sendMsgToUser(*user, msg);
+		}
+	}
+
 	bool isUserInChannel(Client *user)
 	{
 		std::vector<Client*>::iterator it;

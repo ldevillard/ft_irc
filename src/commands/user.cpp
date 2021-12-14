@@ -4,7 +4,7 @@
 #include "../../includes/rpl_codes.hpp"
 #include "../../includes/message.hpp"
 
-User::User(Client *user) : Command("USER", "<username> <hostname> <servername> <realname> : Join wanted channel.", user)
+User::User(Client *user) : Command("USER", "USER - <username> <hostname> <servername> <realname> : Specify identity.", user)
 {
 }
 

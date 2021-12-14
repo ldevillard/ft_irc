@@ -4,7 +4,7 @@
 #include "../../includes/rpl_codes.hpp"
 #include "../../includes/message.hpp"
 
-Join::Join(Client *user) : Command("JOIN", "<channel> <password> : Join wanted channel.", user)
+Join::Join(Client *user) : Command("JOIN", "JOIN - <channel> <password> : Join wanted channel.", user)
 {
 }
 

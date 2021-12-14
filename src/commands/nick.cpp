@@ -1,7 +1,7 @@
 #include "../../includes/commands/nick.hpp"
 #include <iostream>
 
-Nick::Nick(Client *user) : Command("NICK", "<nickname> : Change client nickname.", user)
+Nick::Nick(Client *user) : Command("NICK", "NICK - <nickname> : Change client nickname.", user)
 {
 }
 

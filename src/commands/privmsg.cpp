@@ -5,7 +5,7 @@
 #include "../../includes/message.hpp"
 #include <vector>
 
-Privmsg::Privmsg(Client *user) : Command("PRIVMSG", "<target> <text to be send>: Send message to other client or channel.", user)
+Privmsg::Privmsg(Client *user) : Command("PRIVMSG", "PRIVMSG - <target> <text to be send>: Send message to other client or channel.", user)
 {
 }
 
@@ -36,7 +36,9 @@ void Privmsg::execute()
     {
         Channel *chan = _server->findChannel(_args[1]);
 
+        std::cout << "nick " + _user->getNickName() << std::endl;
+
         if (chan != NULL)
-            chan->broadcastMsg(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + makeMessage());
+            chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + makeMessage(), _user);
     }
 }
