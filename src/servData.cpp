@@ -7,6 +7,16 @@
 
 ServData::~ServData()
 {
+	std::map<std::string, Channel*>::iterator it;
+
+	for (it = _chan_list.begin(); it != _chan_list.end(); it++)
+		delete (*it).second;
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (_clients[i])
+			delete _clients[i];
+	}
 }
 
 ServData::ServData()

@@ -56,6 +56,14 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 	}
 }
 
+Parser::~Parser()
+{
+	std::vector<Command *>::iterator it;
+
+	for (it = _cmds_list.begin(); it != _cmds_list.end(); it++)
+		delete *it;
+}
+
 void Parser::initCommands()
 {
 	_cmds_list.push_back(new Help(_cmds_list, _user));
