@@ -8,6 +8,9 @@ class Command;
 
 class Privmsg : public Command
 {
+	private:
+		std::string makeMessage();
+
 	public:
 		Privmsg(Client *user);
 		void execute();
