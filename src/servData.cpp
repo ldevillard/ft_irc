@@ -20,6 +20,7 @@ ServData::ServData(id_t port, std::string password) : _msg("IRC better than ever
 
 void ServData::setup()
 {
+	shutdown = false;
 	// Create a master socket
 	std::signal(SIGPIPE, SIG_IGN);
 	for (int i = 0; i < _max_clients; i++)
@@ -154,6 +155,9 @@ int ServData::connect()
 	setup();
 	while (true)
 	{
+		if (shutdown)
+			break;
+
 		setupFD();
 		// Wait for an activity on one of the socket
 		// Timeout set to null so infinite waiting

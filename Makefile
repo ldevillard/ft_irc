@@ -4,9 +4,9 @@ CC = clang++
 MAKE = make --no-print-directory
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-CFLAGS += -g
+#CFLAGS += -g
 # CFLAGS += -O3 -fno-builtin
-CFLAGS += -fsanitize=address
+#CFLAGS += -fsanitize=address
 
 INCLUDE_PATH= ./includes
 
@@ -17,6 +17,7 @@ HEADERS = \
 		$(INCLUDE_PATH)/commands/part.hpp \
 		$(INCLUDE_PATH)/commands/user.hpp \
 		$(INCLUDE_PATH)/commands/privmsg.hpp \
+		$(INCLUDE_PATH)/commands/die.hpp \
 		$(INCLUDE_PATH)/channel.hpp \
 		$(INCLUDE_PATH)/client.hpp \
 		$(INCLUDE_PATH)/command.hpp \
@@ -32,6 +33,7 @@ SRCS = \
 		$(SRCS_PATH)/commands/nick.cpp \
 		$(SRCS_PATH)/commands/part.cpp \
 		$(SRCS_PATH)/commands/user.cpp \
+		$(SRCS_PATH)/commands/die.cpp \
 		$(SRCS_PATH)/commands/privmsg.cpp \
 		$(SRCS_PATH)/channel.cpp \
 		$(SRCS_PATH)/command.cpp \
