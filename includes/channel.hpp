@@ -3,6 +3,7 @@
 #include <string>
 #include "message.hpp"
 #include "client.hpp"
+#include "../includes/rpl_codes.hpp"
 
 class Channel
 {
@@ -15,7 +16,12 @@ public:
 	Channel(std::string name) : _channelName(name) {}
 	~Channel();
 
-	void join(Client *user);
+	void join(Client *user)
+	{
+		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " JOIN " + _channelName);
+		_members.push_back(user);
+		updateUsersList();
+	}
 
 	std::string &getName() { return _channelName; }
 
@@ -36,7 +42,7 @@ public:
 
 	bool isUserInChannel(Client *user)
 	{
-		std::vector<Client*>::iterator it;
+		std::vector<Client *>::iterator it;
 
 		for (it = _members.begin(); it != _members.end(); it++)
 		{
@@ -51,5 +57,20 @@ public:
 		}
 
 		return false;
+	}
+
+	void updateUsersList(void)
+	{
+		std::string usersList = "";
+		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
+		{
+			usersList += (*user)->getNickName() + " ";
+		}
+
+		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
+		{
+			message::sendMsgToUser(*user, (":127.0.0.1 " + std::string(RPL_NAMREPLY) + " " + (*user)->getNickName() + " = " + _channelName + " :" + usersList));
+			message::sendMsgToUser(*user, (":127.0.0.1 " + std::string(RPL_ENDOFNAMES) + " " + (*user)->getNickName() + " = " + _channelName + " :End of NAMES list"));
+		}
 	}
 };

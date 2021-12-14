@@ -32,12 +32,12 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 				if (!user->getNickName().empty() && !user->getUserName().empty())
 				{
 					user->setRegistered(true);
-					user->sendMsg(":127.0.0.1 " + std::to_string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
+					user->sendMsg(":127.0.0.1 " + std::string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
 				}
 			}
 			else
 			{
-				user->sendMsg(std::to_string(ERR_NOTREGISTERED) + ":You have not registered");
+				user->sendMsg(std::string(ERR_NOTREGISTERED) + ":You have not registered");
 			}
 		}
 		else
