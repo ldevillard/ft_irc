@@ -16,6 +16,7 @@ public:
 	~Channel();
 
 	void join(Client *user);
+	void leave(Client *user);
 
 	std::string &getName() { return _channelName; }
 
