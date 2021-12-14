@@ -10,12 +10,14 @@ public:
 		_isRegistered = false;
 		_user.clear();
 		_nick.clear();
+		_realName.clear();
 	}
 
 	int recoverData(std::string line);
 
 	const std::string &getUserName() const { return _user; }
 	const std::string &getNickName() const { return _nick; }
+	std::string &getRealName() { return _realName; }
 	const std::string &getAddress() const { return _address; }
 	const bool &isRegistered() const { return _isRegistered; }
 
@@ -33,6 +35,11 @@ public:
 		if (name != "none")
 			_nick = name;
 	}
+	void setRealName(std::string name)
+	{
+		if (name != "none")
+			_realName = name;
+	}
 	void setAddress(std::string address) { _address = address; }
 	void setRegistered(bool state) { _isRegistered = state; }
 
@@ -47,6 +54,7 @@ public:
 private:
 	std::string _user;
 	std::string _nick;
+	std::string _realName;
 	int _sd;
 	std::string _bufferLine;
 	std::string _address;

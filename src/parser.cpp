@@ -42,7 +42,6 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 		}
 		else
 		{
-
 			try
 			{
 				executeCommand();
