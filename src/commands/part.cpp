@@ -11,14 +11,18 @@ Part::Part(Client *user) : Command("PART", "PART - <channel> : Leave wanted chan
 
 void Part::execute()
 {
-    Channel *chan = _server->findChannel(_args[1]);
-    if (chan == NULL)
-        message::sendMsgToUser(_user, "Channel not exist!"); //Debug -> send correct message to user
-    else if (chan->isUserInChannel(_user) == false)
-        message::sendMsgToUser(_user, "You're not in channel"); //Debug -> send correct message to user
-    else
+    if (_args[1] != "#")
     {
-        //Leave Channel
-        //Del channel if it's empty
+        Channel *chan = _server->findChannel(_args[1]);
+
+        if (chan != NULL)
+        {
+            if (chan->isUserInChannel(_user) == true)
+                chan->leave(_user);
+            else
+                _user->sendMsg(std::to_string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+        }
+        else
+            _user->sendMsg(std::to_string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
     }
 }

@@ -23,6 +23,8 @@ public:
 		updateUsersList();
 	}
 
+	void leave(Client *user);
+
 	std::string &getName() { return _channelName; }
 
 	void broadcastMsg(std::string msg)
