@@ -46,6 +46,11 @@ public:
 		return (NULL);
 	}
 
+	void shutdownServer()
+	{
+		shutdown = true;
+	}
+
 private:
 	ServData();
 
@@ -64,6 +69,7 @@ private:
 	int _sd;
 	std::string _password;
 	std::map<std::string, Channel*> _chan_list;
+	bool shutdown;
 
 	void setup();
 	void onInteraction();

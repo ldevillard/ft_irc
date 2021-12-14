@@ -20,7 +20,10 @@ void Join::execute()
 			_server->getChannels().insert(std::make_pair(_args[1], chan));
 		}
 
-		chan->broadcastMsg(_args[1]);
-		chan->join(_user);
+		if (chan->isUserInChannel(_user) == false)
+		{
+			chan->broadcastMsg(_args[1]);
+			chan->join(_user);
+		}
 	}
 }

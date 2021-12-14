@@ -10,6 +10,7 @@ class Parser
 {
 	public:
 		Parser(std::string line, ServData *data, Client *user);
+		~Parser();
 
 		void	executeCommand();
 		bool		isCommand();

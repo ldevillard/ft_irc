@@ -4,6 +4,7 @@
 #include "../includes/commands/nick.hpp"
 #include "../includes/commands/part.hpp"
 #include "../includes/commands/user.hpp"
+#include "../includes/commands/die.hpp"
 #include "../includes/rpl_codes.hpp"
 #include "../includes/commands/privmsg.hpp"
 
@@ -32,12 +33,12 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 				if (!user->getNickName().empty() && !user->getUserName().empty())
 				{
 					user->setRegistered(true);
-					user->sendMsg(":127.0.0.1 " + std::to_string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
+					user->sendMsg(":127.0.0.1 " + std::string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
 				}
 			}
 			else
 			{
-				user->sendMsg(std::to_string(ERR_NOTREGISTERED) + ":You have not registered");
+				user->sendMsg(std::string(ERR_NOTREGISTERED) + ":You have not registered");
 			}
 		}
 		else
@@ -54,6 +55,14 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 	}
 }
 
+Parser::~Parser()
+{
+	std::vector<Command *>::iterator it;
+
+	for (it = _cmds_list.begin(); it != _cmds_list.end(); it++)
+		delete *it;
+}
+
 void Parser::initCommands()
 {
 	_cmds_list.push_back(new Help(_cmds_list, _user));
@@ -62,6 +71,7 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Part(_user));
 	_cmds_list.push_back(new User(_user));
 	_cmds_list.push_back(new Privmsg(_user));
+	_cmds_list.push_back(new Die(_user));
 	//push all commands
 
 	std::vector<Command *>::iterator it;
