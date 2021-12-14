@@ -18,11 +18,15 @@ void Part::execute()
         if (chan != NULL)
         {
             if (chan->isUserInChannel(_user) == true)
+            {
                 chan->leave(_user);
+                if (chan->isEmpty() == true)
+                    _server->getChannels().erase(chan->getName());
+            }
             else
-                _user->sendMsg(std::to_string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+                _user->sendMsg(std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
         }
         else
-            _user->sendMsg(std::to_string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+            _user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
     }
 }
