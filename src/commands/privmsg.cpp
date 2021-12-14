@@ -32,18 +32,42 @@ std::string Privmsg::makeMessage()
 void Privmsg::execute()
 {
 	//Manque les verifs
-	if (_args[1] != "#")
-	{
-		Channel *chan = _server->findChannel(_args[1]);
+	std::string chanName = _args[1];
 
-		if (chan != NULL)
+	if (chanName.empty())
+	{
+		_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+	}
+	else if (chanName[0] == '#')
+	{
+		chanName.erase(chanName.begin());
+		if (chanName.empty())
 		{
-			if (chan->isUserInChannel(_user) == true)
-				chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + makeMessage(), _user);
-			else
-				_user->sendMsg(std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+			_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 		}
 		else
+		{
+			Channel *chan = _server->findChannel(_args[1]);
+
+			if (chan != NULL)
+			{
+				if (chan->isUserInChannel(_user) == true)
+					chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + makeMessage(), _user);
+				else
+					_user->sendMsg(std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+			}
+			else
+				_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+		}
+	}
+	else
+	{
+		Client *targetUser = _server->getUser(chanName);
+		if (!targetUser)
 			_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+		else
+		{
+			targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " PRIVMSG " + targetUser->getNickName() + " :" + makeMessage());
+		}
 	}
 }
