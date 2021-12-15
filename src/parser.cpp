@@ -6,8 +6,9 @@
 #include "../includes/commands/user.hpp"
 #include "../includes/commands/die.hpp"
 #include "../includes/commands/list.hpp"
-#include "../includes/rpl_codes.hpp"
+#include "../includes/commands/quit.hpp"
 #include "../includes/commands/privmsg.hpp"
+#include "../includes/rpl_codes.hpp"
 
 Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _data(data), _user(user)
 {
@@ -74,6 +75,7 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Privmsg(_user));
 	_cmds_list.push_back(new Die(_user));
 	_cmds_list.push_back(new List(_user));
+	_cmds_list.push_back(new Quit(_user));
 	//push all commands
 
 	std::vector<Command *>::iterator it;

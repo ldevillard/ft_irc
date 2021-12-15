@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <sys/socket.h>
+#include <unistd.h>
 
 class Client
 {
@@ -50,6 +51,8 @@ public:
 	}
 
 	int check_info(); //0 if OK, 1 if no user set, 2 if no nick set
+
+	void disconnect() { close(_sd); }
 
 private:
 	std::string _user;
