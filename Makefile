@@ -16,6 +16,7 @@ HEADERS = \
 		$(INCLUDE_PATH)/commands/nick.hpp \
 		$(INCLUDE_PATH)/commands/part.hpp \
 		$(INCLUDE_PATH)/commands/user.hpp \
+		$(INCLUDE_PATH)/commands/list.hpp \
 		$(INCLUDE_PATH)/commands/privmsg.hpp \
 		$(INCLUDE_PATH)/commands/die.hpp \
 		$(INCLUDE_PATH)/channel.hpp \
@@ -35,6 +36,7 @@ SRCS = \
 		$(SRCS_PATH)/commands/user.cpp \
 		$(SRCS_PATH)/commands/die.cpp \
 		$(SRCS_PATH)/commands/privmsg.cpp \
+		$(SRCS_PATH)/commands/list.cpp \
 		$(SRCS_PATH)/channel.cpp \
 		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
