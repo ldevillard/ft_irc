@@ -3,7 +3,8 @@ NAME = ircserv
 CC = clang++
 MAKE = make --no-print-directory
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror 
+CFLAGS += -std=c++98
 CFLAGS += -g
 # CFLAGS += -O3 -fno-builtin
 #CFLAGS += -fsanitize=address
