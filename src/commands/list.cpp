@@ -5,6 +5,14 @@ List::List(Client *user) : Command("LIST", "LIST - Show all channels on the serv
 {
 }
 
+std::string itoa(int nb)
+{
+	std::ostringstream s;
+	s << nb;
+	std::string str(s.str());
+	return str;
+}
+
 void List::execute()
 {
     std::map<std::string, Channel*>::iterator it;
@@ -16,13 +24,13 @@ void List::execute()
         if (chan == NULL)
             _user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
         else
-            _user->sendMsg(std::string(RPL_LIST) + " * " + chan->getName() + " " + std::to_string(chan->getMembers().size())); //TO STRING
+            _user->sendMsg(std::string(RPL_LIST) + " * " + chan->getName() + " " + itoa(chan->getMembers().size())); //TO STRING
     }
     else
     {
         for (it = _server->getChannels().begin(); it != _server->getChannels().end(); it++)
         {
-            _user->sendMsg(std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + std::to_string((*it).second->getMembers().size())); //TO STRING
+            _user->sendMsg(std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + itoa((*it).second->getMembers().size())); //TO STRING
         }
     }
     _user->sendMsg(std::string(RPL_LISTEND));

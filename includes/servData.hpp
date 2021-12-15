@@ -21,6 +21,7 @@
 #include <vector>
 #include <map>
 #include "channel.hpp"
+#include <sstream>
 
 #define MAX_CLIENTS 5
 
@@ -91,3 +92,4 @@ private:
 	void onConnection();
 	void setupFD();
 };
+
