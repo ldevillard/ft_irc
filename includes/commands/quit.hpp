@@ -7,6 +7,8 @@ class Command;
 
 class Quit : public Command
 {
+private:
+    std::string makeMessage();
 public:
 	Quit(Client *user);
 	void execute();
