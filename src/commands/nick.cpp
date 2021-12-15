@@ -15,7 +15,10 @@ void Nick::execute()
 		Client *user = _server->getUser(newNick);
 
 		if (user != NULL && user != _user)
+		{
+			_user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": Nickname already used!");
 			throw ServerException::nickAlreadyUsed();
+		}
 		if (newNick.size() > 0)
 		{
 			if (_user->getNickName().size() > 0)
@@ -32,6 +35,9 @@ void Nick::execute()
 			_user->setNickName(newNick);
 		}
 		else
+		{
+			_user->sendMsg(":127.0.0.1 " + std::string(ERR_ERRONEUSNICKNAME) + " " + _args[1] + ": Invalid Nickname!");
 			throw ServerException::invalidNick();
+		}
 	}
 }
