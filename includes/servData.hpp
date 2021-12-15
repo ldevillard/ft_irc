@@ -51,6 +51,21 @@ public:
 		shutdown = true;
 	}
 
+	std::vector<Channel*> findChannelsOfUser(Client *user)
+	{
+		std::vector<Channel*> tab;
+
+		std::map<std::string, Channel*>::iterator it = _chan_list.begin();
+
+		while (it != _chan_list.end())
+		{
+			if ((*it).second->isUserInChannel(user) == true)
+				tab.push_back((*it).second);
+			it++;
+		}
+		return tab;
+	}
+
 private:
 	ServData();
 

@@ -20,5 +20,8 @@ void User::execute()
 			if (i != _args.size() - 1)
 				_user->getRealName() += " ";
 		}
+
+		//MAKE VERIF
+		_user->setUserName(_args[1]);
 	}
 }

@@ -18,16 +18,16 @@ public:
 
 	void join(Client *user)
 	{
-		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " JOIN " + _channelName);
-		broadcastMsg(":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " JOIN " + _channelName);
+		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " JOIN " + _channelName);
+		broadcastMsgExept(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " JOIN " + _channelName, user);
 		_members.push_back(user);
 		sendChannelInfos(user);
 	}
 
 	void leave(Client *user)
 	{
-		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " PART " + _channelName);
-		broadcastMsg(":" + user->getNickName() + "!" + user->getNickName() + "@" + user->getAddress() + " PART " + _channelName);
+		message::sendMsgToUser(user, ":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " PART " + _channelName);
+		broadcastMsgExept(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " PART " + _channelName, user);
 
 		std::vector<Client *>::iterator it = _members.begin();
 		while ((*it) != user)
@@ -57,7 +57,9 @@ public:
 		for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
 		{
 			if (*user != sender)
+			{
 				message::sendMsgToUser(*user, msg);
+			}
 		}
 	}
 

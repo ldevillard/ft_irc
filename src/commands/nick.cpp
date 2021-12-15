@@ -19,9 +19,17 @@ void Nick::execute()
 		if (newNick.size() > 0)
 		{
 			if (_user->getNickName().size() > 0)
-				_user->sendMsg(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + user->getAddress() + " NICK " + newNick);
+			{
+				message::sendMsgToUser(_user, ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " NICK " + newNick);
+				std::vector<Channel*> tab = _server->findChannelsOfUser(_user);
+				std::vector<Channel*>::iterator it = tab.begin();
+				while(it != tab.end())
+				{
+					(*it)->broadcastMsg(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " NICK " + newNick);
+					it++;
+				}
+			}
 			_user->setNickName(newNick);
-			_user->setUserName(newNick);
 		}
 		else
 			throw ServerException::invalidNick();

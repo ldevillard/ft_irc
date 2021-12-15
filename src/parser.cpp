@@ -19,7 +19,7 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 	{
 		if (!user->isRegistered())
 		{
-			std::cout << "new command " << args[0] << std::endl;
+			//std::cout << "new command " << args[0] << std::endl;
 			if (args[0] == "NICK" || args[0] == "USER")
 			{
 				try
