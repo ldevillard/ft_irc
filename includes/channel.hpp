@@ -36,4 +36,6 @@ public:
 
 	bool isOp(Client *user);
 	void setOp(Client *user, bool state);
+
+	Client *findUserWithName(std::string name);
 };

@@ -41,5 +41,6 @@ void Quit::execute()
         (*it)->leave(_user);
     }
 
-    //Maybe close user fd ?
+	_user->sendMsg(":127.0.0.1 " + std::string(RPL_ENDOFLINKS) + " " + _args[0] + ": Quiting...");
+    //Maybe close user fd to disconnect quickly ?
 }

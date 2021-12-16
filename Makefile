@@ -21,6 +21,7 @@ HEADERS = \
 		$(INCLUDE_PATH)/commands/privmsg.hpp \
 		$(INCLUDE_PATH)/commands/die.hpp \
 		$(INCLUDE_PATH)/commands/quit.hpp \
+		$(INCLUDE_PATH)/commands/kick.hpp \
 		$(INCLUDE_PATH)/channel.hpp \
 		$(INCLUDE_PATH)/client.hpp \
 		$(INCLUDE_PATH)/command.hpp \
@@ -38,6 +39,7 @@ SRCS = \
 		$(SRCS_PATH)/commands/user.cpp \
 		$(SRCS_PATH)/commands/die.cpp \
 		$(SRCS_PATH)/commands/quit.cpp \
+		$(SRCS_PATH)/commands/kick.cpp \
 		$(SRCS_PATH)/commands/privmsg.cpp \
 		$(SRCS_PATH)/commands/list.cpp \
 		$(SRCS_PATH)/channel.cpp \

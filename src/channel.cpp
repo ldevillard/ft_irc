@@ -131,3 +131,16 @@ void Channel::setOp(Client *user, bool state)
 		}
 	}
 }
+
+Client *Channel::findUserWithName(std::string name)
+{
+	std::vector<Client*>::iterator it;
+
+	for (it = _members.begin(); it != _members.end(); it++)
+	{
+		if ((*it)->getNickName() == name)
+			return (*it);
+	}
+
+	return NULL;
+}

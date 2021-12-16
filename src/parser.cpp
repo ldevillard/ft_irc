@@ -7,6 +7,7 @@
 #include "../includes/commands/die.hpp"
 #include "../includes/commands/list.hpp"
 #include "../includes/commands/quit.hpp"
+#include "../includes/commands/kick.hpp"
 #include "../includes/commands/privmsg.hpp"
 #include "../includes/rpl_codes.hpp"
 
@@ -76,6 +77,7 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Die(_user));
 	_cmds_list.push_back(new List(_user));
 	_cmds_list.push_back(new Quit(_user));
+	_cmds_list.push_back(new Kick(_user));
 	//push all commands
 
 	std::vector<Command *>::iterator it;

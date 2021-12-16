@@ -5,6 +5,22 @@ Nick::Nick(Client *user) : Command("NICK", "NICK - <nickname> : Change client ni
 {
 }
 
+bool Nick::charset(std::string &nick)
+{
+	std::string list = "#$%@&*!()\\|+~/?\'\"{}[];:";
+
+	for (int i = 0; i < (int)nick.size(); i++)
+	{
+		for (int j = 0; j < (int)list.size(); j++)
+		{
+			if (nick[i] == list[j])
+				return false;
+		}
+	}
+
+	return true;
+}
+
 void Nick::execute()
 {
 	std::string nick = _user->getNickName();
@@ -19,7 +35,7 @@ void Nick::execute()
 			_user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": Nickname already used!");
 			throw ServerException::nickAlreadyUsed();
 		}
-		if (newNick.size() > 0)
+		if (newNick.size() > 0 && charset(newNick) == true)
 		{
 			if (_user->getNickName().size() > 0)
 			{
