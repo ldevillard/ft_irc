@@ -79,19 +79,6 @@ bool Channel::isUserInChannel(Client *user)
 	return false;
 }
 
-bool Channel::isUserIsOp(Client *user)
-{
-	std::vector<Client *>::iterator it;
-
-	for (it = _ops.begin(); it != _ops.end(); it++)
-	{
-		if (user == (*it))
-			return true;
-	}
-
-	return false;
-}
-
 void Channel::sendChannelInfos(Client *user)
 {
 	std::string usersList = "";

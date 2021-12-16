@@ -32,7 +32,6 @@ public:
 	void broadcastMsgExept(std::string msg, Client *sender);
 
 	bool isUserInChannel(Client *user);
-	bool isUserIsOp(Client *user);
 
 	void sendChannelInfos(Client *user);
 

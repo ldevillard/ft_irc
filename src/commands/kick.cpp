@@ -17,7 +17,7 @@ void Kick::execute()
     {
         if (chan->isUserInChannel(_user) == false)
             _user->sendMsg(":127.0.0.1 " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
-        else if (chan->isUserIsOp(_user) == false)
+        else if (chan->isOp(_user) == false)
             _user->sendMsg(":127.0.0.1 " + std::string(ERR_CHANOPRIVSNEEDED) + " " + _args[1] + ": You're not an operator of this channel!");
         else
         {
