@@ -18,12 +18,13 @@ void Channel::leave(Client *user)
 			_members.erase(it);
 		break;
 	}
-	for (std::vector<Client *>::iterator it = _ops.begin(); it != _ops.end(); it++)
-	{
-		if ((*it) == user)
-			_ops.erase(it);
-		break;
-	}
+	if (isOp(user))
+		for (std::vector<Client *>::iterator it = _ops.begin(); it != _ops.end(); it++)
+		{
+			if ((*it) == user)
+				_ops.erase(it);
+			break;
+		}
 	keepOp();
 }
 
@@ -74,6 +75,13 @@ bool Channel::isUserInChannel(Client *user)
 		if (user == (*it))
 			return true;
 	}
+
+	return false;
+}
+
+bool Channel::isUserIsOp(Client *user)
+{
+	std::vector<Client *>::iterator it;
 
 	for (it = _ops.begin(); it != _ops.end(); it++)
 	{
@@ -138,4 +146,17 @@ void Channel::setOp(Client *user, bool state)
 	{
 		sendChannelInfos(*it);
 	}
+}
+
+Client *Channel::findUserWithName(std::string name)
+{
+	std::vector<Client *>::iterator it;
+
+	for (it = _members.begin(); it != _members.end(); it++)
+	{
+		if ((*it)->getNickName() == name)
+			return (*it);
+	}
+
+	return NULL;
 }

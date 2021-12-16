@@ -6,8 +6,10 @@
 #include "../includes/commands/user.hpp"
 #include "../includes/commands/die.hpp"
 #include "../includes/commands/list.hpp"
-#include "../includes/rpl_codes.hpp"
+#include "../includes/commands/quit.hpp"
+#include "../includes/commands/kick.hpp"
 #include "../includes/commands/privmsg.hpp"
+#include "../includes/rpl_codes.hpp"
 
 Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _data(data), _user(user)
 {
@@ -74,6 +76,8 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Privmsg(_user));
 	_cmds_list.push_back(new Die(_user));
 	_cmds_list.push_back(new List(_user));
+	_cmds_list.push_back(new Quit(_user));
+	_cmds_list.push_back(new Kick(_user));
 	//push all commands
 
 	std::vector<Command *>::iterator it;
@@ -101,20 +105,40 @@ std::vector<std::string> Parser::split(std::string &line)
 	std::vector<std::string> tab;
 	std::string word_buf;
 
+	bool space = false;
+
 	for (int i = 0; line[i]; i++)
 	{
-		if (line[i] == ' ')
+		if (line[i] == ' ' && space == false)
 		{
+			space = true;
 			if (word_buf.size() > 0)
 				tab.push_back(word_buf);
 			word_buf.clear();
 		}
-		else if (line[i] != ' ')
+		else
+		{
 			word_buf += line[i];
+			if (line[i] != ' ')
+				space = false;
+		}
 	}
 
 	if (word_buf.size() > 0)
 		tab.push_back(word_buf);
+
+
+	//DEBUG
+	
+	/*std::cout << "*********************" << std::endl;
+	for(std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); it++)
+	{
+		std::cout << *it << std::endl;
+	}
+	std::cout << "*********************" << std::endl;
+	*/
+	//
+
 	return tab;
 }
 
