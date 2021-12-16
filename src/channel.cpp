@@ -10,14 +10,30 @@ void Channel::join(Client *user)
 
 void Channel::leave(Client *user)
 {
+	std::cout << "hello" << std::endl;
 	broadcastMsg(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " PART " + _channelName);
-	std::vector<Client *>::iterator it = _members.begin();
-	while ((*it) != user)
-		it++;
-	_members.erase(it);
+	for (std::vector<Client *>::iterator it = _members.begin(); it != _members.end(); it++)
+	{
+		if ((*it) == user)
+			_members.erase(it);
+		break;
+	}
+	for (std::vector<Client *>::iterator it = _ops.begin(); it != _ops.end(); it++)
+	{
+		if ((*it) == user)
+			_ops.erase(it);
+		break;
+	}
+	keepOp();
 }
 
-bool Channel::isEmpty()
+void Channel::keepOp(void)
+{
+	if (_ops.empty() && !_members.empty())
+		setOp(*_members.begin(), true);
+}
+
+bool Channel::isEmpty(void)
 {
 	if (_members.size() > 0)
 		return false;
@@ -98,21 +114,28 @@ void Channel::setOp(Client *user, bool state)
 	std::cout << "set " << user->getNickName() << " as op" << std::endl;
 	if (state == true)
 	{
-		if (isOp(user))
-			return;
-		_ops.push_back(user);
+		if (!isOp(user))
+		{
+			_ops.push_back(user);
+			user->sendMsg(std::string(RPL_YOUREOPER) + ":You are now an IRC operator");
+		}
 	}
 	else
 	{
-		if (!isOp(user))
-			return;
-		for (std::vector<Client *>::iterator opIt = _ops.begin(); opIt != _ops.end(); opIt++)
+		if (isOp(user))
 		{
-			if ((*opIt)->getNickName() == user->getNickName())
+			for (std::vector<Client *>::iterator opIt = _ops.begin(); opIt != _ops.end(); opIt++)
 			{
-				_ops.erase(opIt);
-				return;
+				if ((*opIt)->getNickName() == user->getNickName())
+				{
+					_ops.erase(opIt);
+					break;
+				}
 			}
 		}
+	}
+	for (std::vector<Client *>::iterator it = _members.begin(); it != _members.end(); it++)
+	{
+		sendChannelInfos(*it);
 	}
 }

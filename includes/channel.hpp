@@ -20,9 +20,11 @@ public:
 
 	void leave(Client *user);
 
-	bool isEmpty();
+	void keepOp(void);
 
-	std::string &getName();
+	bool isEmpty(void);
+
+	std::string &getName(void);
 	std::vector<Client *> getMembers(void);
 
 	void broadcastMsg(std::string msg);
