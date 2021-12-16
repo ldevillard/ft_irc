@@ -15,6 +15,14 @@ void Channel::leave(Client *user)
 	while ((*it) != user)
 		it++;
 	_members.erase(it);
+
+	if (isUserIsOp(user))
+	{
+		it = _ops.begin();
+		while ((*it) != user)
+			it++;
+		_ops.erase(it);
+	}
 }
 
 bool Channel::isEmpty()
@@ -58,6 +66,13 @@ bool Channel::isUserInChannel(Client *user)
 		if (user == (*it))
 			return true;
 	}
+
+	return false;
+}
+
+bool Channel::isUserIsOp(Client *user)
+{
+	std::vector<Client *>::iterator it;
 
 	for (it = _ops.begin(); it != _ops.end(); it++)
 	{
