@@ -10,22 +10,28 @@ void Channel::join(Client *user)
 
 void Channel::leave(Client *user)
 {
-	std::cout << "hello" << std::endl;
 	broadcastMsg(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " PART " + _channelName);
 	for (std::vector<Client *>::iterator it = _members.begin(); it != _members.end(); it++)
 	{
 		if ((*it) == user)
+		{
 			_members.erase(it);
-		break;
+			break;
+		}
 	}
 	if (isOp(user))
+	{
 		for (std::vector<Client *>::iterator it = _ops.begin(); it != _ops.end(); it++)
 		{
 			if ((*it) == user)
+			{
 				_ops.erase(it);
-			break;
+				break;
+			}
 		}
-	keepOp();
+		keepOp();
+	}
+	sendChannelInfos(user);
 }
 
 void Channel::keepOp(void)
@@ -106,7 +112,6 @@ bool Channel::isOp(Client *user)
 
 void Channel::setOp(Client *user, bool state)
 {
-	std::cout << "set " << user->getNickName() << " as op" << std::endl;
 	if (state == true)
 	{
 		if (!isOp(user))

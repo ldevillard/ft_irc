@@ -10,6 +10,7 @@ Join::Join(Client *user) : Command("JOIN", "JOIN - <channel> <password> : Join w
 
 void Join::execute()
 {
+
 	if (_args[1] != "#")
 	{
 		Channel *chan = _server->findChannel(_args[1]);
