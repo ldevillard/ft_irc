@@ -11,6 +11,7 @@
 #include "../includes/commands/kick.hpp"
 #include "../includes/commands/who.hpp"
 #include "../includes/commands/privmsg.hpp"
+#include "../includes/commands/notice.hpp"
 #include "../includes/rpl_codes.hpp"
 
 Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _data(data), _user(user)
@@ -86,6 +87,7 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Quit(_user));
 	_cmds_list.push_back(new Kick(_user));
 	_cmds_list.push_back(new Who(_user));
+	_cmds_list.push_back(new Notice(_user));
 	//push all commands
 
 	std::vector<Command *>::iterator it;
