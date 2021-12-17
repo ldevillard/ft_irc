@@ -82,6 +82,7 @@ bool boating(std::string msg, Client *user, Channel *chan)
 
 	if (msg[0] && msg[0] == '!')
 	{
+		msg.erase(msg.begin());
 		std::vector<std::string> args = Parser::split(msg);
 
 		if (args[0] == "help")
