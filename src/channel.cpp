@@ -31,7 +31,6 @@ void Channel::leave(Client *user)
 		}
 		keepOp();
 	}
-	sendChannelInfos(user);
 }
 
 void Channel::keepOp(void)
@@ -135,9 +134,7 @@ void Channel::setOp(Client *user, bool state)
 		}
 	}
 	for (std::vector<Client *>::iterator it = _members.begin(); it != _members.end(); it++)
-	{
 		sendChannelInfos(*it);
-	}
 }
 
 Client *Channel::findUserWithName(std::string name)
