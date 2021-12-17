@@ -27,9 +27,9 @@ void Part::execute()
                 }
 			}
 			else
-				_user->sendMsg(":127.0.0.1 " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+				_user->sendMsg(":server " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
 		}
 		else
-			_user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+			_user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 	}
 }

@@ -26,7 +26,7 @@ void Who::execute()
     {
         Channel *chan = _server->findChannel(_args[1]);
         if (chan == NULL)
-            _user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+            _user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
         else
         {
             std::vector<Client*> users = chan->getMembers();

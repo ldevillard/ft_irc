@@ -10,6 +10,7 @@ public:
 	Client()
 	{
 		_isRegistered = false;
+		_correctPsswd = false;
 		_user.clear();
 		_nick.clear();
 		_realName.clear();
@@ -55,6 +56,26 @@ public:
 
 	void disconnect() { close(_sd); }
 
+	void setPsswdState(bool state)
+	{
+		_correctPsswd = state;
+	}
+
+	bool getPsswdState(void)
+	{
+		return _correctPsswd;
+	}
+
+	void setKill(bool state)
+	{
+		_getKilled = state;
+	}
+
+	bool getKill(void)
+	{
+		return _getKilled;
+	}
+
 private:
 	std::string _user;
 	std::string _nick;
@@ -63,4 +84,6 @@ private:
 	std::string _bufferLine;
 	std::string _address;
 	bool _isRegistered;
+	bool _correctPsswd;
+	bool _getKilled;
 };

@@ -11,19 +11,19 @@ void Kick::execute()
 		return;
 	Channel *chan = _server->findChannel(_args[1]);
 	if (chan == NULL)
-		_user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+		_user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 	else
 	{
 		if (chan->isUserInChannel(_user) == false)
-			_user->sendMsg(":127.0.0.1 " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+			_user->sendMsg(":server " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
 		else if (chan->isOp(_user) == false)
-			_user->sendMsg(":127.0.0.1 " + std::string(ERR_CHANOPRIVSNEEDED) + " " + _args[1] + ": You're not an operator of this channel!");
+			_user->sendMsg(":server " + std::string(ERR_CHANOPRIVSNEEDED) + " " + _args[1] + ": You're not an operator of this channel!");
 		else
 		{
 			Client *target = chan->findUserWithName(_args[2]);
 
 			if (target == NULL)
-				_user->sendMsg(":127.0.0.1 " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": Can't find target in channel!");
+				_user->sendMsg(":server " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": Can't find target in channel!");
 			else
 			{
 				std::string message;

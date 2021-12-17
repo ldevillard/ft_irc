@@ -25,6 +25,7 @@ ServData::ServData()
 
 ServData::ServData(id_t port, std::string password) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)), _max_clients(5), _opt(1), _port(port), _password(password)
 {
+	_needPsswd = true;
 	std::cout << "Port : " << _port << std::endl;
 }
 
@@ -115,6 +116,14 @@ void ServData::onInteraction()
 
 				Parser parser(line, this, _clients[i]);
 				// send(_sd, line.c_str(), line.length(), 0);
+
+				if (_clients[i]->getKill())
+				{
+					std::cout << "Client disconnected!" << std::endl;
+					close(_sd);
+					delete _clients[i];
+					_clients[i] = NULL;
+				}
 			}
 		}
 	}

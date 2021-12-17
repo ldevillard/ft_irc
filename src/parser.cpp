@@ -3,6 +3,7 @@
 #include "../includes/commands/join.hpp"
 #include "../includes/commands/nick.hpp"
 #include "../includes/commands/part.hpp"
+#include "../includes/commands/pass.hpp"
 #include "../includes/commands/user.hpp"
 #include "../includes/commands/die.hpp"
 #include "../includes/commands/list.hpp"
@@ -23,8 +24,7 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 	{
 		if (!user->isRegistered())
 		{
-			//std::cout << "new command " << args[0] << std::endl;
-			if (args[0] == "NICK" || args[0] == "USER")
+			if (args[0] == "NICK" || args[0] == "USER" || args[0] == "PASS")
 			{
 				try
 				{
@@ -34,10 +34,10 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 				{
 					std::cout << "Error: " << e.what() << std::endl;
 				}
-				if (!user->getNickName().empty() && !user->getUserName().empty())
+				if (user->getPsswdState() && !user->getNickName().empty() && !user->getUserName().empty())
 				{
 					user->setRegistered(true);
-					user->sendMsg(":127.0.0.1 " + std::string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
+					user->sendMsg(":server " + std::string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
 				}
 			}
 			else
@@ -60,7 +60,7 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 	else
 	{
 		if (args[0] != "PONG")
-			_user->sendMsg(":127.0.0.1 " + std::string(ERR_UNKNOWNCOMMAND) + +" " + args[0] + " :" + args[0] + " Unknown command!");
+			_user->sendMsg(":server " + std::string(ERR_UNKNOWNCOMMAND) + +" " + args[0] + " :" + args[0] + " Unknown command!");
 	}
 }
 
@@ -78,6 +78,7 @@ void Parser::initCommands()
 	_cmds_list.push_back(new Join(_user));
 	_cmds_list.push_back(new Nick(_user));
 	_cmds_list.push_back(new Part(_user));
+	_cmds_list.push_back(new Pass(_user));
 	_cmds_list.push_back(new User(_user));
 	_cmds_list.push_back(new Privmsg(_user));
 	_cmds_list.push_back(new Die(_user));

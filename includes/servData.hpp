@@ -82,6 +82,16 @@ public:
 		return &_banWordsList;
 	}
 
+	bool passwordAuth(std::string check)
+	{
+		return _password == check;
+	}
+
+	bool needPsswd(void)
+	{
+		return _needPsswd;
+	}
+
 private:
 	ServData();
 
@@ -99,6 +109,7 @@ private:
 	int _port;
 	int _sd;
 	std::string _password;
+	bool _needPsswd;
 	std::map<std::string, Channel *> _chan_list;
 	bool shutdown;
 	std::vector<std::string> _banWordsList;

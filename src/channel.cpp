@@ -96,9 +96,9 @@ void Channel::sendChannelInfos(Client *user)
 		usersList += (*userIt)->getNickName() + " ";
 	}
 
-	message::sendMsgToUser(user, (":127.0.0.1 " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
-	message::sendMsgToUser(user, (":127.0.0.1 " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
-	message::sendMsgToUser(user, (":127.0.0.1 " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " :End of NAMES list"));
+	message::sendMsgToUser(user, (":server " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
+	message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
+	message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " :End of NAMES list"));
 }
 
 bool Channel::isOp(Client *user)

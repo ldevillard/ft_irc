@@ -21,18 +21,18 @@ void List::execute()
 	{
 		Channel *chan = _server->findChannel(_args[1]);
 		if (chan == NULL)
-			_user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+			_user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 		else
 		{
-			_user->sendMsg(":127.0.0.1 " + std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + itoa((*it).second->getMembers().size())); //TO STRING
+			_user->sendMsg(":server " + std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + itoa((*it).second->getMembers().size())); //TO STRING
 		}
 	}
 	else
 	{
 		for (it = _server->getChannels().begin(); it != _server->getChannels().end(); it++)
 		{
-			_user->sendMsg(":127.0.0.1 " + std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + itoa((*it).second->getMembers().size())); //TO STRING
+			_user->sendMsg(":server " + std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + itoa((*it).second->getMembers().size())); //TO STRING
 		}
 	}
-	_user->sendMsg(":127.0.0.1 " + std::string(RPL_LISTEND) + " :End of LIST");
+	_user->sendMsg(":server " + std::string(RPL_LISTEND) + " :End of LIST");
 }

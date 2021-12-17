@@ -19,6 +19,7 @@ HEADERS = \
 		$(INCLUDE_PATH)/commands/join.hpp \
 		$(INCLUDE_PATH)/commands/nick.hpp \
 		$(INCLUDE_PATH)/commands/part.hpp \
+		$(INCLUDE_PATH)/commands/pass.hpp \
 		$(INCLUDE_PATH)/commands/user.hpp \
 		$(INCLUDE_PATH)/commands/list.hpp \
 		$(INCLUDE_PATH)/commands/who.hpp \
@@ -41,6 +42,7 @@ SRCS = \
 		$(SRCS_PATH)/commands/join.cpp \
 		$(SRCS_PATH)/commands/nick.cpp \
 		$(SRCS_PATH)/commands/part.cpp \
+		$(SRCS_PATH)/commands/pass.cpp \
 		$(SRCS_PATH)/commands/user.cpp \
 		$(SRCS_PATH)/commands/die.cpp \
 		$(SRCS_PATH)/commands/quit.cpp \
