@@ -22,4 +22,23 @@ void Who::execute()
             message::sendMsgToUser(_user, std::string(RPL_WHOREPLY) + " " + (*it)->getNickName() + " " + (*it)->getUserName() + "@" + (*it)->getAddress());
         message::sendMsgToUser(_user, std::string(RPL_ENDOFWHO) + " End of WHO");
     }
+    else
+    {
+        Channel *chan = _server->findChannel(_args[1]);
+        if (chan == NULL)
+            _user->sendMsg(":127.0.0.1 " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+        else
+        {
+            std::vector<Client*> users = chan->getMembers();
+
+            if (users.size() == 1)
+                message::sendMsgToUser(_user, std::string(RPL_WHOREPLY) + " Channel " + _args[1] +" has : " + itoa(users.size()) + " user.");
+            else if (users.size() > 1)
+                message::sendMsgToUser(_user, std::string(RPL_WHOREPLY) + " Channel " + _args[1] +" has : " + itoa(users.size()) + " users.");
+            
+            for (std::vector<Client*>::iterator it = users.begin(); it != users.end(); it++)
+                message::sendMsgToUser(_user, std::string(RPL_WHOREPLY) + " " + (*it)->getNickName() + " " + (*it)->getUserName() + "@" + (*it)->getAddress());
+            message::sendMsgToUser(_user, std::string(RPL_ENDOFWHO) + " End of WHO");
+        }
+    }
 }
