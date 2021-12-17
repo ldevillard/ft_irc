@@ -92,7 +92,7 @@ bool boating(std::string msg, Client *user, Channel *chan)
 		else if (args[0] == "dice")
 		{
 			std::srand(time(NULL));
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + message::c_itoa((std::rand() % 6) + 1));
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + Message::c_itoa((std::rand() % 6) + 1));
 		}
 		else if (args[0] == "source")
 		{

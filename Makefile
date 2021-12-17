@@ -54,6 +54,7 @@ SRCS = \
 		$(SRCS_PATH)/commands/notice.cpp \
 		$(SRCS_PATH)/B_O_A_T.cpp \
 		$(SRCS_PATH)/channel.cpp \
+		$(SRCS_PATH)/client.cpp \
 		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
 		$(SRCS_PATH)/parser.cpp\

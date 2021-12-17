@@ -212,3 +212,62 @@ Client *ServData::getUser(std::string name)
 	}
 	return NULL;
 }
+
+std::map<std::string, Channel *> &ServData::getChannels() { return _chan_list; }
+
+Channel *ServData::findChannel(std::string name)
+{
+	std::map<std::string, Channel *>::iterator it;
+
+	for (it = _chan_list.begin(); it != _chan_list.end(); it++)
+	{
+		if (name == (*it).first)
+			return (*it).second;
+	}
+	return (NULL);
+}
+
+void ServData::shutdownServer()
+{
+	shutdown = true;
+}
+
+std::vector<Channel *> ServData::findChannelsOfUser(Client *user)
+{
+	std::vector<Channel *> tab;
+
+	for (std::map<std::string, Channel *>::iterator it = _chan_list.begin(); it != _chan_list.end(); it++)
+	{
+		if ((*it).second->isUserInChannel(user) == true)
+			tab.push_back((*it).second);
+	}
+	return tab;
+}
+
+std::vector<Client *> ServData::getVectorUser()
+{
+	std::vector<Client *> users;
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (_clients[i] != NULL)
+			users.push_back(_clients[i]);
+	}
+
+	return users;
+}
+
+std::vector<std::string> *ServData::getBanWordsList()
+{
+	return &_banWordsList;
+}
+
+bool ServData::passwordAuth(std::string check)
+{
+	return _password == check;
+}
+
+bool ServData::needPsswd(void)
+{
+	return _needPsswd;
+}

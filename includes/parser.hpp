@@ -8,20 +8,21 @@
 
 class Parser
 {
-	public:
-		Parser(std::string line, ServData *data, Client *user);
-		~Parser();
+public:
+	Parser(std::string line, ServData *data, Client *user);
+	~Parser();
 
-		void	executeCommand();
-		bool		isCommand();
+	void executeCommand();
+	bool isCommand();
 
-		static 	std::vector<std::string> split(std::string &line);
-	private:
-		void initCommands();
+	static std::vector<std::string> split(std::string &line);
 
-		std::string _line;
-		std::vector<Command*> _cmds_list;
+private:
+	void initCommands();
 
-		ServData *_data;
-		Client	*_user;
+	std::string _line;
+	std::vector<Command *> _cmds_list;
+
+	ServData *_data;
+	Client *_user;
 };

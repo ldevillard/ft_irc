@@ -33,64 +33,14 @@ public:
 	~ServData();
 	int connect();
 	Client *getUser(std::string name);
-	std::map<std::string, Channel *> &getChannels() { return _chan_list; }
-
-	Channel *findChannel(std::string name)
-	{
-		std::map<std::string, Channel *>::iterator it;
-
-		for (it = _chan_list.begin(); it != _chan_list.end(); it++)
-		{
-			if (name == (*it).first)
-				return (*it).second;
-		}
-		return (NULL);
-	}
-
-	void shutdownServer()
-	{
-		shutdown = true;
-	}
-
-	std::vector<Channel *> findChannelsOfUser(Client *user)
-	{
-		std::vector<Channel *> tab;
-
-		for (std::map<std::string, Channel *>::iterator it = _chan_list.begin(); it != _chan_list.end(); it++)
-		{
-			if ((*it).second->isUserInChannel(user) == true)
-				tab.push_back((*it).second);
-		}
-		return tab;
-	}
-
-	std::vector<Client *> getVectorUser()
-	{
-		std::vector<Client *> users;
-
-		for (int i = 0; i < MAX_CLIENTS; i++)
-		{
-			if (_clients[i] != NULL)
-				users.push_back(_clients[i]);
-		}
-
-		return users;
-	}
-
-	std::vector<std::string> *getBanWordsList()
-	{
-		return &_banWordsList;
-	}
-
-	bool passwordAuth(std::string check)
-	{
-		return _password == check;
-	}
-
-	bool needPsswd(void)
-	{
-		return _needPsswd;
-	}
+	std::map<std::string, Channel *> &getChannels();
+	Channel *findChannel(std::string name);
+	void shutdownServer();
+	std::vector<Channel *> findChannelsOfUser(Client *user);
+	std::vector<Client *> getVectorUser();
+	std::vector<std::string> *getBanWordsList();
+	bool passwordAuth(std::string check);
+	bool needPsswd(void);
 
 private:
 	ServData();

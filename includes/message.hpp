@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include "../includes/client.hpp"
 
-class message
+class Message
 {
 private:
 public:

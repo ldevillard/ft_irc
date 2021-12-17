@@ -8,10 +8,10 @@ class Command;
 
 class Help : public Command
 {
-	public:
-		Help(std::vector<Command*> &cmds, Client *user);
-		void execute();
+public:
+	Help(std::vector<Command *> &cmds, Client *user);
+	void execute();
 
-	private:
-		std::vector<Command*> &_cmds;
+private:
+	std::vector<Command *> &_cmds;
 };

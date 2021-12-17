@@ -16,33 +16,21 @@ private:
 	ServData *_server;
 
 public:
-	Channel(std::string name, ServData *server) : _channelName(name), _server(server) {}
-	~Channel() {}
-
+	Channel(std::string name, ServData *server);
+	~Channel();
 	void join(Client *user);
-
 	void leave(Client *user);
-
 	void keepOp(void);
-
 	bool isEmpty(void);
-
 	std::string &getName(void);
 	std::vector<Client *> getMembers(void);
-
 	void broadcastMsg(std::string msg);
-
 	void broadcastMsgExept(std::string msg, Client *sender);
-
 	bool isUserInChannel(Client *user);
-
 	void sendChannelInfos(Client *user);
-
 	bool isOp(Client *user);
 	void setOp(Client *user, bool state);
-
 	Client *findUserWithName(std::string name);
-
 	ServData *getServer(void);
 };
 

@@ -8,7 +8,7 @@ class Command;
 
 class Part : public Command
 {
-	public:
-		Part(Client *user);
-		void execute();
+public:
+	Part(Client *user);
+	void execute();
 };

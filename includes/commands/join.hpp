@@ -7,7 +7,7 @@ class Command;
 
 class Join : public Command
 {
-	public:
-		Join(Client *user);
-		void execute();
+public:
+	Join(Client *user);
+	void execute();
 };

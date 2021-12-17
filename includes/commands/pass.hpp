@@ -7,7 +7,7 @@ class Command;
 
 class Pass : public Command
 {
-	public:
-		Pass(Client *user);
-		void execute();
+public:
+	Pass(Client *user);
+	void execute();
 };
