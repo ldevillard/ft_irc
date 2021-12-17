@@ -44,7 +44,6 @@ void Nick::execute()
 				for (std::vector<Channel *>::iterator it = tab.begin(); it != tab.end(); it++)
 				{
 					(*it)->broadcastMsg(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " NICK " + newNick);
-					it++;
 				}
 			}
 			_user->setNickName(newNick);
