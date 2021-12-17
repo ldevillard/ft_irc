@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 #include <sstream>
 #include <string>
+#include <ctime>
 
 class CURLplusplus
 {
@@ -82,20 +83,18 @@ void boating(std::string msg, Client *user, Channel *chan)
 	else if (args[0] == "cat")
 	{
 		CURLplusplus curlpp;
-
 		std::string result = curlpp.Get("https://api.thecatapi.com/v1/images/search");
-
 		std::cout << result << std::endl;
-
 		size_t pos = result.find("http");
-
 		result = result.substr(pos, result.size() - pos);
-
 		pos = result.find("\"");
-
 		result = result.substr(0, result.size() - (result.size() - pos));
-
 		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + result);
+	}
+	else if (args[0] == "time")
+	{
+		time_t now = time(NULL);
+		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
 	}
 	else
 	{
