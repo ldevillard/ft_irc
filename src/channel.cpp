@@ -98,7 +98,7 @@ void Channel::sendChannelInfos(Client *user)
 
 	message::sendMsgToUser(user, (":server " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
 	message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
-	message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " :End of NAMES list"));
+	message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " : End of NAMES list"));
 }
 
 bool Channel::isOp(Client *user)
@@ -118,7 +118,7 @@ void Channel::setOp(Client *user, bool state)
 		if (!isOp(user))
 		{
 			_ops.push_back(user);
-			user->sendMsg(std::string(RPL_YOUREOPER) + ":You are now an IRC operator");
+			user->sendMsg(":server " + std::string(RPL_YOUREOPER) + ": You are now an IRC operator");
 		}
 	}
 	else

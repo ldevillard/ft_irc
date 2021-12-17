@@ -17,12 +17,10 @@ void Pass::execute()
 	else if (_server->passwordAuth(_args[1]))
 	{
 		_user->setPsswdState(true);
-		std::cout << "auth success" << std::endl;
 	}
 	else
 	{
-		std::cout << "auth failed" << std::endl;
-		_user->sendMsg(":server " + std::string(ERR_PASSWDMISMATCH) + " :Password incorrect!");
+		_user->sendMsg(":server " + std::string(ERR_PASSWDMISMATCH) + " : Password incorrect!");
 		_user->sendMsg(":server KILL " + _user->getAddress() + " :Bad password");
 		_user->setKill(true);
 	}

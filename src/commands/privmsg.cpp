@@ -33,35 +33,32 @@ void Privmsg::execute()
 	std::string chanName = _args[1];
 
 	if (chanName.empty())
-		_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+		_user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 	else if (chanName[0] == '#')
 	{
 		chanName.erase(chanName.begin());
 		if (chanName.empty())
-			_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+			_user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 		else
 		{
 			Channel *chan = _server->findChannel(_args[1]);
 			if (chan != NULL)
 			{
-				if (chan->isUserInChannel(_user) == true)
-				{
-					std::string msg = makeMessage();
-					if (boating(msg, _user, chan))
-						chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + msg, _user);
-				}
+				std::string msg = makeMessage();
+				if (boating(msg, _user, chan) && chan->isUserInChannel(_user) == true)
+					chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + msg, _user);
 				else
-					_user->sendMsg(std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
+					_user->sendMsg(":server " + std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
 			}
 			else
-				_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
+				_user->sendMsg(":server " + std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
 		}
 	}
 	else
 	{
 		Client *targetUser = _server->getUser(chanName);
 		if (!targetUser)
-			_user->sendMsg(std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": No such nick!");
+			_user->sendMsg(":server " + std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": No such nick!");
 		else
 			targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " PRIVMSG " + targetUser->getNickName() + " :" + makeMessage());
 	}

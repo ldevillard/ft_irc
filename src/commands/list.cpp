@@ -34,5 +34,5 @@ void List::execute()
 			_user->sendMsg(":server " + std::string(RPL_LIST) + " * " + (*it).second->getName() + " " + itoa((*it).second->getMembers().size())); //TO STRING
 		}
 	}
-	_user->sendMsg(":server " + std::string(RPL_LISTEND) + " :End of LIST");
+	_user->sendMsg(":server " + std::string(RPL_LISTEND) + " : End of LIST");
 }

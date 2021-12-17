@@ -10,5 +10,5 @@ void Help::execute()
 	std::vector<Command *>::iterator it;
 
 	for (it = _cmds.begin(); it != _cmds.end(); it++)
-		_user->sendMsg(std::string(RPL_HELPTXT) + " - " + (*it)->getDesc());
+		_user->sendMsg(":server " + std::string(RPL_HELPTXT) + " - " + (*it)->getDesc());
 }
