@@ -57,6 +57,8 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 			}
 		}
 	}
+	else
+		_user->sendMsg(":127.0.0.1 " + std::string(ERR_UNKNOWNCOMMAND) + " " + ": Unknown command!");
 }
 
 Parser::~Parser()
@@ -91,6 +93,9 @@ bool Parser::isCommand()
 {
 	std::vector<std::string> args = split(_line);
 
+	if (args.size() == 0)
+		return false;
+
 	std::vector<Command *>::iterator it;
 
 	for (it = _cmds_list.begin(); it != _cmds_list.end(); it++)
@@ -109,7 +114,7 @@ std::vector<std::string> Parser::split(std::string &line)
 
 	bool space = false;
 
-	for (int i = 0; line[i]; i++)
+	for (int i = 0; i < (int)line.size(); i++)
 	{
 		if (line[i] == ' ' && space == false)
 		{
@@ -140,7 +145,6 @@ std::vector<std::string> Parser::split(std::string &line)
 	std::cout << "*********************" << std::endl;
 	*/
 	//
-
 	return tab;
 }
 
