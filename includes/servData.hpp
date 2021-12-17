@@ -33,11 +33,11 @@ public:
 	~ServData();
 	int connect();
 	Client *getUser(std::string name);
-	std::map<std::string, Channel*> &getChannels() { return _chan_list; }
+	std::map<std::string, Channel *> &getChannels() { return _chan_list; }
 
 	Channel *findChannel(std::string name)
 	{
-		std::map<std::string, Channel*>::iterator it;
+		std::map<std::string, Channel *>::iterator it;
 
 		for (it = _chan_list.begin(); it != _chan_list.end(); it++)
 		{
@@ -52,24 +52,21 @@ public:
 		shutdown = true;
 	}
 
-	std::vector<Channel*> findChannelsOfUser(Client *user)
+	std::vector<Channel *> findChannelsOfUser(Client *user)
 	{
-		std::vector<Channel*> tab;
+		std::vector<Channel *> tab;
 
-		std::map<std::string, Channel*>::iterator it = _chan_list.begin();
-
-		while (it != _chan_list.end())
+		for (std::map<std::string, Channel *>::iterator it = _chan_list.begin(); it != _chan_list.end(); it++)
 		{
 			if ((*it).second->isUserInChannel(user) == true)
 				tab.push_back((*it).second);
-			it++;
 		}
 		return tab;
 	}
 
-	std::vector<Client*> getVectorUser()
+	std::vector<Client *> getVectorUser()
 	{
-		std::vector<Client*> users;
+		std::vector<Client *> users;
 
 		for (int i = 0; i < MAX_CLIENTS; i++)
 		{
@@ -97,7 +94,7 @@ private:
 	int _port;
 	int _sd;
 	std::string _password;
-	std::map<std::string, Channel*> _chan_list;
+	std::map<std::string, Channel *> _chan_list;
 	bool shutdown;
 
 	void setup();
@@ -105,4 +102,3 @@ private:
 	void onConnection();
 	void setupFD();
 };
-

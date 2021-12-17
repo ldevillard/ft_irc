@@ -58,7 +58,10 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 		}
 	}
 	else
-		_user->sendMsg(":127.0.0.1 " + std::string(ERR_UNKNOWNCOMMAND) + " " + ": Unknown command!");
+	{
+		if (args[0] != "PONG")
+			_user->sendMsg(":127.0.0.1 " + std::string(ERR_UNKNOWNCOMMAND) + +" " + args[0] + " :" + args[0] + " Unknown command!");
+	}
 }
 
 Parser::~Parser()
@@ -134,9 +137,8 @@ std::vector<std::string> Parser::split(std::string &line)
 	if (word_buf.size() > 0)
 		tab.push_back(word_buf);
 
-
 	//DEBUG
-	
+
 	/*std::cout << "*********************" << std::endl;
 	for(std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); it++)
 	{
