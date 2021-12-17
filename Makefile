@@ -5,7 +5,7 @@ MAKE = make --no-print-directory
 
 CFLAGS = -Wall -Wextra -Werror
 CFLAGS += -std=c++98
-#CFLAGS += -g
+CFLAGS += -g
 # CFLAGS += -O3 -fno-builtin
 CFLAGS += -fsanitize=address
 
@@ -23,6 +23,7 @@ HEADERS = \
 		$(INCLUDE_PATH)/commands/die.hpp \
 		$(INCLUDE_PATH)/commands/quit.hpp \
 		$(INCLUDE_PATH)/commands/kick.hpp \
+		$(INCLUDE_PATH)/B_O_A_T.hpp \
 		$(INCLUDE_PATH)/channel.hpp \
 		$(INCLUDE_PATH)/client.hpp \
 		$(INCLUDE_PATH)/command.hpp \
@@ -44,6 +45,7 @@ SRCS = \
 		$(SRCS_PATH)/commands/privmsg.cpp \
 		$(SRCS_PATH)/commands/list.cpp \
 		$(SRCS_PATH)/commands/who.cpp \
+		$(SRCS_PATH)/B_O_A_T.cpp \
 		$(SRCS_PATH)/channel.cpp \
 		$(SRCS_PATH)/command.cpp \
 		$(SRCS_PATH)/main.cpp \
@@ -58,7 +60,7 @@ OBJS = $(SRCS:%.cpp=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+		$(CC) $(CFLAGS) -lcurl -o $(NAME) $(OBJS)
 
 clean:
 		$(RM) $(OBJS)

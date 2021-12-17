@@ -114,7 +114,6 @@ std::vector<std::string> Parser::split(std::string &line)
 {
 	std::vector<std::string> tab;
 	std::string word_buf;
-
 	bool space = false;
 
 	for (int i = 0; i < (int)line.size(); i++)
@@ -133,20 +132,8 @@ std::vector<std::string> Parser::split(std::string &line)
 				space = false;
 		}
 	}
-
 	if (word_buf.size() > 0)
 		tab.push_back(word_buf);
-
-	//DEBUG
-
-	/*std::cout << "*********************" << std::endl;
-	for(std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); it++)
-	{
-		std::cout << *it << std::endl;
-	}
-	std::cout << "*********************" << std::endl;
-	*/
-	//
 	return tab;
 }
 

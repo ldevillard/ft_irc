@@ -15,9 +15,9 @@ class Parser
 		void	executeCommand();
 		bool		isCommand();
 
+		static 	std::vector<std::string> split(std::string &line);
 	private:
 		void initCommands();
-		std::vector<std::string> split(std::string &line);
 
 		std::string _line;
 		std::vector<Command*> _cmds_list;

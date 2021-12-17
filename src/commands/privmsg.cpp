@@ -4,6 +4,7 @@
 #include "../../includes/rpl_codes.hpp"
 #include "../../includes/message.hpp"
 #include <vector>
+#include "../../includes/B_O_A_T.hpp"
 
 Privmsg::Privmsg(Client *user) : Command("PRIVMSG", "PRIVMSG - <target> <text to be send>: Send message to other client or channel.", user)
 {
@@ -52,7 +53,16 @@ void Privmsg::execute()
 			if (chan != NULL)
 			{
 				if (chan->isUserInChannel(_user) == true)
-					chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + makeMessage(), _user);
+				{
+					std::string msg = makeMessage();
+					if (msg[0] == '!')
+					{
+						std::string tmp(msg);
+						tmp.erase(tmp.begin());
+						boating(tmp, _user, chan);
+					}
+					chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + msg, _user);
+				}
 				else
 					_user->sendMsg(std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");
 			}
