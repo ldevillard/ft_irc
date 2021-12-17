@@ -67,6 +67,19 @@ public:
 		return tab;
 	}
 
+	std::vector<Client*> getVectorUser()
+	{
+		std::vector<Client*> users;
+
+		for (int i = 0; i < MAX_CLIENTS; i++)
+		{
+			if (_clients[i] != NULL)
+				users.push_back(_clients[i]);
+		}
+
+		return users;
+	}
+
 private:
 	ServData();
 
