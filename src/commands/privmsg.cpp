@@ -13,10 +13,9 @@ Privmsg::Privmsg(Client *user) : Command("PRIVMSG", "PRIVMSG - <target> <text to
 std::string Privmsg::makeMessage()
 {
 	std::string ret;
-
 	std::vector<std::string>::iterator it = _args.begin();
-	it += 2;
 
+	it += 2;
 	if ((*it)[0] == ':')
 		(*it).erase(0, 1);
 	while (it != _args.end())
@@ -26,30 +25,23 @@ std::string Privmsg::makeMessage()
 			ret += " ";
 		it++;
 	}
-
 	return ret;
 }
 
 void Privmsg::execute()
 {
-	//Manque les verifs
 	std::string chanName = _args[1];
 
 	if (chanName.empty())
-	{
 		_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
-	}
 	else if (chanName[0] == '#')
 	{
 		chanName.erase(chanName.begin());
 		if (chanName.empty())
-		{
 			_user->sendMsg(std::string(ERR_NOSUCHCHANNEL) + " " + _args[1] + ": No such channel!");
-		}
 		else
 		{
 			Channel *chan = _server->findChannel(_args[1]);
-
 			if (chan != NULL)
 			{
 				if (chan->isUserInChannel(_user) == true)
@@ -71,8 +63,6 @@ void Privmsg::execute()
 		if (!targetUser)
 			_user->sendMsg(std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": No such nick!");
 		else
-		{
 			targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " PRIVMSG " + targetUser->getNickName() + " :" + makeMessage());
-		}
 	}
 }

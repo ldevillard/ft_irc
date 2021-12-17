@@ -11,7 +11,10 @@ CFLAGS += -fsanitize=address
 
 INCLUDE_PATH= ./includes
 
+CFG_PATH= ./server_config.hpp
+
 HEADERS = \
+		$(CFG_PATH) \
 		$(INCLUDE_PATH)/commands/help.hpp \
 		$(INCLUDE_PATH)/commands/join.hpp \
 		$(INCLUDE_PATH)/commands/nick.hpp \
