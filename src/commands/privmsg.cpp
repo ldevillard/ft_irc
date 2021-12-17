@@ -55,13 +55,8 @@ void Privmsg::execute()
 				if (chan->isUserInChannel(_user) == true)
 				{
 					std::string msg = makeMessage();
-					if (msg[0] == '!')
-					{
-						std::string tmp(msg);
-						tmp.erase(tmp.begin());
-						boating(tmp, _user, chan);
-					}
-					chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + msg, _user);
+					if (boating(msg, _user, chan))
+						chan->broadcastMsgExept(":" + _user->getNickName() + " PRIVMSG " + _args[1] + " :" + msg, _user);
 				}
 				else
 					_user->sendMsg(std::string(ERR_USERNOTINCHANNEL) + " " + _args[1] + ": You're not in such channel!");

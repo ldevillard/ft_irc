@@ -3,7 +3,9 @@
 #include <string>
 #include "message.hpp"
 #include "client.hpp"
-#include "../includes/rpl_codes.hpp"
+#include "rpl_codes.hpp"
+
+class ServData;
 
 class Channel
 {
@@ -11,9 +13,10 @@ private:
 	std::vector<Client *> _members;
 	std::vector<Client *> _ops;
 	std::string _channelName;
+	ServData *_server;
 
 public:
-	Channel(std::string name) : _channelName(name) {}
+	Channel(std::string name, ServData *server) : _channelName(name), _server(server) {}
 	~Channel() {}
 
 	void join(Client *user);
@@ -39,4 +42,8 @@ public:
 	void setOp(Client *user, bool state);
 
 	Client *findUserWithName(std::string name);
+
+	ServData *getServer(void);
 };
+
+#include "servData.hpp"

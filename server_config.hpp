@@ -1,0 +1,6 @@
+#pragma once
+
+#define SRVCFG_KEEPOPINCHANNEL 1
+
+#define BOTCFG_OPBYPASSFILTER 1
+#define BOTCFG_FILTERKICK 0

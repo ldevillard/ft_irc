@@ -16,7 +16,7 @@ void Join::execute()
 		Channel *chan = _server->findChannel(_args[1]);
 		if (chan == NULL)
 		{
-			chan = new Channel(_args[1]);
+			chan = new Channel(_args[1], _server);
 			_server->getChannels().insert(std::make_pair(_args[1], chan));
 		}
 		if (chan->isUserInChannel(_user) == false)

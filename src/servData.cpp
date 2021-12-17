@@ -7,7 +7,7 @@
 
 ServData::~ServData()
 {
-	std::map<std::string, Channel*>::iterator it;
+	std::map<std::string, Channel *>::iterator it;
 
 	for (it = _chan_list.begin(); it != _chan_list.end(); it++)
 		delete (*it).second;
@@ -26,6 +26,12 @@ ServData::ServData()
 ServData::ServData(id_t port, std::string password) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)), _max_clients(5), _opt(1), _port(port), _password(password)
 {
 	std::cout << "Port : " << _port << std::endl;
+}
+
+void initBanWords(std::vector<std::string> &list)
+{
+	list.push_back("owo");
+	list.push_back("sad");
 }
 
 void ServData::setup()
@@ -53,6 +59,7 @@ void ServData::setup()
 	if (listen(_master_socket, 3) < 0)
 		throw ServerException::listening();
 	_addrlen = sizeof(_address);
+	initBanWords(_banWordsList);
 	std::cout << "Waiting for connections..." << std::endl;
 }
 

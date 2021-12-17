@@ -1,5 +1,6 @@
 #include "../includes/channel.hpp"
 #include "../includes/message.hpp"
+#include "../server_config.hpp"
 
 void Channel::join(Client *user)
 {
@@ -29,7 +30,8 @@ void Channel::leave(Client *user)
 				break;
 			}
 		}
-		keepOp();
+		if (SRVCFG_KEEPOPINCHANNEL)
+			keepOp();
 	}
 }
 
@@ -148,4 +150,9 @@ Client *Channel::findUserWithName(std::string name)
 	}
 
 	return NULL;
+}
+
+ServData *Channel::getServer(void)
+{
+	return _server;
 }

@@ -77,6 +77,11 @@ public:
 		return users;
 	}
 
+	std::vector<std::string> *getBanWordsList()
+	{
+		return &_banWordsList;
+	}
+
 private:
 	ServData();
 
@@ -96,6 +101,7 @@ private:
 	std::string _password;
 	std::map<std::string, Channel *> _chan_list;
 	bool shutdown;
+	std::vector<std::string> _banWordsList;
 
 	void setup();
 	void onInteraction();

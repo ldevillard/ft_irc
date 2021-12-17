@@ -1,10 +1,10 @@
 #include "../includes/B_O_A_T.hpp"
-// #include <random>
 #include "../includes/message.hpp"
 #include <curl/curl.h>
 #include <sstream>
 #include <string>
 #include <ctime>
+#include "../server_config.hpp"
 
 class CURLplusplus
 {
@@ -58,48 +58,67 @@ private:
 	}
 };
 
-void boating(std::string msg, Client *user, Channel *chan)
+bool boating(std::string msg, Client *user, Channel *chan)
 {
-	(void)user;
-	(void)chan;
-	std::cout << "bot = " << msg << std::endl;
 	std::string botNickName = "b.o.a.t";
+	std::vector<std::string> *banWords = chan->getServer()->getBanWordsList();
 
-	std::vector<std::string> args = Parser::split(msg);
+	if (!chan->isOp(user) || !BOTCFG_OPBYPASSFILTER)
 
-	if (args[0] == "help")
+		for (std::vector<std::string>::iterator it = banWords->begin(); it != banWords->end(); it++)
+		{
+			if (msg.find(*it) != std::string::npos)
+			{
+				if (BOTCFG_FILTERKICK)
+				{
+					chan->broadcastMsg(":" + botNickName + " KICK " + chan->getName() + " " + user->getNickName() + " Sending ban words");
+					chan->leave(user);
+				}
+				else
+					user->sendMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :<only visible by you> Your message contain ban word and have been blocked");
+				return false;
+			}
+		}
+
+	if (msg[0] && msg[0] == '!')
 	{
-		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " : !help, !dice, !source");
+		std::vector<std::string> args = Parser::split(msg);
+
+		if (args[0] == "help")
+		{
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " : !help, !dice, !source");
+		}
+		else if (args[0] == "dice")
+		{
+			std::srand(time(NULL));
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + message::c_itoa((std::rand() % 6) + 1));
+		}
+		else if (args[0] == "source")
+		{
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :https://github.com/ldevillard/ft_irc");
+		}
+		else if (args[0] == "cat")
+		{
+			CURLplusplus curlpp;
+			std::string result = curlpp.Get("https://api.thecatapi.com/v1/images/search");
+			std::cout << result << std::endl;
+			size_t pos = result.find("http");
+			result = result.substr(pos, result.size() - pos);
+			pos = result.find("\"");
+			result = result.substr(0, result.size() - (result.size() - pos));
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + result);
+		}
+		else if (args[0] == "time")
+		{
+			time_t now = time(NULL);
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
+		}
+		else
+		{
+			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :Command not found (" + args[0] + ")");
+		}
 	}
-	else if (args[0] == "dice")
-	{
-		std::srand(time(NULL));
-		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + message::c_itoa((std::rand() % 6) + 1));
-	}
-	else if (args[0] == "source")
-	{
-		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :https://github.com/ldevillard/ft_irc");
-	}
-	else if (args[0] == "cat")
-	{
-		CURLplusplus curlpp;
-		std::string result = curlpp.Get("https://api.thecatapi.com/v1/images/search");
-		std::cout << result << std::endl;
-		size_t pos = result.find("http");
-		result = result.substr(pos, result.size() - pos);
-		pos = result.find("\"");
-		result = result.substr(0, result.size() - (result.size() - pos));
-		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + result);
-	}
-	else if (args[0] == "time")
-	{
-		time_t now = time(NULL);
-		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
-	}
-	else
-	{
-		chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :Command not found (" + args[0] + ")");
-	}
+	return true;
 }
 
 /*
