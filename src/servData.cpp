@@ -25,7 +25,10 @@ ServData::ServData()
 
 ServData::ServData(id_t port, std::string password) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)), _max_clients(5), _opt(1), _port(port), _password(password)
 {
-	_needPsswd = true;
+	if (_password.empty())
+		_needPsswd = false;
+	else
+		_needPsswd = true;
 	std::cout << "Port : " << _port << std::endl;
 }
 

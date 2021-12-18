@@ -35,7 +35,7 @@ Parser::Parser(std::string line, ServData *data, Client *user) : _line(line), _d
 				{
 					std::cout << "Error: " << e.what() << std::endl;
 				}
-				if (user->getPsswdState() && !user->getNickName().empty() && !user->getUserName().empty())
+				if ((data->needPsswd() == false || user->getPsswdState() == true) && !user->getNickName().empty() && !user->getUserName().empty())
 				{
 					user->setRegistered(true);
 					user->sendMsg(":server " + std::string(RPL_WELCOME) + " " + user->getNickName() + " :Welcome to the Internet Relay Network " + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress());
