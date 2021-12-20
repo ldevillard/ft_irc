@@ -7,6 +7,8 @@ class Command;
 
 class Notice : public Command
 {
+private:
+	std::string makeMessage();
 public:
 	Notice(Client *user);
 	void execute();
