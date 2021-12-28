@@ -27,7 +27,7 @@ public:
 	void broadcastMsg(std::string msg);
 	void broadcastMsgExept(std::string msg, Client *sender);
 	bool isUserInChannel(Client *user);
-	void sendChannelInfos(Client *user);
+	void sendChannelInfos(Client *user, bool sendTopic);
 	bool isOp(Client *user);
 	void setOp(Client *user, bool state);
 	Client *findUserWithName(std::string name);

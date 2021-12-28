@@ -218,13 +218,22 @@ Client *ServData::getUser(std::string name)
 
 std::map<std::string, Channel *> &ServData::getChannels() { return _chan_list; }
 
+std::string str_to_lower(std::string str)
+{
+	std::string res;
+
+	for (std::string::iterator it = str.begin(); it != str.end(); it++)
+		res.push_back(std::tolower(*it));
+	return res;
+}
+
 Channel *ServData::findChannel(std::string name)
 {
 	std::map<std::string, Channel *>::iterator it;
 
 	for (it = _chan_list.begin(); it != _chan_list.end(); it++)
 	{
-		if (name == (*it).first)
+		if (str_to_lower(name) == str_to_lower((*it).first))
 			return (*it).second;
 	}
 	return (NULL);

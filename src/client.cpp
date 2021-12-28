@@ -4,6 +4,7 @@ Client::Client()
 {
 	_isRegistered = false;
 	_correctPsswd = false;
+	_getKilled = false;
 	_user.clear();
 	_nick.clear();
 	_realName.clear();

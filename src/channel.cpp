@@ -10,7 +10,7 @@ void Channel::join(Client *user)
 {
 	_members.push_back(user);
 	broadcastMsg(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " JOIN " + _channelName);
-	sendChannelInfos(user);
+	sendChannelInfos(user, true);
 }
 
 void Channel::leave(Client *user)
@@ -90,7 +90,7 @@ bool Channel::isUserInChannel(Client *user)
 	return false;
 }
 
-void Channel::sendChannelInfos(Client *user)
+void Channel::sendChannelInfos(Client *user, bool sendTopic)
 {
 	std::string usersList = "";
 	for (std::vector<Client *>::iterator userIt = _members.begin(); userIt != _members.end(); userIt++)
@@ -100,9 +100,12 @@ void Channel::sendChannelInfos(Client *user)
 		usersList += (*userIt)->getNickName() + " ";
 	}
 
-	Message::sendMsgToUser(user, (":server " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
-	Message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
-	Message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " : End of NAMES list"));
+	if (sendTopic)
+	{
+		Message::sendMsgToUser(user, (":server " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
+		Message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
+		Message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " : End of NAMES list"));
+	}
 }
 
 bool Channel::isOp(Client *user)
@@ -140,7 +143,7 @@ void Channel::setOp(Client *user, bool state)
 		}
 	}
 	for (std::vector<Client *>::iterator it = _members.begin(); it != _members.end(); it++)
-		sendChannelInfos(*it);
+		sendChannelInfos(*it, false);
 }
 
 Client *Channel::findUserWithName(std::string name)

@@ -7,7 +7,7 @@ CFLAGS = -Wall -Wextra -Werror
 CFLAGS += -std=c++98
 CFLAGS += -g
 # CFLAGS += -O3 -fno-builtin
-CFLAGS += -fsanitize=address
+# CFLAGS += -fsanitize=address
 
 INCLUDE_PATH= ./includes
 
@@ -80,6 +80,6 @@ re: fclean
 		$(MAKE) all
 
 run: all
-	./ircserv 8080 bite
+	./ircserv 6697 owo
 
 .PHONY: all clean fclean re
