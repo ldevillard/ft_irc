@@ -34,7 +34,7 @@ void Channel::leave(Client *user)
 				break;
 			}
 		}
-		if (SRVCFG_KEEPOPINCHANNEL)
+		if (CFG_KEEPOPINCHANNEL)
 			keepOp();
 	}
 }

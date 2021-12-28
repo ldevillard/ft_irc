@@ -12,7 +12,7 @@ ServData::~ServData()
 	for (it = _chan_list.begin(); it != _chan_list.end(); it++)
 		delete (*it).second;
 
-	for (int i = 0; i < MAX_CLIENTS; i++)
+	for (int i = 0; i < CFG_MAXCLIENTS; i++)
 	{
 		if (_clients[i])
 			delete _clients[i];
@@ -23,7 +23,7 @@ ServData::ServData()
 {
 }
 
-ServData::ServData(id_t port, std::string password) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)), _max_clients(5), _opt(1), _port(port), _password(password)
+ServData::ServData(id_t port, std::string password) : _msg("IRC better than ever before!\n"), _addrlen(sizeof(_address)), _opt(1), _port(port), _password(password)
 {
 	if (_password.empty())
 		_needPsswd = false;
@@ -43,7 +43,7 @@ void ServData::setup()
 	shutdown = false;
 	// Create a master socket
 	std::signal(SIGPIPE, SIG_IGN);
-	for (int i = 0; i < _max_clients; i++)
+	for (int i = 0; i < CFG_MAXCLIENTS; i++)
 		_clients[i] = NULL;
 	if ((_master_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 		throw ServerException::socket_creation();
@@ -88,7 +88,7 @@ int readLine(Client &user)
 
 void ServData::onInteraction()
 {
-	for (int i = 0; i < _max_clients; i++)
+	for (int i = 0; i < CFG_MAXCLIENTS; i++)
 	{
 
 		if (_clients[i] && FD_ISSET(_clients[i]->getSd(), &_read_fds))
@@ -142,7 +142,7 @@ void ServData::onConnection()
 		// gives infos that we'll use in send and recv
 		std::cout << "New connection : socket fd [" << _new_socket << "] ip [" << inet_ntoa(_address.sin_addr) << "] port [" << ntohs(_address.sin_port) << "]" << std::endl;
 		// add new socket to sockets array
-		for (int i = 0; i < _max_clients; i++)
+		for (int i = 0; i < CFG_MAXCLIENTS; i++)
 		{
 			if (!_clients[i])
 			{
@@ -165,7 +165,7 @@ void ServData::setupFD()
 	FD_SET(_master_socket, &_read_fds);
 	_max_sd = _master_socket;
 	// add child sockets to set
-	for (int i = 0; i < _max_clients; i++)
+	for (int i = 0; i < CFG_MAXCLIENTS; i++)
 	{
 		if (_clients[i])
 		{
@@ -213,7 +213,7 @@ std::string str_to_lower(std::string str)
 
 Client *ServData::getUserFromUsername(std::string name)
 {
-	for (size_t i = 0; i < MAX_CLIENTS; i++)
+	for (size_t i = 0; i < CFG_MAXCLIENTS; i++)
 	{
 		if (_clients[i] && str_to_lower(name) == str_to_lower(_clients[i]->getUserName()))
 			return _clients[i];
@@ -223,7 +223,7 @@ Client *ServData::getUserFromUsername(std::string name)
 
 Client *ServData::getUser(std::string name)
 {
-	for (size_t i = 0; i < MAX_CLIENTS; i++)
+	for (size_t i = 0; i < CFG_MAXCLIENTS; i++)
 	{
 		if (_clients[i] && str_to_lower(name) == str_to_lower(_clients[i]->getNickName()))
 			return _clients[i];
@@ -266,7 +266,7 @@ std::vector<Client *> ServData::getVectorUser()
 {
 	std::vector<Client *> users;
 
-	for (int i = 0; i < MAX_CLIENTS; i++)
+	for (int i = 0; i < CFG_MAXCLIENTS; i++)
 	{
 		if (_clients[i] != NULL)
 			users.push_back(_clients[i]);

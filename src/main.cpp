@@ -2,6 +2,11 @@
 
 int main(int ac, char **av)
 {
+	if (CFG_MAXCLIENTS < 5 || CFG_MAXCLIENTS > 100)
+	{
+		std::cerr << "CFG_MAXCLIENTS must be between 5 and 100" << std::endl;
+		return 1;
+	}
 	try
 	{
 		if (ac != 3)

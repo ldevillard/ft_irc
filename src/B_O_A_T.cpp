@@ -58,47 +58,55 @@ private:
 	}
 };
 
+bool msgFiltering(std::string msg, Client *user, Channel *chan)
+{
+	std::vector<std::string> *banWords = user->getServer()->getBanWordsList();
+
+	for (std::vector<std::string>::iterator it = banWords->begin(); it != banWords->end(); it++)
+	{
+		if (msg.find(*it) != std::string::npos)
+		{
+			if (BOTCFG_FILTERKICK)
+			{
+				chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " KICK " + chan->getName() + " " + user->getNickName() + " Sending ban words");
+				chan->leave(user);
+			}
+			else
+				user->sendMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :<only visible by you> Your message contain ban word and have been blocked");
+			return true;
+		}
+	}
+	return false;
+}
+
 bool boating(std::string msg, Client *user, Channel *chan)
 {
 	if (!BOTCFG_ENABLE)
 		return true;
-	std::string botNickName = "b.o.a.t";
-	std::vector<std::string> *banWords = user->getServer()->getBanWordsList();
 
-	if (!chan->isOp(user) || !BOTCFG_OPBYPASSFILTER)
-
-		for (std::vector<std::string>::iterator it = banWords->begin(); it != banWords->end(); it++)
-		{
-			if (msg.find(*it) != std::string::npos)
-			{
-				if (BOTCFG_FILTERKICK)
-				{
-					chan->broadcastMsg(":" + botNickName + " KICK " + chan->getName() + " " + user->getNickName() + " Sending ban words");
-					chan->leave(user);
-				}
-				else
-					user->sendMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :<only visible by you> Your message contain ban word and have been blocked");
-				return false;
-			}
-		}
+	if (BOTCFG_ENABLEFILTER && (!chan->isOp(user) || !BOTCFG_OPBYPASSFILTER))
+	{
+		if (msgFiltering(msg, user, chan))
+			return false;
+	}
 
 	if (msg[0] && msg[0] == '!')
 	{
+		chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :" + msg, user);
 		msg.erase(msg.begin());
 		std::vector<std::string> args = Parser::split(msg);
-
 		if (args[0] == "help")
 		{
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " : !help, !dice, !source");
+			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " : !help, !dice, !source");
 		}
 		else if (args[0] == "dice")
 		{
 			std::srand(time(NULL));
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + Message::c_itoa((std::rand() % 6) + 1));
+			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + Message::c_itoa((std::rand() % 6) + 1));
 		}
 		else if (args[0] == "source")
 		{
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :https://github.com/ldevillard/ft_irc");
+			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :https://github.com/ldevillard/ft_irc");
 		}
 		else if (args[0] == "cat")
 		{
@@ -108,19 +116,21 @@ bool boating(std::string msg, Client *user, Channel *chan)
 			result = result.substr(pos, result.size() - pos);
 			pos = result.find("\"");
 			result = result.substr(0, result.size() - (result.size() - pos));
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + result);
+			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + result);
 		}
 		else if (args[0] == "time")
 		{
 			time_t now = time(NULL);
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
+			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
 		}
 		else
 		{
-			chan->broadcastMsg(":" + botNickName + " PRIVMSG " + chan->getName() + " :Command not found (" + args[0] + ")");
+			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :Command not found (" + args[0] + ")");
 		}
+		return false;
 	}
-	return true;
+	else
+		return true;
 }
 
 /*

@@ -21,8 +21,7 @@
 #include "./serverException.hpp"
 #include "channel.hpp"
 #include "client.hpp"
-
-#define MAX_CLIENTS 5
+#include "../server_config.hpp"
 
 class ServData
 {
@@ -49,10 +48,9 @@ private:
 	std::string _msg;
 	size_t _addrlen;
 	fd_set _read_fds;
-	Client *_clients[MAX_CLIENTS];
+	Client *_clients[CFG_MAXCLIENTS];
 	int _activity;
 	int _master_socket;
-	int _max_clients;
 	int _max_sd;
 	int _new_socket;
 	int _opt;
