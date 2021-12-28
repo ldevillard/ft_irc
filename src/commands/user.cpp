@@ -10,10 +10,10 @@ User::User(Client *user) : Command("USER", "USER - <username> <hostname> <server
 
 void User::execute()
 {
-	if(_args.size() > 1)
+	if (_args.size() > 1)
 	{
 		if (_args.size() > 5)
-			_args[4].erase(0,1);
+			_args[4].erase(0, 1);
 		for (size_t i = 4; i < _args.size(); i++)
 		{
 			_user->setRealName(_user->getRealName() + _args[i]);
@@ -22,6 +22,12 @@ void User::execute()
 		}
 
 		//MAKE VERIF
-		_user->setUserName(_args[1]);
+		if (_server->getUserFromUsername(_args[1]))
+		{
+			_user->sendMsg(":server " + std::string(ERR_NOSUCHNICK) + " " + _args[1] + ": Username already used!");
+			throw ServerException::nickAlreadyUsed();
+		}
+		else
+			_user->setUserName(_args[1]);
 	}
 }

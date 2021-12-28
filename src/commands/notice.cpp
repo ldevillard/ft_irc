@@ -25,7 +25,7 @@ std::string Notice::makeMessage()
 
 void Notice::execute()
 {
-    std::string chanName = _args[1];
+	std::string chanName = _args[1];
 
 	if (chanName[0] == '#')
 	{
@@ -38,25 +38,25 @@ void Notice::execute()
 		}
 		else
 		{
-            std::string msg = makeMessage();
-            chan = new Channel(_args[1], _server);
+			std::string msg = makeMessage();
+			chan = new Channel(_args[1]);
 			_server->getChannels().insert(std::make_pair(_args[1], chan));
-            chan->broadcastMsgExept(":" + _user->getNickName() + " NOTICE " + _args[1] + " :" + msg, _user);
-            _server->getChannels().erase(chan->getName());
-            delete chan;
-        }
+			chan->broadcastMsgExept(":" + _user->getNickName() + " NOTICE " + _args[1] + " :" + msg, _user);
+			_server->getChannels().erase(chan->getName());
+			delete chan;
+		}
 	}
 	else
 	{
 		Client *targetUser = _server->getUser(chanName);
 		if (!targetUser)
-        {
-            targetUser = new Client();
-            targetUser->setNickName(chanName);
+		{
+			targetUser = new Client(_server);
+			targetUser->setNickName(chanName);
 			targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " NOTICE " + chanName + " :" + makeMessage());
-            delete targetUser;
-        }
+			delete targetUser;
+		}
 		else
-		    targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " NOTICE " + chanName + " :" + makeMessage());
+			targetUser->sendMsg(":" + _user->getNickName() + "!" + _user->getNickName() + "@" + _user->getAddress() + " NOTICE " + chanName + " :" + makeMessage());
 	}
 }

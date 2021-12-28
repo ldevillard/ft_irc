@@ -60,8 +60,10 @@ private:
 
 bool boating(std::string msg, Client *user, Channel *chan)
 {
+	if (!BOTCFG_ENABLE)
+		return true;
 	std::string botNickName = "b.o.a.t";
-	std::vector<std::string> *banWords = chan->getServer()->getBanWordsList();
+	std::vector<std::string> *banWords = user->getServer()->getBanWordsList();
 
 	if (!chan->isOp(user) || !BOTCFG_OPBYPASSFILTER)
 
@@ -102,7 +104,6 @@ bool boating(std::string msg, Client *user, Channel *chan)
 		{
 			CURLplusplus curlpp;
 			std::string result = curlpp.Get("https://api.thecatapi.com/v1/images/search");
-			std::cout << result << std::endl;
 			size_t pos = result.find("http");
 			result = result.substr(pos, result.size() - pos);
 			pos = result.find("\"");

@@ -4,10 +4,13 @@
 #include <unistd.h>
 #include <iostream>
 
+class ServData;
+class Channel;
+
 class Client
 {
 public:
-	Client();
+	Client(ServData *server);
 	const std::string &getUserName() const;
 	const std::string &getNickName() const;
 	std::string &getRealName();
@@ -27,6 +30,7 @@ public:
 	bool getPsswdState(void);
 	void setKill(bool state);
 	bool getKill(void);
+	ServData *getServer(void);
 
 private:
 	std::string _user;
@@ -38,4 +42,7 @@ private:
 	bool _isRegistered;
 	bool _correctPsswd;
 	bool _getKilled;
+	ServData *_server;
 };
+
+#include "servData.hpp"

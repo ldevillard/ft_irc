@@ -2,7 +2,7 @@
 #include "../includes/message.hpp"
 #include "../server_config.hpp"
 
-Channel::Channel(std::string name, ServData *server) : _channelName(name), _server(server) {}
+Channel::Channel(std::string name) : _channelName(name) {}
 
 Channel::~Channel() {}
 
@@ -66,9 +66,7 @@ void Channel::broadcastMsgExept(std::string msg, Client *sender)
 	for (std::vector<Client *>::iterator user = _members.begin(); user != _members.end(); user++)
 	{
 		if (*user != sender)
-		{
 			Message::sendMsgToUser(*user, msg);
-		}
 	}
 }
 
@@ -101,11 +99,9 @@ void Channel::sendChannelInfos(Client *user, bool sendTopic)
 	}
 
 	if (sendTopic)
-	{
 		Message::sendMsgToUser(user, (":server " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
-		Message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
-		Message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " : End of NAMES list"));
-	}
+	Message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
+	Message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " : End of NAMES list"));
 }
 
 bool Channel::isOp(Client *user)
@@ -157,9 +153,4 @@ Client *Channel::findUserWithName(std::string name)
 	}
 
 	return NULL;
-}
-
-ServData *Channel::getServer(void)
-{
-	return _server;
 }

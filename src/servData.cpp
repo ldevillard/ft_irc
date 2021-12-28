@@ -77,7 +77,7 @@ int readLine(Client &user)
 		return read;
 	else if (buff == '\n')
 	{
-		if (line.at(line.length() - 1) == '\r')
+		if (line.length() > 0 && line.at(line.length() - 1) == '\r')
 			line.erase(line.length() - 1, 1);
 		return 2;
 	}
@@ -99,14 +99,14 @@ void ServData::onInteraction()
 			if (status == -1)
 			{
 				std::cerr << "Error inr recv(). Quiting" << std::endl;
-				close(_sd);
+				_clients[i]->disconnect();
 				delete _clients[i];
 				_clients[i] = NULL;
 			}
 			else if (status == 0)
 			{
 				std::cout << "Client disconnected!" << std::endl;
-				close(_sd);
+				_clients[i]->disconnect();
 				delete _clients[i];
 				_clients[i] = NULL;
 			}
@@ -115,10 +115,11 @@ void ServData::onInteraction()
 				std::string line = std::string(_clients[i]->getBufferLine());
 				_clients[i]->getBufferLine().erase();
 
-				std::cout << "<- [" << _clients[i]->getSd() << "] " << line << std::endl;
-
-				Parser parser(line, this, _clients[i]);
-				// send(_sd, line.c_str(), line.length(), 0);
+				if (line.length() > 0)
+				{
+					std::cout << "<- [" << _clients[i]->getSd() << "] " << line << std::endl;
+					Parser parser(line, this, _clients[i]);
+				}
 
 				if (_clients[i]->getKill())
 				{
@@ -145,7 +146,7 @@ void ServData::onConnection()
 		{
 			if (!_clients[i])
 			{
-				_clients[i] = new Client();
+				_clients[i] = new Client(this);
 				_clients[i]->setSd(_new_socket);
 
 				_clients[i]->setAddress(inet_ntoa(_address.sin_addr));
@@ -172,7 +173,6 @@ void ServData::setupFD()
 			// if valid socket you can add it to the read list
 			if (_sd > 0)
 				FD_SET(_sd, &_read_fds);
-			// highest fd number, needed for poll()
 			if (_sd > _max_sd)
 				_max_sd = _sd;
 		}
@@ -190,7 +190,6 @@ int ServData::connect()
 		setupFD();
 		// Wait for an activity on one of the socket
 		// Timeout set to null so infinite waiting
-		// migh change later to poll
 		_activity = select(_max_sd + 1, &_read_fds, NULL, NULL, NULL);
 		if ((_activity < 0) && (errno != EINTR))
 			throw ServerException::select();
@@ -203,21 +202,6 @@ int ServData::connect()
 	return (0);
 }
 
-Client *ServData::getUser(std::string name)
-{
-	int i = 0;
-
-	while (i < MAX_CLIENTS)
-	{
-		if (_clients[i] && _clients[i]->getNickName() == name)
-			return _clients[i];
-		i++;
-	}
-	return NULL;
-}
-
-std::map<std::string, Channel *> &ServData::getChannels() { return _chan_list; }
-
 std::string str_to_lower(std::string str)
 {
 	std::string res;
@@ -226,6 +210,28 @@ std::string str_to_lower(std::string str)
 		res.push_back(std::tolower(*it));
 	return res;
 }
+
+Client *ServData::getUserFromUsername(std::string name)
+{
+	for (size_t i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (_clients[i] && str_to_lower(name) == str_to_lower(_clients[i]->getUserName()))
+			return _clients[i];
+	}
+	return NULL;
+}
+
+Client *ServData::getUser(std::string name)
+{
+	for (size_t i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (_clients[i] && str_to_lower(name) == str_to_lower(_clients[i]->getNickName()))
+			return _clients[i];
+	}
+	return NULL;
+}
+
+std::map<std::string, Channel *> &ServData::getChannels() { return _chan_list; }
 
 Channel *ServData::findChannel(std::string name)
 {

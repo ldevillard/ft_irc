@@ -6,7 +6,7 @@ MAKE = make --no-print-directory
 CFLAGS = -Wall -Wextra -Werror
 CFLAGS += -std=c++98
 CFLAGS += -g
-# CFLAGS += -O3 -fno-builtin
+CFLAGS += -O3 -fno-builtin
 # CFLAGS += -fsanitize=address
 
 INCLUDE_PATH= ./includes

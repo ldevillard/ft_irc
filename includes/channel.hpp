@@ -2,10 +2,7 @@
 #include <vector>
 #include <string>
 #include "message.hpp"
-#include "client.hpp"
 #include "rpl_codes.hpp"
-
-class ServData;
 
 class Channel
 {
@@ -13,10 +10,9 @@ private:
 	std::vector<Client *> _members;
 	std::vector<Client *> _ops;
 	std::string _channelName;
-	ServData *_server;
 
 public:
-	Channel(std::string name, ServData *server);
+	Channel(std::string name);
 	~Channel();
 	void join(Client *user);
 	void leave(Client *user);
@@ -31,7 +27,4 @@ public:
 	bool isOp(Client *user);
 	void setOp(Client *user, bool state);
 	Client *findUserWithName(std::string name);
-	ServData *getServer(void);
 };
-
-#include "servData.hpp"

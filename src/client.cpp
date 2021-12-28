@@ -1,6 +1,6 @@
 #include "../includes/client.hpp"
 
-Client::Client()
+Client::Client(ServData *server) : _server(server)
 {
 	_isRegistered = false;
 	_correctPsswd = false;
@@ -44,7 +44,19 @@ void Client::sendMsg(std::string msg)
 	send(_sd, (msg + "\r\n").c_str(), (msg + "\r\n").length(), 0);
 }
 
-void Client::disconnect() { close(_sd); }
+void Client::disconnect()
+{
+	std::vector<Channel *> chans = _server->findChannelsOfUser(this);
+
+	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
+		(*it)->leave(this);
+	close(_sd);
+}
+
+ServData *Client::getServer()
+{
+	return _server;
+}
 
 void Client::setPsswdState(bool state)
 {

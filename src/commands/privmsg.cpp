@@ -5,6 +5,7 @@
 #include "../../includes/message.hpp"
 #include <vector>
 #include "../../includes/B_O_A_T.hpp"
+#include "../../server_config.hpp"
 
 Privmsg::Privmsg(Client *user) : Command("PRIVMSG", "PRIVMSG - <target> <text to be send>: Send message to other client or channel.", user)
 {

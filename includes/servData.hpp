@@ -1,6 +1,5 @@
 #pragma once
 
-#include "./serverException.hpp"
 #include <netdb.h>
 #include <string>
 #include <cstring>
@@ -14,14 +13,14 @@
 #include <netinet/in.h>
 #include <csignal>
 #include <map>
+#include <sstream>
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
-#include <poll.h>	  // Poll() (yeah no shit)
 #include <iostream>
-#include "client.hpp"
 #include <vector>
 #include <map>
+#include "./serverException.hpp"
 #include "channel.hpp"
-#include <sstream>
+#include "client.hpp"
 
 #define MAX_CLIENTS 5
 
@@ -32,6 +31,7 @@ public:
 	ServData(id_t port, std::string password);
 	~ServData();
 	int connect();
+	Client *getUserFromUsername(std::string name);
 	Client *getUser(std::string name);
 	std::map<std::string, Channel *> &getChannels();
 	Channel *findChannel(std::string name);

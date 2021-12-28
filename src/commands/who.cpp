@@ -19,7 +19,9 @@ void Who::execute()
 			_user->sendMsg(":server " + std::string(RPL_WHOREPLY) + " Server has : " + itoa(users.size()) + " users.");
 
 		for (std::vector<Client *>::iterator it = users.begin(); it != users.end(); it++)
+		{
 			_user->sendMsg(":server " + std::string(RPL_WHOREPLY) + " " + (*it)->getNickName() + " " + (*it)->getUserName() + "@" + (*it)->getAddress());
+		}
 		_user->sendMsg(":server " + std::string(RPL_ENDOFWHO) + " : End of WHO");
 	}
 	else
@@ -37,7 +39,12 @@ void Who::execute()
 				_user->sendMsg(":server " + std::string(RPL_WHOREPLY) + " Channel " + _args[1] + " has : " + itoa(users.size()) + " users.");
 
 			for (std::vector<Client *>::iterator it = users.begin(); it != users.end(); it++)
-				_user->sendMsg(":server " + std::string(RPL_WHOREPLY) + " " + (*it)->getNickName() + " " + (*it)->getUserName() + "@" + (*it)->getAddress());
+			{
+				std::string opCheck;
+				if (chan->isOp(_user))
+					opCheck += "@";
+				_user->sendMsg(":server " + std::string(RPL_WHOREPLY) + " " + opCheck + (*it)->getNickName() + " " + (*it)->getUserName() + "@" + (*it)->getAddress());
+			}
 			_user->sendMsg(":server " + std::string(RPL_ENDOFWHO) + " : End of WHO");
 		}
 	}
