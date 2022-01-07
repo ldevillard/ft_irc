@@ -92,40 +92,52 @@ bool boating(std::string msg, Client *user, Channel *chan)
 
 	if (msg[0] && msg[0] == '!')
 	{
-		chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :" + msg, user);
 		msg.erase(msg.begin());
-		std::vector<std::string> args = Parser::split(msg);
-		if (args[0] == "help")
+		if (msg.empty())
 		{
-			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " : !help, !dice, !source");
-		}
-		else if (args[0] == "dice")
-		{
-			std::srand(time(NULL));
-			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + Message::c_itoa((std::rand() % 6) + 1));
-		}
-		else if (args[0] == "source")
-		{
-			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :https://github.com/ldevillard/ft_irc");
-		}
-		else if (args[0] == "cat")
-		{
-			CURLplusplus curlpp;
-			std::string result = curlpp.Get("https://api.thecatapi.com/v1/images/search");
-			size_t pos = result.find("http");
-			result = result.substr(pos, result.size() - pos);
-			pos = result.find("\"");
-			result = result.substr(0, result.size() - (result.size() - pos));
-			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + result);
-		}
-		else if (args[0] == "time")
-		{
-			time_t now = time(NULL);
-			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
+			user->sendMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :invalid command");
 		}
 		else
 		{
-			chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :Command not found (" + args[0] + ")");
+
+			std::vector<std::string> args = Parser::split(msg);
+			if (args[0] == "help")
+			{
+				chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :!" + msg, user);
+				chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :!cat, !dice, !help, !source, !time");
+			}
+			else if (args[0] == "dice")
+			{
+				chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :!" + msg, user);
+				std::srand(time(NULL));
+				chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + Message::c_itoa((std::rand() % 6) + 1));
+			}
+			else if (args[0] == "source")
+			{
+				chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :!" + msg, user);
+				chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :https://github.com/ldevillard/ft_irc");
+			}
+			else if (args[0] == "cat")
+			{
+				chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :!" + msg, user);
+				CURLplusplus curlpp;
+				std::string result = curlpp.Get("https://api.thecatapi.com/v1/images/search");
+				size_t pos = result.find("http");
+				result = result.substr(pos, result.size() - pos);
+				pos = result.find("\"");
+				result = result.substr(0, result.size() - (result.size() - pos));
+				chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + result);
+			}
+			else if (args[0] == "time")
+			{
+				chan->broadcastMsgExept(":" + user->getNickName() + " PRIVMSG " + chan->getName() + " :!" + msg, user);
+				time_t now = time(NULL);
+				chan->broadcastMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :" + ctime(&now));
+			}
+			else
+			{
+				user->sendMsg(":" + std::string(BOTCFG_NAME) + " PRIVMSG " + chan->getName() + " :Command not found (" + args[0] + ")");
+			}
 		}
 		return false;
 	}
