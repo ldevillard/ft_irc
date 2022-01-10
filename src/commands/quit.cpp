@@ -28,7 +28,7 @@ void Quit::execute()
 {
 	std::vector<Channel *> chans = _server->findChannelsOfUser(_user);
 
-	if (_args.size() > 2 && (_args[1] != ":")) //Send msg to let channels know that user disconnected
+	if (_args.size() > 1 && (_args[1] != ":")) //Send msg to let channels know that user disconnected
 	{
 		for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
 		{
