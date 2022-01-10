@@ -2,6 +2,7 @@
 
 #define CFG_MAXCLIENTS 10
 #define CFG_KEEPOPINCHANNEL 1
+#define CFG_DEFAULTQUITMSG "Leaving..."
 
 #define BOTCFG_ENABLE 1
 #define BOTCFG_NAME "b.o.a.t"

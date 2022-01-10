@@ -1,5 +1,6 @@
 #include "../../includes/commands/quit.hpp"
 #include "../../includes/rpl_codes.hpp"
+#include "../../server_config.hpp"
 
 Quit::Quit(Client *user) : Command("QUIT", "QUIT - Disconnect from the server.", user)
 {
@@ -39,7 +40,7 @@ void Quit::execute()
 	else
 		for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++) //Leave all chanels
 		{
-			(*it)->broadcastMsgExept(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " QUIT :Leaving...", _user);
+			(*it)->broadcastMsgExept(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " QUIT :" + CFG_DEFAULTQUITMSG, _user);
 			(*it)->leave(_user, false);
 		}
 	_user->setKill(true);

@@ -80,6 +80,6 @@ re: fclean
 		$(MAKE) all
 
 run: all
-	./ircserv 6697 owo
+	./ircserv 6697 salut
 
 .PHONY: all clean fclean re
