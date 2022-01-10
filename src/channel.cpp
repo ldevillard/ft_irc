@@ -13,9 +13,10 @@ void Channel::join(Client *user)
 	sendChannelInfos(user, true);
 }
 
-void Channel::leave(Client *user)
+void Channel::leave(Client *user, bool needBroadcast)
 {
-	broadcastMsg(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " PART " + _channelName);
+	if (needBroadcast)
+		broadcastMsg(":" + user->getNickName() + "!" + user->getUserName() + "@" + user->getAddress() + " PART " + _channelName);
 	for (std::vector<Client *>::iterator it = _members.begin(); it != _members.end(); it++)
 	{
 		if ((*it) == user)
@@ -101,7 +102,7 @@ void Channel::sendChannelInfos(Client *user, bool sendTopic)
 	if (sendTopic)
 		Message::sendMsgToUser(user, (":server " + std::string(RPL_TOPIC) + " " + user->getNickName() + " " + _channelName + " :Undefined topic"));
 	Message::sendMsgToUser(user, (":server " + std::string(RPL_NAMREPLY) + " " + user->getNickName() + " = " + _channelName + " :" + usersList));
-	Message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + user->getNickName() + " " + _channelName + " : End of NAMES list"));
+	Message::sendMsgToUser(user, (":server " + std::string(RPL_ENDOFNAMES) + " " + _channelName + " :End of NAMES list"));
 }
 
 bool Channel::isOp(Client *user)
@@ -121,7 +122,8 @@ void Channel::setOp(Client *user, bool state)
 		if (!isOp(user))
 		{
 			_ops.push_back(user);
-			user->sendMsg(":server " + std::string(RPL_YOUREOPER) + ": You are now an IRC operator");
+			user->sendMsg(":server " + std::string(RPL_YOUREOPER) + ":You are now an IRC operator");
+			broadcastMsgExept(":server " + std::string(RPL_WHOISOPERATOR) + " " + user->getNickName() + " :Is now an IRC operator", user);
 		}
 	}
 	else

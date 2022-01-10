@@ -28,16 +28,19 @@ void Quit::execute()
 {
 	std::vector<Channel *> chans = _server->findChannelsOfUser(_user);
 
-	if (_args.size() > 1 && (_args[1] != ":" && _args.size() == 2)) //Send msg to let channels know that user disconnected
+	if (_args.size() > 2 && (_args[1] != ":")) //Send msg to let channels know that user disconnected
 	{
 		for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++)
-			(*it)->broadcastMsg(":" + _user->getNickName() + " PRIVMSG " + (*it)->getName() + " :" + makeMessage());
+		{
+			(*it)->broadcastMsgExept(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " QUIT :" + makeMessage(), _user);
+			(*it)->leave(_user, false);
+		}
 	}
-
-	for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++) //Leave all chanels
-	{
-		(*it)->broadcastMsg(":" + _user->getNickName() + " QUIT :");
-		(*it)->leave(_user);
-	}
+	else
+		for (std::vector<Channel *>::iterator it = chans.begin(); it != chans.end(); it++) //Leave all chanels
+		{
+			(*it)->broadcastMsgExept(":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getAddress() + " QUIT :Leaving...", _user);
+			(*it)->leave(_user, false);
+		}
 	_user->setKill(true);
 }

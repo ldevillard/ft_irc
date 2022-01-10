@@ -15,7 +15,7 @@ public:
 	Channel(std::string name);
 	~Channel();
 	void join(Client *user);
-	void leave(Client *user);
+	void leave(Client *user, bool needBroadcast = true);
 	void keepOp(void);
 	bool isEmpty(void);
 	std::string &getName(void);
